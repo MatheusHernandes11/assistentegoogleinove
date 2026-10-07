@@ -33,8 +33,8 @@ export function score(e: Empresa) {
 }
 
 export const ranking = () => [...empresas].sort((a, b) => score(b) - score(a));
-export const voce = empresas[0];
-export const lider = () => ranking().filter((e) => !e.voce)[0];
+export const voce = empresas[0]!;
+export const lider = () => ranking().filter((e) => !e.voce)[0]!;
 export const posicao = () => ranking().findIndex((e) => e.voce) + 1;
 export const media = (k: "avaliacoes" | "fotos" | "nota" | "servicos" | "categorias") => {
   const o = empresas.filter((e) => !e.voce);

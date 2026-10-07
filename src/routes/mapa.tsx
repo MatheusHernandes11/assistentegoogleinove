@@ -22,7 +22,7 @@ function Mapa() {
   const [raio, setRaio] = useState(5);
   const [sel, setSel] = useState("b");
   const visiveis = empresas.filter((e) => e.distancia <= raio);
-  const e = empresas.find((x) => x.id === sel) ?? empresas[0];
+  const e = empresas.find((x) => x.id === sel) ?? empresas[0]!;
 
   return (
     <AppShell title="Mapa de concorrentes" subtitle={`${visiveis.length} empresas num raio de ${raio} km de ${empresa.endereco}`}>

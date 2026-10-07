@@ -30,9 +30,9 @@ function pts(e: Empresa) {
 
 function Radar() {
   const outros = ranking().filter((e) => !e.voce);
-  const [ids, setIds] = useState([outros[0].id, outros[1].id]);
+  const [ids, setIds] = useState([outros[0]!.id, outros[1]!.id]);
   const sel = ids.map((id) => empresas.find((e) => e.id === id)!);
-  const A = sel[0];
+  const A = sel[0]!;
   const linhas: [string, (e: Empresa) => string][] = [
     ["Nota", (e) => fmt(e.nota, 1)], ["Avaliações", (e) => String(e.avaliacoes)], ["Fotos", (e) => String(e.fotos)],
     ["Serviços", (e) => String(e.servicos)], ["Categorias", (e) => String(e.categorias)], ["Site", (e) => (e.site ? "✓" : "—")], ["Presença local", (e) => String(score(e))],
