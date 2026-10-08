@@ -56,7 +56,7 @@ function Mapa() {
           <h2 className="mt-3 font-display text-2xl font-semibold">{e.nome}</h2>
           <p className="text-sm text-muted-foreground">{empresa.segmento} · {fmt(e.distancia, 1)} km</p>
           <dl className="mt-6 grid grid-cols-2 gap-4 font-mono">
-            {[["Nota", `★ ${fmt(e.nota, 1)}`], ["Avaliações", e.avaliacoes], ["Fotos", e.fotos], ["Serviços", e.servicos]].map(([k, v]) => (
+            {[["Nota", `★ ${fmt(e.nota, 1)}`], ["Avaliações", e.avaliacoes], ["Fotos", e.fotos], ["Categorias", e.categorias]].map(([k, v]) => (
               <div key={k}><dt className="eyebrow font-sans">{k}</dt><dd className="mt-1 text-xl">{v}</dd></div>
             ))}
           </dl>
