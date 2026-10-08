@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as PalavrasChaveRouteImport } from './routes/palavras-chave'
 import { Route as RadarRouteImport } from './routes/radar'
@@ -18,6 +19,11 @@ import { Route as ReuniaoRouteImport } from './routes/reuniao'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapaRoute = MapaRouteImport.update({
@@ -43,6 +49,7 @@ const ReuniaoRoute = ReuniaoRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/mapa': typeof MapaRoute
   '/palavras-chave': typeof PalavrasChaveRoute
   '/radar': typeof RadarRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/mapa': typeof MapaRoute
   '/palavras-chave': typeof PalavrasChaveRoute
   '/radar': typeof RadarRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/mapa': typeof MapaRoute
   '/palavras-chave': typeof PalavrasChaveRoute
   '/radar': typeof RadarRoute
@@ -65,14 +74,22 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mapa' | '/palavras-chave' | '/radar' | '/reuniao'
+  fullPaths: '/' | '/auth' | '/mapa' | '/palavras-chave' | '/radar' | '/reuniao'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mapa' | '/palavras-chave' | '/radar' | '/reuniao'
-  id: '__root__' | '/' | '/mapa' | '/palavras-chave' | '/radar' | '/reuniao'
+  to: '/' | '/auth' | '/mapa' | '/palavras-chave' | '/radar' | '/reuniao'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/mapa'
+    | '/palavras-chave'
+    | '/radar'
+    | '/reuniao'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   MapaRoute: typeof MapaRoute
   PalavrasChaveRoute: typeof PalavrasChaveRoute
   RadarRoute: typeof RadarRoute
@@ -86,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mapa': {
@@ -121,6 +145,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   MapaRoute: MapaRoute,
   PalavrasChaveRoute: PalavrasChaveRoute,
   RadarRoute: RadarRoute,
