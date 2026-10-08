@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { NovaAuditoria } from "./NovaAuditoria";
+import { useAuditoria } from "@/lib/use-auditoria";
 import type { ReactNode } from "react";
 import { empresa } from "@/lib/data";
 
