@@ -21,9 +21,9 @@ function Reuniao() {
   const [script, setScript] = useState(true);
   const L = lider(), pos = posicao(), s = score(voce);
   const pontos = [
-    { t: "Volume de avaliações", d: `Você tem ${voce.avaliacoes} avaliações e o líder tem ${L.avaliacoes} — desvantagem de ${L.avaliacoes - voce.avaliacoes}.`, p: "O Google confia em quem tem mais prova social. Cada avaliação que falta é um paciente que escolhe o vizinho." },
+    { t: "Volume de avaliações", d: `Você tem ${voce.avaliacoes} avaliações e o líder tem ${L.avaliacoes} — desvantagem de ${L.avaliacoes - voce.avaliacoes}.`, p: "O Google confia em quem tem mais prova social. Cada avaliação que falta é um cliente que escolhe o vizinho." },
     { t: "Acervo de fotos", d: `A concorrência tem ${L.fotos} fotos contra ${voce.fotos} suas.`, p: "Fichas com mais fotos recebem mais pedidos de rota. Quem não mostra, não é visitado." },
-    { t: "Serviços omitidos", d: "Implante, clareamento e ortodontia são buscados na cidade e não estão na sua ficha.", p: "Você faz o serviço, mas para o Google você não faz. Isso é invisibilidade comercial." },
+    { t: "Serviços omitidos", d: `Serviços de ${empresa.segmento.toLowerCase()} buscados em ${empresa.cidade} não estão na sua ficha.`, p: "Você faz o serviço, mas para o Google você não faz. Isso é invisibilidade comercial." },
     { t: "Recência de avaliações", d: "Sua última avaliação foi há 3 semanas.", p: "Para o Google, ficha parada é empresa parada. O líder recebe avaliações toda semana." },
   ];
   const plano = [
@@ -53,7 +53,7 @@ function Reuniao() {
           <div>
             <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Posição real na região</p>
             <p className="font-display text-8xl font-semibold leading-none">{pos}º</p>
-            <p className="mt-3 text-surface/60">entre {empresas.length} clínicas num raio de {empresa.raio} km</p>
+            <p className="mt-3 text-surface/60">entre {empresas.length} empresas num raio de {empresa.raio} km</p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Dono da região</p>
