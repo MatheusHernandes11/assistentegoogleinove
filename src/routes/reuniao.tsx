@@ -1,7 +1,8 @@
+import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { fmt } from "@/components/AppShell";
-import { empresa, empresas, lider, posicao, voce } from "@/lib/data";
+import { empresa, empresas, lider, posicao, score, voce } from "@/lib/data";
 
 export const Route = createFileRoute("/reuniao")({
   head: () => ({
@@ -16,12 +17,13 @@ export const Route = createFileRoute("/reuniao")({
 });
 
 function Reuniao() {
+  useAuditoria();
   const [script, setScript] = useState(true);
-  const L = lider(), pos = posicao(), s = 64;
+  const L = lider(), pos = posicao(), s = score(voce);
   const pontos = [
-    { t: "Volume de avaliações", d: `Você tem ${voce.avaliacoes} avaliações e o líder tem ${L.avaliacoes} — desvantagem de ${L.avaliacoes - voce.avaliacoes}.`, p: "O Google confia em quem tem mais prova social. Cada avaliação que falta é um paciente que escolhe o vizinho." },
+    { t: "Volume de avaliações", d: `Você tem ${voce.avaliacoes} avaliações e o líder tem ${L.avaliacoes} — desvantagem de ${L.avaliacoes - voce.avaliacoes}.`, p: "O Google confia em quem tem mais prova social. Cada avaliação que falta é um cliente que escolhe o vizinho." },
     { t: "Acervo de fotos", d: `A concorrência tem ${L.fotos} fotos contra ${voce.fotos} suas.`, p: "Fichas com mais fotos recebem mais pedidos de rota. Quem não mostra, não é visitado." },
-    { t: "Serviços omitidos", d: "Implante, clareamento e ortodontia são buscados na cidade e não estão na sua ficha.", p: "Você faz o serviço, mas para o Google você não faz. Isso é invisibilidade comercial." },
+    { t: "Serviços omitidos", d: `Serviços de ${empresa.segmento.toLowerCase()} buscados em ${empresa.cidade} não estão na sua ficha.`, p: "Você faz o serviço, mas para o Google você não faz. Isso é invisibilidade comercial." },
     { t: "Recência de avaliações", d: "Sua última avaliação foi há 3 semanas.", p: "Para o Google, ficha parada é empresa parada. O líder recebe avaliações toda semana." },
   ];
   const plano = [
@@ -31,11 +33,12 @@ function Reuniao() {
   ];
 
   return (
-    <div className="min-h-screen bg-ink text-surface">
+    <div className="pitch min-h-screen bg-ink text-surface">
       <div className="mx-auto max-w-6xl px-8 py-10">
         <div className="mb-12 flex items-center justify-between">
-          <span className="font-display font-semibold tracking-tight">INOVE LOCAL · Diagnóstico {empresa.nome}</span>
-          <div className="flex gap-2 text-sm">
+          <span className="flex items-center gap-3 font-display font-semibold tracking-tight"><span className="grid size-9 place-items-center rounded-lg bg-mint text-ink">I</span>INOVE LOCAL · Diagnóstico {empresa.nome}</span>
+          <div className="no-print flex gap-2 text-sm">
+            <button onClick={() => window.print()} className="rounded-lg bg-mint px-3 py-1.5 font-medium text-ink hover:bg-mint/90">Exportar PDF / Imprimir</button>
             <button onClick={() => setScript((v) => !v)} className="rounded-lg px-3 py-1.5 text-surface/60 ring-1 ring-surface/15 hover:text-surface">{script ? "Ocultar roteiro" : "Mostrar roteiro"}</button>
             <Link to="/" className="rounded-lg px-3 py-1.5 text-surface/60 ring-1 ring-surface/15 hover:text-surface">Sair</Link>
           </div>
@@ -45,12 +48,12 @@ function Reuniao() {
           <div>
             <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Score Inove</p>
             <p className="font-display text-8xl font-semibold leading-none text-coral">{s}<span className="text-3xl text-surface/40">/100</span></p>
-            <p className="mt-3 inline-block rounded-full bg-coral/15 px-3 py-1 text-sm text-coral ring-1 ring-coral/30">Alerta: fora do Top 3</p>
+            <p className="mt-3 inline-block rounded-full bg-coral/15 px-3 py-1 text-sm text-coral ring-1 ring-coral/30">{pos <= 3 ? "Top 3 da região" : "Alerta: fora do Top 3"}</p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Posição real na região</p>
             <p className="font-display text-8xl font-semibold leading-none">{pos}º</p>
-            <p className="mt-3 text-surface/60">entre {empresas.length} clínicas num raio de {empresa.raio} km</p>
+            <p className="mt-3 text-surface/60">entre {empresas.length} empresas num raio de {empresa.raio} km</p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Dono da região</p>
@@ -71,7 +74,7 @@ function Reuniao() {
           ))}
         </div>
 
-        <h2 className="mt-20 font-display text-3xl font-semibold">Plano de implementação de 90 dias</h2>
+        <h2 className="print-break mt-20 font-display text-3xl font-semibold">Plano de implementação de 90 dias</h2>
         <div className="mt-6 grid gap-3 md:grid-cols-3">
           {plano.map(([m, t, d]) => (
             <div key={m} className="rounded-[14px] bg-surface/5 p-6 ring-1 ring-surface/10">
@@ -81,7 +84,7 @@ function Reuniao() {
             </div>
           ))}
         </div>
-        <div className="mt-14 text-center">
+        <div className="no-print mt-14 text-center">
           <button className="rounded-lg bg-mint px-8 py-4 font-display text-lg font-semibold text-ink hover:bg-mint/90">Iniciar Projeto com a Inove</button>
         </div>
       </div>

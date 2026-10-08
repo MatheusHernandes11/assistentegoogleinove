@@ -1,3 +1,4 @@
+import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, Bar, fmt } from "@/components/AppShell";
 import { empresa, empresas, lider, media, pesquisarKeywords, posicao, ranking, score, voce } from "@/lib/data";
@@ -16,10 +17,11 @@ export const Route = createFileRoute("/")({
 });
 
 function Painel() {
+  useAuditoria();
   const s = score(voce), L = lider(), sl = score(L), pos = posicao();
   const top = ranking().filter((e) => !e.voce).slice(0, 2);
   const mediaScore = Math.round(empresas.filter((e) => !e.voce).reduce((a, e) => a + score(e), 0) / (empresas.length - 1));
-  const kws = pesquisarKeywords("dentista londrina").slice(0, 4);
+  const kws = pesquisarKeywords(`${empresa.segmento.split(" ")[0]} ${empresa.cidade}`.toLowerCase()).slice(0, 4);
   const conc = { Alta: "text-coral", Média: "text-amber", Baixa: "text-mint" };
 
   return (

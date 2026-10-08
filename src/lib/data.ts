@@ -36,6 +36,61 @@ export const ranking = () => [...empresas].sort((a, b) => score(b) - score(a));
 export const voce = empresas[0]!;
 export const lider = () => ranking().filter((e) => !e.voce)[0]!;
 export const posicao = () => ranking().findIndex((e) => e.voce) + 1;
+
+// ---------- Auditoria dinâmica (dados simulados a partir do nome) ----------
+export type Perfil = { nome: string; cidade: string; endereco: string; segmento: string };
+const original = { empresa: { ...empresa }, empresas: empresas.map((e) => ({ ...e })) };
+let versao = 0;
+const ouvintes = new Set<() => void>();
+
+function rng(texto: string) {
+  let s = [...texto].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+  return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+}
+
+export function gerarAuditoria(p: Perfil) {
+  const r = rng(`${p.nome}|${p.cidade}|${p.segmento}`.toLowerCase());
+  const base = p.segmento.split(" ")[0] || "Empresa";
+  const sufixos = ["Prime", "Centro", "Mais", "Vitta", "Premium", "Express", "Total"];
+  const mk = (id: string, nome: string, voce = false): Empresa => {
+    const av = Math.round(40 + r() * 800);
+    return {
+      id, nome, voce, nota: Math.round((4 + r() * 0.95) * 10) / 10, avaliacoes: av,
+      fotos: Math.round(av * (0.25 + r() * 0.3)), servicos: Math.round(6 + r() * 13),
+      categorias: Math.round(2 + r() * 2), site: r() > 0.2,
+      distancia: voce ? 0 : Math.round((0.5 + r() * 8) * 10) / 10,
+      x: voce ? 50 : Math.round(15 + r() * 70), y: voce ? 50 : Math.round(15 + r() * 70),
+    };
+  };
+  const voceNovo = mk("voce", p.nome, true);
+  voceNovo.avaliacoes = Math.min(voceNovo.avaliacoes, 260); // cenário típico de auditoria
+  return [voceNovo, ...sufixos.map((s, i) => mk(String.fromCharCode(97 + i), `${base} ${s}`))];
+}
+
+function aplicar(perfil: Perfil, lista: Empresa[]) {
+  Object.assign(empresa, perfil);
+  Object.assign(voce, lista[0]);
+  empresas.splice(1, empresas.length - 1, ...lista.slice(1));
+  versao++;
+  ouvintes.forEach((f) => f());
+}
+
+export function analisarEmpresa(p: Perfil) {
+  aplicar(p, gerarAuditoria(p));
+  if (typeof window !== "undefined") localStorage.setItem("inove-perfil", JSON.stringify(p));
+}
+export function voltarExemplo() {
+  aplicar(original.empresa, original.empresas.map((e) => ({ ...e })));
+  if (typeof window !== "undefined") localStorage.removeItem("inove-perfil");
+}
+export function carregarSalvo() {
+  try {
+    const raw = localStorage.getItem("inove-perfil");
+    if (raw) aplicar(JSON.parse(raw), gerarAuditoria(JSON.parse(raw)));
+  } catch { /* ignora */ }
+}
+export const assinar = (f: () => void) => { ouvintes.add(f); return () => { ouvintes.delete(f); }; };
+export const lerVersao = () => versao;
 export const media = (k: "avaliacoes" | "fotos" | "nota" | "servicos" | "categorias") => {
   const o = empresas.filter((e) => !e.voce);
   return o.reduce((s, e) => s + e[k], 0) / o.length;
