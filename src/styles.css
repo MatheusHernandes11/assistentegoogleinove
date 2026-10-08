@@ -94,3 +94,14 @@
   color: var(--muted-foreground);
 }
 @utility bg-glow { background: var(--glow); }
+
+@media print {
+  @page { size: A4; margin: 12mm; }
+  html, body { background: white !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .no-print { display: none !important; }
+  .pitch { --ink: oklch(1 0 0); --surface: oklch(0.2 0.005 285); min-height: 0; }
+  .pitch .text-8xl { font-size: 4.5rem; }
+  .pitch h2 { margin-top: 2.5rem; }
+  .pitch .grid > div { break-inside: avoid; }
+  .print-break { break-before: page; margin-top: 0 !important; }
+}
