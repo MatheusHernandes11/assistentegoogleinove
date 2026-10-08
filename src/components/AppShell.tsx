@@ -30,7 +30,8 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
             ))}
           </nav>
           <div className="flex items-center gap-3">
-            <span className="hidden rounded-full bg-mint/10 px-3 py-1 text-xs font-medium text-mint ring-1 ring-mint/25 sm:inline">
+            <NovaAuditoria />
+            <span className="hidden rounded-full bg-mint/10 px-3 py-1 text-xs font-medium text-mint ring-1 ring-mint/25 xl:inline">
               {empresa.nome} · {empresa.cidade}
             </span>
             <Link to="/reuniao" className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-ink/90">

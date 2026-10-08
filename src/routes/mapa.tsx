@@ -1,3 +1,4 @@
+import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell, fmt } from "@/components/AppShell";
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/mapa")({
 const raios = [1, 3, 5, 10];
 
 function Mapa() {
+  useAuditoria();
   const [raio, setRaio] = useState(5);
   const [sel, setSel] = useState("b");
   const visiveis = empresas.filter((e) => e.distancia <= raio);

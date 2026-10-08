@@ -1,3 +1,4 @@
+import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell, fmt } from "@/components/AppShell";
@@ -29,6 +30,7 @@ function pts(e: Empresa) {
 }
 
 function Radar() {
+  useAuditoria();
   const outros = ranking().filter((e) => !e.voce);
   const [ids, setIds] = useState([outros[0]!.id, outros[1]!.id]);
   const sel = ids.map((id) => empresas.find((e) => e.id === id)!);

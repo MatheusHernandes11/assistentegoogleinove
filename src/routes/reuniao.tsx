@@ -1,3 +1,4 @@
+import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { fmt } from "@/components/AppShell";
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/reuniao")({
 });
 
 function Reuniao() {
+  useAuditoria();
   const [script, setScript] = useState(true);
   const L = lider(), pos = posicao(), s = 64;
   const pontos = [
