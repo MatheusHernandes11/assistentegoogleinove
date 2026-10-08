@@ -18,7 +18,7 @@ export const Route = createFileRoute("/radar")({
 
 const eixos: { k: keyof Empresa; label: string; max: number }[] = [
   { k: "nota", label: "Nota", max: 5 }, { k: "avaliacoes", label: "Avaliações", max: 842 },
-  { k: "fotos", label: "Fotos", max: 312 }, { k: "servicos", label: "Serviços", max: 19 }, { k: "categorias", label: "Categorias", max: 4 },
+  { k: "fotos", label: "Fotos", max: 312 }, { k: "categorias", label: "Categorias", max: 4 },
 ];
 
 function pts(e: Empresa) {
@@ -37,7 +37,7 @@ function Radar() {
   const A = sel[0]!;
   const linhas: [string, (e: Empresa) => string][] = [
     ["Nota", (e) => fmt(e.nota, 1)], ["Avaliações", (e) => String(e.avaliacoes)], ["Fotos", (e) => String(e.fotos)],
-    ["Serviços", (e) => String(e.servicos)], ["Categorias", (e) => String(e.categorias)], ["Site", (e) => (e.site ? "✓" : "—")], ["Presença local", (e) => String(score(e))],
+    ["Categorias", (e) => String(e.categorias)], ["Site", (e) => (e.site ? "✓" : "—")], ["Presença local", (e) => String(score(e))],
   ];
 
   return (
@@ -46,7 +46,7 @@ function Radar() {
         <section className="tile col-span-12 lg:col-span-5">
           <span className="eyebrow">Radar</span>
           <svg viewBox="0 0 200 200" className="mx-auto mt-4 w-full max-w-sm">
-            {[0.25, 0.5, 0.75, 1].map((r) => <polygon key={r} points={pts({ ...voce, nota: 5 * r, avaliacoes: 842 * r, fotos: 312 * r, servicos: 19 * r, categorias: 4 * r })} className="fill-none stroke-ink/10" />)}
+            {[0.25, 0.5, 0.75, 1].map((r) => <polygon key={r} points={pts({ ...voce, nota: 5 * r, avaliacoes: 842 * r, fotos: 312 * r, categorias: 4 * r })} className="fill-none stroke-ink/10" />)}
             {eixos.map((a, i) => { const ang = (Math.PI * 2 * i) / eixos.length - Math.PI / 2; return <text key={a.label} x={100 + Math.cos(ang) * 94} y={100 + Math.sin(ang) * 94} textAnchor="middle" dominantBaseline="middle" className="fill-muted-foreground text-[7px]">{a.label}</text>; })}
             <polygon points={pts(A)} className="fill-coral/15 stroke-coral" />
             <polygon points={pts(voce)} className="fill-mint/25 stroke-mint" strokeWidth={1.5} />
