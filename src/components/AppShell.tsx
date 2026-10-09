@@ -12,6 +12,7 @@ const nav = [
 ] as const;
 
 export function AppShell({ title, subtitle, children }: { title: string; subtitle: string; children?: ReactNode }) {
+  const { pronto } = useAuditoria();
   return (
     <div className="min-h-screen bg-paper text-ink">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-glow" />

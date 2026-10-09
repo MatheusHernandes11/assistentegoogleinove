@@ -135,7 +135,7 @@ function Painel() {
             <span className="rounded-full bg-surface/10 px-2 py-0.5 text-xs font-medium text-surface/80 ring-1 ring-surface/15">Pitch</span>
           </div>
           <p className="mt-5 font-display text-xl font-semibold tracking-tight">{empresa.nome} · {s}/100</p>
-          <p className="mt-1 text-sm text-surface/60">{pos}º de {empresas.length} empresas · 4 pontos críticos · plano de 90 dias</p>
+          <p className="mt-1 text-sm text-surface/60">{pos}º de {empresas.length} empresas · {pontosCriticos().length} pontos críticos · plano de 90 dias</p>
           <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-surface/15"><div className="h-full rounded-full bg-mint" style={{ width: `${s}%` }} /></div>
           <Link to="/reuniao" className="mt-6 inline-flex rounded-lg bg-mint px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-mint/90">Abrir apresentação</Link>
         </section>
