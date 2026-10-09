@@ -2,7 +2,8 @@ import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { fmt } from "@/components/AppShell";
-import { empresa, empresas, lider, posicao, score, voce } from "@/lib/data";
+import { Navigate } from "@tanstack/react-router";
+import { empresa, empresas, lider, pontosCriticos, posicao, score, temDados, voce } from "@/lib/data";
 
 export const Route = createFileRoute("/reuniao")({
   head: () => ({
@@ -17,18 +18,15 @@ export const Route = createFileRoute("/reuniao")({
 });
 
 function Reuniao() {
-  useAuditoria();
   const [script, setScript] = useState(true);
+  const { pronto } = useAuditoria();
+  if (!pronto) return null;
+  if (!temDados()) return <Navigate to="/" />;
   const L = lider(), pos = posicao(), s = score(voce);
-  const pontos = [
-    { t: "Volume de avaliações", d: `Você tem ${voce.avaliacoes} avaliações e o líder tem ${L.avaliacoes} — desvantagem de ${L.avaliacoes - voce.avaliacoes}.`, p: "O Google confia em quem tem mais prova social. Cada avaliação que falta é um cliente que escolhe o vizinho." },
-    { t: "Acervo de fotos", d: `A concorrência tem ${L.fotos} fotos contra ${voce.fotos} suas.`, p: "Fichas com mais fotos recebem mais pedidos de rota. Quem não mostra, não é visitado." },
-    { t: "Serviços omitidos", d: `Serviços de ${empresa.segmento.toLowerCase()} buscados em ${empresa.cidade} não estão na sua ficha.`, p: "Você faz o serviço, mas para o Google você não faz. Isso é invisibilidade comercial." },
-    { t: "Recência de avaliações", d: "Sua última avaliação foi há 3 semanas.", p: "Para o Google, ficha parada é empresa parada. O líder recebe avaliações toda semana." },
-  ];
+  const pontos = pontosCriticos();
   const plano = [
     ["Mês 1", "Fundação", "Ficha otimizada, serviços e categorias completos, 40 fotos profissionais."],
-    ["Mês 2", "Prova social", "Campanha de avaliações com pacientes, respostas a todas as avaliações."],
+    ["Mês 2", "Prova social", "Campanha de avaliações com clientes, respostas a todas as avaliações."],
     ["Mês 3", "Domínio", "Posts semanais, palavras-chave locais e meta de entrar no Top 3."],
   ];
 
@@ -62,7 +60,7 @@ function Reuniao() {
           </div>
         </section>
 
-        <h2 className="mt-20 font-display text-3xl font-semibold">Os 4 pontos críticos</h2>
+        <h2 className="mt-20 font-display text-3xl font-semibold">Os {pontos.length} pontos críticos</h2>
         <div className="mt-6 grid gap-3 md:grid-cols-2">
           {pontos.map((p, i) => (
             <div key={p.t} className="rounded-[14px] bg-surface/5 p-6 ring-1 ring-surface/10">

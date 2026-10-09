@@ -17,7 +17,7 @@ export function NovaAuditoria() {
   const [erro, setErro] = useState<string | null>(null);
   const [f, setF] = useState({ nome: "", cidade: "", endereco: "", segmento: "", raio: "5" });
 
-  if (typeof window !== "undefined") window.onabrirauditoria = () => setAberto(true);
+  if (typeof window !== "undefined") window.onabrirauditoria = () => (user === null ? window.location.assign("/auth") : setAberto(true));
 
   const campo = (k: "nome" | "cidade" | "endereco" | "segmento", label: string, ph: string) => (
     <label className="block text-sm">

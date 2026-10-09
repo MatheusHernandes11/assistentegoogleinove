@@ -100,3 +100,16 @@ export function pesquisarKeywords(q: string): Keyword[] {
   const conc = ["Alta", "Alta", "Média", "Baixa", "Média"] as const;
   return termos.map((termo, i) => ({ termo, volume: Math.round((1900 / (i + 1)) * (0.8 + ((seed + i) % 5) / 10)), cpc: 2 + ((seed + i * 3) % 50) / 10, concorrencia: conc[i]!, posicao: null }));
 }
+
+/** Pontos críticos reais: só entram se houver desvantagem frente ao líder. */
+export function pontosCriticos() {
+  const v = voce, L = lider(), dias = diasDesdeUltimaAvaliacao();
+  const p: { t: string; d: string; p: string }[] = [];
+  if (L.avaliacoes > v.avaliacoes) p.push({ t: "Volume de avaliações", d: `Você tem ${v.avaliacoes} avaliações e o líder (${L.nome}) tem ${L.avaliacoes} — desvantagem de ${L.avaliacoes - v.avaliacoes}.`, p: "O Google confia em quem tem mais prova social. Cada avaliação que falta é um cliente que escolhe o vizinho." });
+  if (L.nota > v.nota) p.push({ t: "Nota média", d: `Sua nota é ${v.nota.toFixed(1)} e a do líder é ${L.nota.toFixed(1)}.`, p: "Clientes comparam estrelas antes de ligar. Diferenças pequenas mudam a escolha." });
+  if (L.fotos > v.fotos) p.push({ t: "Acervo de fotos", d: `O líder exibe ${L.fotos} fotos contra ${v.fotos} suas (o Google mostra até 10 por consulta).`, p: "Fichas com mais fotos recebem mais pedidos de rota. Quem não mostra, não é visitado." });
+  if (!v.site) p.push({ t: "Sem site na ficha", d: "Sua ficha no Google não tem site cadastrado.", p: "Sem site, o cliente não tem para onde ir depois de te achar — e o Google entende menos sobre o seu negócio." });
+  if (L.categorias > v.categorias) p.push({ t: "Categorias", d: `O líder usa ${L.categorias} categorias e você ${v.categorias}.`, p: "Cada categoria é uma porta de entrada em buscas diferentes. Você está deixando portas fechadas." });
+  if (dias !== null && dias > 14) p.push({ t: "Recência de avaliações", d: `Sua avaliação mais recente foi há ${dias} dias.`, p: "Para o Google, ficha parada é empresa parada." });
+  return p;
+}

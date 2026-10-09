@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { NovaAuditoria } from "./NovaAuditoria";
 import { useAuditoria } from "@/lib/use-auditoria";
 import type { ReactNode } from "react";
-import { empresa } from "@/lib/data";
+import { empresa, temDados } from "@/lib/data";
 
 const nav = [
   { to: "/", label: "Painel" },
@@ -11,7 +11,8 @@ const nav = [
   { to: "/radar", label: "Radar" },
 ] as const;
 
-export function AppShell({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
+export function AppShell({ title, subtitle, children }: { title: string; subtitle: string; children?: ReactNode }) {
+  const { pronto } = useAuditoria();
   return (
     <div className="min-h-screen bg-paper text-ink">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-glow" />
@@ -34,7 +35,7 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
           <div className="flex items-center gap-3">
             <NovaAuditoria />
             <span className="hidden rounded-full bg-mint/10 px-3 py-1 text-xs font-medium text-mint ring-1 ring-mint/25 xl:inline">
-              {empresa.nome} · {empresa.cidade}
+              {empresa.nome ? `${empresa.nome} · ${empresa.cidade}` : "Nenhuma empresa"}
             </span>
             <Link to="/reuniao" className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-ink/90">
               Modo Reunião
@@ -50,10 +51,16 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-surface px-3 py-2 text-sm ring-1 ring-border">
             <span className="size-2 rounded-full bg-mint" />
-            <span className="text-muted-foreground">Monitoramento ativo · dados simulados</span>
+            <span className="text-muted-foreground">Dados reais do Google</span>
           </div>
         </div>
-        {children}
+        {!pronto ? null : temDados() ? children : (
+          <div className="tile mx-auto max-w-lg py-12 text-center">
+            <h2 className="font-display text-2xl font-semibold">Comece uma auditoria</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Digite o nome de uma empresa e a cidade. Buscamos no Google a nota, as avaliações, as fotos e os concorrentes reais dentro do raio.</p>
+            <button onClick={() => window.onabrirauditoria?.()} className="mt-6 rounded-lg bg-ink px-5 py-2.5 text-sm font-medium text-surface hover:bg-ink/90">+ Analisar empresa</button>
+          </div>
+        )}
       </div>
     </div>
   );

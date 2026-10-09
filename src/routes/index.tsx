@@ -1,8 +1,8 @@
 import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, Bar, fmt } from "@/components/AppShell";
-import { empresa, empresas, lider, media, pesquisarKeywords, posicao, ranking, score, voce } from "@/lib/data";
-import mapa from "@/assets/mapa-londrina.jpg";
+import { empresa, empresas, lider, media, mediaScore as calcMedia, pontosCriticos, posicao, ranking, score, temDados, voce } from "@/lib/data";
+import { MapaGoogle, projetar, zoomPara } from "@/components/MapaGoogle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,11 +18,10 @@ export const Route = createFileRoute("/")({
 
 function Painel() {
   useAuditoria();
+  if (!temDados()) return <AppShell title="Painel de presença local" subtitle="Dados reais do Google Maps" />;
   const s = score(voce), L = lider(), sl = score(L), pos = posicao();
   const top = ranking().filter((e) => !e.voce).slice(0, 2);
-  const mediaScore = Math.round(empresas.filter((e) => !e.voce).reduce((a, e) => a + score(e), 0) / (empresas.length - 1));
-  const kws = pesquisarKeywords(`${empresa.segmento.split(" ")[0]} ${empresa.cidade}`.toLowerCase()).slice(0, 4);
-  const conc = { Alta: "text-coral", Média: "text-amber", Baixa: "text-mint" };
+  const mediaScore = calcMedia();
 
   return (
     <AppShell title="Painel de presença local" subtitle={`Raio de ${empresa.raio} km em ${empresa.cidade} · ${empresa.segmento}`}>
@@ -30,14 +29,14 @@ function Painel() {
         <section className="tile col-span-12 md:col-span-6 lg:col-span-3">
           <div className="flex items-center justify-between">
             <span className="eyebrow">Score Inove</span>
-            <span className="rounded-full bg-mint/10 px-2 py-0.5 text-xs font-medium text-mint ring-1 ring-mint/25">+6 / 30d</span>
+            
           </div>
           <div className="mt-6 flex items-end gap-1.5">
             <span className="font-display text-6xl font-semibold leading-none tracking-tight">{s}</span>
             <span className="mb-1.5 text-lg text-muted-foreground">/ 100</span>
           </div>
           <div className="mt-4"><Bar value={s} /></div>
-          <p className="mt-3 text-sm text-muted-foreground">Média da região: {mediaScore}. {pos}º de {empresas.length} clínicas.</p>
+          <p className="mt-3 text-sm text-muted-foreground">Média da região: {mediaScore}. {pos}º de {empresas.length} empresas.</p>
         </section>
 
         <section className="tile col-span-12 md:col-span-6 lg:col-span-4">
@@ -56,9 +55,11 @@ function Painel() {
         <Link to="/mapa" className="tile col-span-12 block transition hover:ring-mint/40 lg:col-span-5">
           <span className="eyebrow">Raio {empresa.raio} km · {empresa.cidade}</span>
           <div className="mt-4 flex gap-4">
-            <img src={mapa} alt="Mapa de concorrentes em Londrina" width={960} height={720} className="aspect-[4/3] w-full rounded-lg object-cover ring-1 ring-border" />
+            <MapaGoogle zoom={zoomPara(empresa.raio)} className="w-full">
+              {empresas.map((x) => { const p = projetar(x.lat, x.lng, zoomPara(empresa.raio)); return <span key={x.id} className={`absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-surface ${x.voce ? "bg-mint" : "bg-coral"}`} style={{ left: `${p.x}%`, top: `${p.y}%` }} />; })}
+            </MapaGoogle>
             <div className="flex w-32 shrink-0 flex-col justify-between text-sm">
-              <div><p className="font-display text-xl font-semibold">{empresas.length}</p><p className="text-xs text-muted-foreground">clínicas no raio</p></div>
+              <div><p className="font-display text-xl font-semibold">{empresas.length}</p><p className="text-xs text-muted-foreground">empresas no raio</p></div>
               <div><p className="font-display text-xl font-semibold text-mint">{pos}º</p><p className="text-xs text-muted-foreground">sua posição</p></div>
               <div><p className="font-display text-xl font-semibold text-coral">4</p><p className="text-xs text-muted-foreground">pontos críticos</p></div>
             </div>
@@ -105,31 +106,27 @@ function Painel() {
               <div className="size-[82%] animate-[spin_12s_linear_infinite] rounded-full ring-1 ring-mint/40" style={{ background: "conic-gradient(from 90deg, color-mix(in oklab, var(--mint) 35%, transparent), color-mix(in oklab, var(--mint) 7%, transparent), color-mix(in oklab, var(--mint) 35%, transparent))" }} />
             </div>
           </div>
-          <p className="mt-4 text-center text-sm text-muted-foreground">Sua nota está perto do líder, mas você perde em avaliações e fotos.</p>
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            {L.avaliacoes > voce.avaliacoes ? `O líder tem ${L.avaliacoes - voce.avaliacoes} avaliações a mais que você.` : "Você tem mais avaliações que o líder."}{" "}
+            {voce.nota >= L.nota ? "Sua nota é igual ou maior." : `Sua nota é ${fmt(L.nota - voce.nota, 1)} menor.`}
+          </p>
         </Link>
 
         <section className="tile col-span-12 lg:col-span-7">
           <div className="flex items-center justify-between">
-            <span className="eyebrow">Pesquisa de palavras-chave</span>
-            <Link to="/palavras-chave" className="text-xs text-muted-foreground hover:text-ink">Pesquisar →</Link>
+            <span className="eyebrow">Ranking da região · Inove Score</span>
+            <Link to="/palavras-chave" className="text-xs text-muted-foreground hover:text-ink">Ranking por busca →</Link>
           </div>
-          <div className="mt-4 overflow-hidden rounded-lg ring-1 ring-border">
-            <table className="w-full text-sm">
-              <thead className="bg-ink/5 text-left text-xs uppercase tracking-[0.08em] text-muted-foreground">
-                <tr><th className="px-4 py-3 font-medium">Termo</th><th className="px-4 py-3 text-right font-medium">Volume</th><th className="px-4 py-3 text-right font-medium">Concorrência</th><th className="px-4 py-3 text-right font-medium">Posição</th></tr>
-              </thead>
-              <tbody className="divide-y divide-border font-mono">
-                {kws.map((k) => (
-                  <tr key={k.termo}>
-                    <td className="px-4 py-3 font-sans">{k.termo}</td>
-                    <td className="px-4 py-3 text-right">{fmt(k.volume)}</td>
-                    <td className={`px-4 py-3 text-right ${conc[k.concorrencia]}`}>{k.concorrencia}</td>
-                    <td className="px-4 py-3 text-right font-semibold">{k.posicao ?? "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ol className="mt-4 max-h-72 divide-y divide-border overflow-auto rounded-lg ring-1 ring-border">
+            {ranking().map((e, i) => (
+              <li key={e.id} className={`flex items-center gap-3 px-4 py-2.5 text-sm ${e.voce ? "bg-mint/10" : ""}`}>
+                <span className="w-6 font-mono text-muted-foreground">{i + 1}</span>
+                <span className="flex-1 truncate font-medium">{e.nome}</span>
+                <span className="font-mono text-xs text-muted-foreground">★ {fmt(e.nota, 1)} · {e.avaliacoes} · {fmt(e.distancia, 1)} km</span>
+                <span className="w-8 text-right font-mono font-semibold">{score(e)}</span>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section className="col-span-12 rounded-[14px] bg-ink p-6 text-surface lg:col-span-5">
@@ -138,7 +135,7 @@ function Painel() {
             <span className="rounded-full bg-surface/10 px-2 py-0.5 text-xs font-medium text-surface/80 ring-1 ring-surface/15">Pitch</span>
           </div>
           <p className="mt-5 font-display text-xl font-semibold tracking-tight">{empresa.nome} · {s}/100</p>
-          <p className="mt-1 text-sm text-surface/60">{pos}º de {empresas.length} clínicas · 4 pontos críticos · plano de 90 dias</p>
+          <p className="mt-1 text-sm text-surface/60">{pos}º de {empresas.length} empresas · {pontosCriticos().length} pontos críticos · plano de 90 dias</p>
           <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-surface/15"><div className="h-full rounded-full bg-mint" style={{ width: `${s}%` }} /></div>
           <Link to="/reuniao" className="mt-6 inline-flex rounded-lg bg-mint px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-mint/90">Abrir apresentação</Link>
         </section>
