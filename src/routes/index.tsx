@@ -1,7 +1,7 @@
 import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, Bar, fmt } from "@/components/AppShell";
-import { empresa, empresas, lider, media, mediaScore as calcMedia, posicao, ranking, score, temDados, voce } from "@/lib/data";
+import { empresa, empresas, lider, media, mediaScore as calcMedia, pontosCriticos, posicao, ranking, score, temDados, voce } from "@/lib/data";
 import { MapaGoogle, projetar, zoomPara } from "@/components/MapaGoogle";
 
 export const Route = createFileRoute("/")({
