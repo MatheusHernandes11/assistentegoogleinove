@@ -106,31 +106,27 @@ function Painel() {
               <div className="size-[82%] animate-[spin_12s_linear_infinite] rounded-full ring-1 ring-mint/40" style={{ background: "conic-gradient(from 90deg, color-mix(in oklab, var(--mint) 35%, transparent), color-mix(in oklab, var(--mint) 7%, transparent), color-mix(in oklab, var(--mint) 35%, transparent))" }} />
             </div>
           </div>
-          <p className="mt-4 text-center text-sm text-muted-foreground">Sua nota está perto do líder, mas você perde em avaliações e fotos.</p>
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            {L.avaliacoes > voce.avaliacoes ? `O líder tem ${L.avaliacoes - voce.avaliacoes} avaliações a mais que você.` : "Você tem mais avaliações que o líder."}{" "}
+            {voce.nota >= L.nota ? "Sua nota é igual ou maior." : `Sua nota é ${fmt(L.nota - voce.nota, 1)} menor.`}
+          </p>
         </Link>
 
         <section className="tile col-span-12 lg:col-span-7">
           <div className="flex items-center justify-between">
-            <span className="eyebrow">Pesquisa de palavras-chave</span>
-            <Link to="/palavras-chave" className="text-xs text-muted-foreground hover:text-ink">Pesquisar →</Link>
+            <span className="eyebrow">Ranking da região · Inove Score</span>
+            <Link to="/palavras-chave" className="text-xs text-muted-foreground hover:text-ink">Ranking por busca →</Link>
           </div>
-          <div className="mt-4 overflow-hidden rounded-lg ring-1 ring-border">
-            <table className="w-full text-sm">
-              <thead className="bg-ink/5 text-left text-xs uppercase tracking-[0.08em] text-muted-foreground">
-                <tr><th className="px-4 py-3 font-medium">Termo</th><th className="px-4 py-3 text-right font-medium">Volume</th><th className="px-4 py-3 text-right font-medium">Concorrência</th><th className="px-4 py-3 text-right font-medium">Posição</th></tr>
-              </thead>
-              <tbody className="divide-y divide-border font-mono">
-                {kws.map((k) => (
-                  <tr key={k.termo}>
-                    <td className="px-4 py-3 font-sans">{k.termo}</td>
-                    <td className="px-4 py-3 text-right">{fmt(k.volume)}</td>
-                    <td className={`px-4 py-3 text-right ${conc[k.concorrencia]}`}>{k.concorrencia}</td>
-                    <td className="px-4 py-3 text-right font-semibold">{k.posicao ?? "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ol className="mt-4 max-h-72 divide-y divide-border overflow-auto rounded-lg ring-1 ring-border">
+            {ranking().map((e, i) => (
+              <li key={e.id} className={`flex items-center gap-3 px-4 py-2.5 text-sm ${e.voce ? "bg-mint/10" : ""}`}>
+                <span className="w-6 font-mono text-muted-foreground">{i + 1}</span>
+                <span className="flex-1 truncate font-medium">{e.nome}</span>
+                <span className="font-mono text-xs text-muted-foreground">★ {fmt(e.nota, 1)} · {e.avaliacoes} · {fmt(e.distancia, 1)} km</span>
+                <span className="w-8 text-right font-mono font-semibold">{score(e)}</span>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section className="col-span-12 rounded-[14px] bg-ink p-6 text-surface lg:col-span-5">
