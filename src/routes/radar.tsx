@@ -2,7 +2,7 @@ import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell, fmt } from "@/components/AppShell";
-import { empresas, ranking, score, voce, type Empresa } from "@/lib/data";
+import { empresas, ranking, score, temDados, voce, type Empresa } from "@/lib/data";
 
 export const Route = createFileRoute("/radar")({
   head: () => ({
@@ -16,10 +16,10 @@ export const Route = createFileRoute("/radar")({
   component: Radar,
 });
 
-const eixos: { k: keyof Empresa; label: string; max: number }[] = [
-  { k: "nota", label: "Nota", max: 5 }, { k: "avaliacoes", label: "Avaliações", max: 842 },
-  { k: "fotos", label: "Fotos", max: 312 }, { k: "categorias", label: "Categorias", max: 4 },
+const eixosBase: { k: keyof Empresa; label: string }[] = [
+  { k: "nota", label: "Nota" }, { k: "avaliacoes", label: "Avaliações" }, { k: "fotos", label: "Fotos" }, { k: "categorias", label: "Categorias" },
 ];
+let eixos: { k: keyof Empresa; label: string; max: number }[] = [];
 
 function pts(e: Empresa) {
   return eixos.map((a, i) => {
@@ -32,7 +32,10 @@ function pts(e: Empresa) {
 function Radar() {
   useAuditoria();
   const outros = ranking().filter((e) => !e.voce);
-  const [ids, setIds] = useState([outros[0]!.id, outros[1]!.id]);
+  const [idsSel, setIds] = useState<string[]>([]);
+  if (!temDados() || outros.length === 0) return <AppShell title="Radar de concorrência" subtitle="" />;
+  eixos = eixosBase.map((a) => ({ ...a, max: a.k === "nota" ? 5 : Math.max(1, ...empresas.map((e) => e[a.k] as number)) }));
+  const ids = [idsSel[0] ?? outros[0]!.id, idsSel[1] ?? (outros[1] ?? outros[0]!).id];
   const sel = ids.map((id) => empresas.find((e) => e.id === id)!);
   const A = sel[0]!;
   const linhas: [string, (e: Empresa) => string][] = [
@@ -60,7 +63,7 @@ function Radar() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="eyebrow mr-2">Comparar com</span>
             {[0, 1].map((i) => (
-              <select key={i} value={ids[i]} onChange={(e) => setIds((p) => p.map((x, j) => (j === i ? e.target.value : x)))} className="rounded-lg bg-paper px-3 py-2 text-sm ring-1 ring-border">
+              <select key={i} value={ids[i]} onChange={(e) => setIds(ids.map((x, j) => (j === i ? e.target.value : x)))} className="rounded-lg bg-paper px-3 py-2 text-sm ring-1 ring-border">
                 {outros.map((o) => <option key={o.id} value={o.id}>{o.nome}</option>)}
               </select>
             ))}
