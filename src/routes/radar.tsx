@@ -49,7 +49,7 @@ function Radar() {
         <section className="tile col-span-12 lg:col-span-5">
           <span className="eyebrow">Radar</span>
           <svg viewBox="0 0 200 200" className="mx-auto mt-4 w-full max-w-sm">
-            {[0.25, 0.5, 0.75, 1].map((r) => <polygon key={r} points={pts({ ...voce, nota: 5 * r, avaliacoes: 842 * r, fotos: 312 * r, categorias: 4 * r })} className="fill-none stroke-ink/10" />)}
+            {[0.25, 0.5, 0.75, 1].map((r) => <polygon key={r} points={pts({ ...voce, ...Object.fromEntries(eixos.map((a) => [a.k, a.max * r])) } as Empresa)} className="fill-none stroke-ink/10" />)}
             {eixos.map((a, i) => { const ang = (Math.PI * 2 * i) / eixos.length - Math.PI / 2; return <text key={a.label} x={100 + Math.cos(ang) * 94} y={100 + Math.sin(ang) * 94} textAnchor="middle" dominantBaseline="middle" className="fill-muted-foreground text-[7px]">{a.label}</text>; })}
             <polygon points={pts(A)} className="fill-coral/15 stroke-coral" />
             <polygon points={pts(voce)} className="fill-mint/25 stroke-mint" strokeWidth={1.5} />
