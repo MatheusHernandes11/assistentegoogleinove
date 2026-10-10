@@ -74,7 +74,7 @@ function Painel() {
           <div className="mt-4 overflow-hidden rounded-lg ring-1 ring-border">
             <table className="w-full text-sm">
               <thead className="bg-ink/5 text-left text-xs uppercase tracking-[0.08em] text-muted-foreground">
-                <tr>{["Clínica", "Avaliações", "Nota", "Fotos", "Score"].map((h, i) => <th key={h} className={`px-4 py-3 font-medium ${i ? "text-right" : ""}`}>{h}</th>)}</tr>
+                <tr>{[empresa.segmento || "Empresa", "Avaliações", "Nota", "Fotos", "Score"].map((h, i) => <th key={h} className={`px-4 py-3 font-medium ${i ? "text-right" : ""}`}>{h}</th>)}</tr>
               </thead>
               <tbody className="divide-y divide-border font-mono">
                 {[voce, ...top].map((e) => (
