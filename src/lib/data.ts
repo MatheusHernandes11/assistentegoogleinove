@@ -15,10 +15,34 @@ export type Perfil = {
   raio: number;
 };
 
+// Dados padrão iniciais (garante que o SSR e a primeira abertura nunca fiquem em branco)
+const auditoriaInicialPadrao: Auditoria = gerarAuditoriaNacional({
+  nome: "Clínica Odonto Prime",
+  cidade: "São Paulo",
+  uf: "SP",
+  endereco: "Av. Paulista, 1000",
+  segmento: "Clínica Odontológica",
+  raio: 5,
+});
+
 export const empresa: Perfil & { ultimaAvaliacao: string | null; centro: { lat: number; lng: number } | null; real: boolean } = {
-  nome: "", cidade: "", uf: "", endereco: "", segmento: "", raio: 5, ultimaAvaliacao: null, centro: null, real: false,
+  ...auditoriaInicialPadrao.perfil,
+  ultimaAvaliacao: auditoriaInicialPadrao.resultado.ultimaAvaliacao,
+  centro: auditoriaInicialPadrao.resultado.centro,
+  real: true,
 };
-export const empresas: Empresa[] = [];
+
+const c0 = auditoriaInicialPadrao.resultado.centro;
+const escalaInit = 40 / 5;
+const posInit = (e: { lat: number; lng: number }) => ({
+  x: Math.max(3, Math.min(97, 50 + (e.lng - c0.lng) * 111 * Math.cos((c0.lat * Math.PI) / 180) * escalaInit)),
+  y: Math.max(3, Math.min(97, 50 - (e.lat - c0.lat) * 111 * escalaInit)),
+});
+
+export const empresas: Empresa[] = [
+  { ...auditoriaInicialPadrao.resultado.voce, ...posInit(auditoriaInicialPadrao.resultado.voce), id: "voce", voce: true },
+  ...auditoriaInicialPadrao.resultado.concorrentes.map((c, i) => ({ ...c, ...posInit(c), id: `c${i}` })),
+];
 
 export const temDados = () => empresas.length > 0;
 const vazio: Empresa = { id: "voce", nome: "—", nota: 0, avaliacoes: 0, fotos: 0, categorias: 0, site: false, distancia: 0, lat: 0, lng: 0, x: 50, y: 50, voce: true };
@@ -84,7 +108,11 @@ export function aplicarAuditoria(a: Auditoria) {
     ...a.resultado.concorrentes.map((c, i) => ({ ...c, ...pos(c), id: `c${i}` })));
   versao++;
   ouvintes.forEach((f) => f());
-  if (typeof window !== "undefined") localStorage.setItem("inove-auditoria", JSON.stringify(a));
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem("inove-auditoria", JSON.stringify(a));
+    } catch { /* ignora */ }
+  }
 }
 
 export function carregarSalvo() {
@@ -93,21 +121,9 @@ export function carregarSalvo() {
       const raw = localStorage.getItem("inove-auditoria");
       if (raw) {
         aplicarAuditoria(JSON.parse(raw));
-        return;
       }
     }
   } catch { /* ignora */ }
-
-  // Carrega exemplo inicial padrão para não iniciar com tela vazia
-  const exemploInicial: Auditoria = gerarAuditoriaNacional({
-    nome: "Clínica Odonto Prime",
-    cidade: "São Paulo",
-    uf: "SP",
-    endereco: "Av. Paulista",
-    segmento: "Clínica Odontológica",
-    raio: 5,
-  });
-  aplicarAuditoria(exemploInicial);
 }
 
 export const assinar = (f: () => void) => { ouvintes.add(f); return () => { ouvintes.delete(f); }; };
