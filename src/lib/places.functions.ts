@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { gerarAuditoriaNacional, type Auditoria } from "./data";
+import { buscarMetricasGoogleAdsLive } from "./keywords-api";
 
 const GATEWAY = "https://connector-gateway.lovable.dev/google_maps/places/v1";
 
@@ -120,4 +121,10 @@ export const rankingPalavra = createServerFn({ method: "POST" })
       { placeId: "gen-4", nome: `Referência Regional`, nota: 4.6, avaliacoes: 140 },
       { placeId: "gen-5", nome: `Serviço Local Autorizado`, nota: 4.4, avaliacoes: 88 },
     ];
+  });
+
+export const consultarGoogleAdsLive = createServerFn({ method: "POST" })
+  .validator((d) => z.object({ termos: z.array(z.string()), cidade: z.string().optional() }).parse(d))
+  .handler(async ({ data }) => {
+    return await buscarMetricasGoogleAdsLive(data.termos, data.cidade);
   });
