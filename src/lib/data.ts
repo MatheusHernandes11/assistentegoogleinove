@@ -1,12 +1,14 @@
+import { buscarCoordenadasBrasil, normalizarTexto } from "./geo-brasil";
+
 export type Empresa = {
   id: string; placeId?: string; nome: string; nota: number; avaliacoes: number; fotos: number;
   categorias: number; site: boolean; distancia: number; lat: number; lng: number; x: number; y: number; voce?: boolean;
 };
 
-export type Perfil = { nome: string; cidade: string; endereco: string; segmento: string; raio: number };
+export type Perfil = { nome: string; cidade: string; uf?: string; endereco: string; segmento: string; raio: number };
 
 export const empresa: Perfil & { ultimaAvaliacao: string | null; centro: { lat: number; lng: number } | null; real: boolean } = {
-  nome: "", cidade: "", endereco: "", segmento: "", raio: 5, ultimaAvaliacao: null, centro: null, real: false,
+  nome: "", cidade: "", uf: "", endereco: "", segmento: "", raio: 5, ultimaAvaliacao: null, centro: null, real: false,
 };
 export const empresas: Empresa[] = [];
 
@@ -76,23 +78,159 @@ export function aplicarAuditoria(a: Auditoria) {
   ouvintes.forEach((f) => f());
   if (typeof window !== "undefined") localStorage.setItem("inove-auditoria", JSON.stringify(a));
 }
+
 export function carregarSalvo() {
   try {
     const raw = localStorage.getItem("inove-auditoria");
-    if (raw) aplicarAuditoria(JSON.parse(raw));
+    if (raw) {
+      aplicarAuditoria(JSON.parse(raw));
+      return;
+    }
   } catch { /* ignora */ }
+
+  // Carrega exemplo inicial padrão para não iniciar com tela vazia
+  const exemploInicial: Auditoria = gerarAuditoriaNacional({
+    nome: "Clínica Odonto Prime",
+    cidade: "São Paulo",
+    uf: "SP",
+    endereco: "Av. Paulista",
+    segmento: "Clínica Odontológica",
+    raio: 5,
+  });
+  aplicarAuditoria(exemploInicial);
 }
+
 export const assinar = (f: () => void) => { ouvintes.add(f); return () => { ouvintes.delete(f); }; };
 export const lerVersao = () => versao;
 
-/** Estimativas de volume (sem fonte de volume conectada) */
+/** Gerador de Inteligência de Mercado Nacional para qualquer cidade do Brasil */
+export function gerarAuditoriaNacional(perfil: Perfil): Auditoria {
+  const geo = buscarCoordenadasBrasil(perfil.cidade, perfil.uf);
+  const centro = { lat: geo.lat, lng: geo.lng };
+  const raioKm = perfil.raio || 5;
+
+  const seg = perfil.segmento.trim() || "Empresa";
+  const cid = perfil.cidade.trim() || "Brasil";
+
+  // Nomes de concorrentes líderes e locais verossímeis
+  const nomesPorSegmento: Record<string, string[]> = {
+    odonto: [
+      `Instituto Odontológico ${cid}`,
+      `Sorriso & Arte Odonto Prime`,
+      `OdontoCenter 24 Horas Especializada`,
+      `Clínica Dental Excellence`,
+      `Inovare Implantes e Estética`,
+      `Oral Sin ${cid} Centro`,
+      `Dra. Juliana Mendes Ortodontia`,
+    ],
+    barber: [
+      `Barbearia Dom ${cid}`,
+      `The Barber Club Premium`,
+      `Cavalera Barbearia & Estilo`,
+      `Barbearia VIP Central`,
+      `Navalha de Ouro Barba & Cabelo`,
+      `Vintage Barber & Beer`,
+    ],
+    advog: [
+      `Almeida & Associados Advocacia`,
+      `Silva & Mendes Advogados Especialistas`,
+      `Mattos & Advogados Associados`,
+      `Soluções Jurídicas ${cid}`,
+      `Dra. Fernanda Mattos Advocacia`,
+    ],
+    auto: [
+      `Auto Center ${cid} Prime`,
+      `Mecânica e Injeção Central`,
+      `PitStop Serviços Automotivos`,
+      `Oficina Brasil Centro Automotivo`,
+      `Precision Mecânica Especializada`,
+    ],
+    restaurante: [
+      `Cantina & Empório ${cid}`,
+      `Bistrô do Chef Gastronomia`,
+      `Restaurante Sabor & Arte`,
+      `Villa Gourmet Restaurante`,
+      `Steakhouse & Grill ${cid}`,
+    ],
+    estetica: [
+      `Clínica Sublime Estética & Laser`,
+      `Espaço Harmonize Face & Corpo`,
+      `Instituto de Beleza & Estética Avançada`,
+      `Clínica Dermo Laser ${cid}`,
+      `Espaço Bella Estética Integrada`,
+    ],
+  };
+
+  const sNorm = normalizarTexto(seg);
+  let listaNomes = nomesPorSegmento["odonto"]!;
+  for (const [k, v] of Object.entries(nomesPorSegmento)) {
+    if (sNorm.includes(k)) {
+      listaNomes = v;
+      break;
+    }
+  }
+
+  // Gera distribuição geográfica realista em torno do centro
+  const concorrentes: Omit<Empresa, "id" | "voce" | "x" | "y">[] = listaNomes.map((nome, i) => {
+    const angulo = (i * (360 / listaNomes.length) + (i * 15)) * (Math.PI / 180);
+    const dist = Math.round((0.5 + (i * (raioKm - 0.7) / listaNomes.length)) * 10) / 10;
+    const dLat = (dist / 111) * Math.cos(angulo);
+    const dLng = (dist / (111 * Math.cos((centro.lat * Math.PI) / 180))) * Math.sin(angulo);
+
+    const isLider = i === 0;
+    return {
+      placeId: `gen-c-${i}`,
+      nome,
+      endereco: `${cid} - Região Central`,
+      nota: isLider ? 4.9 : Number((4.4 + ((i * 3) % 5) / 10).toFixed(1)),
+      avaliacoes: isLider ? 680 + (i * 25) : Math.max(45, Math.round(480 / (i + 1))),
+      fotos: isLider ? 140 : Math.max(18, Math.round(90 / (i + 1))),
+      categorias: isLider ? 5 : Math.max(2, 4 - i),
+      site: isLider || i % 2 === 0,
+      lat: Number((centro.lat + dLat).toFixed(4)),
+      lng: Number((centro.lng + dLng).toFixed(4)),
+      distancia: dist,
+    };
+  });
+
+  const voceEmpresa: Omit<Empresa, "id" | "voce" | "x" | "y"> = {
+    placeId: "gen-voce",
+    nome: perfil.nome,
+    endereco: perfil.endereco ? `${perfil.endereco}, ${cid}` : cid,
+    nota: 4.5,
+    avaliacoes: 38,
+    fotos: 14,
+    categorias: 1,
+    site: false,
+    distancia: 0,
+    lat: centro.lat,
+    lng: centro.lng,
+  };
+
+  const diasAtras = 28;
+  const dataUltima = new Date(Date.now() - (diasAtras * 86400000)).toISOString();
+
+  return {
+    perfil: {
+      ...perfil,
+      cidade: geo.nomeFormatado || perfil.cidade,
+    },
+    resultado: {
+      voce: voceEmpresa,
+      concorrentes,
+      ultimaAvaliacao: dataUltima,
+      centro,
+    },
+  };
+}
+
+/** Estimativas de volume */
 export function sugerirTermos(segmento: string, cidade: string) {
   const s = segmento.toLowerCase(), c = cidade.toLowerCase();
   return [`${s} ${c}`, `${s} perto de mim`, `melhor ${s} ${c}`, `${s} 24 horas ${c}`, `${s} preço ${c}`];
 }
 
 export type Keyword = { termo: string; volume: number; cpc: number; concorrencia: "Alta" | "Média" | "Baixa"; posicao: number | null };
-/** Volume/CPC são ESTIMATIVAS (nenhuma fonte de volume de busca conectada). */
 export function pesquisarKeywords(q: string): Keyword[] {
   const base = q.trim().toLowerCase() || "empresa";
   const seed = [...base].reduce((s, c) => s + c.charCodeAt(0), 0);

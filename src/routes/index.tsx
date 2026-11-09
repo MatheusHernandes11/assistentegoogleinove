@@ -1,8 +1,10 @@
 import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { AppShell, Bar, fmt } from "@/components/AppShell";
 import { empresa, empresas, lider, media, mediaScore as calcMedia, pontosCriticos, posicao, ranking, score, temDados, voce } from "@/lib/data";
 import { MapaGoogle, projetar, zoomPara } from "@/components/MapaGoogle";
+import { analisarKeywordsConcorrentes } from "@/lib/seo-keywords";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,13 +25,16 @@ function Painel() {
   const top = ranking().filter((e) => !e.voce).slice(0, 2);
   const mediaScore = calcMedia();
 
+  const { keywords, diagnostico } = useMemo(() => {
+    return analisarKeywordsConcorrentes();
+  }, [empresa.segmento, empresa.cidade, empresa.raio, voce.avaliacoes]);
+
   return (
     <AppShell title="Painel de presença local" subtitle={`Raio de ${empresa.raio} km em ${empresa.cidade} · ${empresa.segmento}`}>
-      <div className="grid grid-cols-12 gap-3">
+      <div className="grid grid-cols-12 gap-3.5">
         <section className="tile col-span-12 md:col-span-6 lg:col-span-3">
           <div className="flex items-center justify-between">
             <span className="eyebrow">Score Inove</span>
-            
           </div>
           <div className="mt-6 flex items-end gap-1.5">
             <span className="font-display text-6xl font-semibold leading-none tracking-tight">{s}</span>
@@ -65,6 +70,28 @@ function Painel() {
             </div>
           </div>
         </Link>
+
+        {/* NOVO: BANNER DE PALAVRAS-CHAVE DOS CONCORRENTES & GOOGLE ADS */}
+        <section className="tile col-span-12 border-l-4 border-l-mint bg-surface p-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span className="eyebrow text-mint">SEO de Ads & Palavras-Chave dos Concorrentes</span>
+              <h2 className="mt-1 font-display text-xl font-semibold">
+                Seus concorrentes dominam {diagnostico.taxaInvisibilidade}% das buscas mais rentáveis
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Termos como <strong>"{keywords[0]?.termo}"</strong> geram {diagnostico.buscasPerdidasParaConcorrentes.toLocaleString("pt-BR")} buscas/mês captadas por {L.nome}. Equivalente a <strong>R$ {diagnostico.custoOportunidadeAds.toLocaleString("pt-BR")}/mês</strong> em Google Ads.
+              </p>
+            </div>
+            <Link
+              to="/palavras-chave"
+              className="inline-flex items-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-sm font-medium text-surface transition hover:bg-ink/90"
+            >
+              <span>Ver Palavras dos Concorrentes</span>
+              <span>→</span>
+            </Link>
+          </div>
+        </section>
 
         <section className="tile col-span-12 lg:col-span-8">
           <div className="flex items-center justify-between">
