@@ -1,17 +1,13 @@
 import { useServerFn } from "@tanstack/react-start";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { aplicarAuditoria, empresa, gerarAuditoriaNacional } from "@/lib/data";
 import { ESTADOS_BRASIL } from "@/lib/geo-brasil";
 import { auditarEmpresa } from "@/lib/places.functions";
-import { useUsuario } from "@/lib/use-auditoria";
+import { useUsuario, useModalAuditoria, abrirModalAuditoria } from "@/lib/use-auditoria";
 
+export { abrirModalAuditoria };
 export function useAbrirAuditoria() {
-  return () => {
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new Event("abrir-auditoria"));
-      if (window.onabrirauditoria) window.onabrirauditoria();
-    }
-  };
+  return abrirModalAuditoria;
 }
 
 const PRESETS_CLIENTES = [
@@ -40,7 +36,7 @@ const NICHOS_RAPIDOS = [
 export function NovaAuditoria() {
   const user = useUsuario();
   const auditar = useServerFn(auditarEmpresa);
-  const [aberto, setAberto] = useState(false);
+  const { aberto, abrir, fechar } = useModalAuditoria();
   const [carregando, setCarregando] = useState(false);
   const [etapaStatus, setEtapaStatus] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
@@ -54,16 +50,6 @@ export function NovaAuditoria() {
     raio: "3",
   });
 
-  useEffect(() => {
-    window.onabrirauditoria = () => setAberto(true);
-    const handler = () => setAberto(true);
-    window.addEventListener("abrir-auditoria", handler);
-    return () => {
-      delete window.onabrirauditoria;
-      window.removeEventListener("abrir-auditoria", handler);
-    };
-  }, []);
-
   function carregarPreset(p: typeof PRESETS_CLIENTES[number]) {
     setF(p);
   }
@@ -71,8 +57,9 @@ export function NovaAuditoria() {
   return (
     <>
       <button
-        onClick={() => setAberto(true)}
-        className="flex items-center gap-1.5 rounded-lg bg-surface px-3 py-2 text-xs sm:text-sm font-medium ring-1 ring-border transition hover:ring-ink/40 shadow-2xs"
+        type="button"
+        onClick={() => abrir()}
+        className="flex items-center gap-1.5 rounded-lg bg-surface px-3 py-2 text-xs sm:text-sm font-medium ring-1 ring-border transition hover:ring-ink/40 shadow-2xs cursor-pointer"
       >
         <span className="text-mint font-bold text-sm">🎯</span>
         <span className="font-semibold">Nova Análise de Cliente</span>
@@ -80,12 +67,12 @@ export function NovaAuditoria() {
 
       {aberto && (
         <div
-          className="fixed inset-0 z-50 grid place-items-center bg-ink/50 p-4 backdrop-blur-sm overflow-y-auto"
-          onClick={() => !carregando && setAberto(false)}
+          className="fixed inset-0 z-50 grid place-items-center bg-ink/60 p-4 backdrop-blur-sm overflow-y-auto"
+          onClick={() => !carregando && fechar()}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="my-8 w-full max-w-xl space-y-5 rounded-[18px] bg-surface p-6 sm:p-8 shadow-2xl ring-1 ring-border"
+            className="my-8 w-full max-w-xl space-y-5 rounded-[18px] bg-surface p-6 sm:p-8 shadow-2xl ring-1 ring-border animate-in fade-in zoom-in-95 duration-150"
           >
             {/* Header da Ficha */}
             <div className="flex items-start justify-between border-b border-border/80 pb-4">
@@ -102,8 +89,8 @@ export function NovaAuditoria() {
               </div>
               <button
                 type="button"
-                onClick={() => setAberto(false)}
-                className="rounded-lg p-1.5 text-muted-foreground hover:bg-paper hover:text-ink transition"
+                onClick={() => fechar()}
+                className="rounded-lg p-1.5 text-muted-foreground hover:bg-paper hover:text-ink transition cursor-pointer"
               >
                 ✕
               </button>
@@ -156,7 +143,7 @@ export function NovaAuditoria() {
                     resultado = gerada.resultado;
                   }
                   aplicarAuditoria({ perfil, resultado });
-                  setAberto(false);
+                  fechar();
                 } catch (err) {
                   setErro(err instanceof Error ? err.message : "Não foi possível analisar no momento.");
                 } finally {
@@ -305,8 +292,8 @@ export function NovaAuditoria() {
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => setAberto(false)}
-                    className="rounded-lg px-4 py-2 text-xs sm:text-sm ring-1 ring-border hover:bg-paper"
+                    onClick={() => fechar()}
+                    className="rounded-lg px-4 py-2 text-xs sm:text-sm ring-1 ring-border hover:bg-paper cursor-pointer"
                   >
                     Cancelar
                   </button>

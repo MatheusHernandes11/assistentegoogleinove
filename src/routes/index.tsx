@@ -1,4 +1,4 @@
-import { useAuditoria } from "@/lib/use-auditoria";
+import { useAuditoria, abrirModalAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { AppShell, Bar, fmt } from "@/components/AppShell";
@@ -33,6 +33,31 @@ function Painel() {
       title="Painel de presença local"
       subtitle={`${empresa.endereco ? `${empresa.endereco}, ` : ""}${empresa.cidade} ${empresa.uf ? `(${empresa.uf})` : ""} · Raio de ${empresa.raio} km · ${empresa.segmento}`}
     >
+      {/* BANNER DE AÇÃO EM LARGURA TOTAL: COMEÇAR NOVO CLIENTE */}
+      <div className="mb-6 rounded-2xl bg-gradient-to-r from-ink via-ink/95 to-ink p-5 sm:p-6 text-surface shadow-xl ring-1 ring-border">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/20 px-3 py-1 text-xs font-semibold text-mint ring-1 ring-mint/30">
+              📍 Diagnóstico Comercial Hiperlocal
+            </span>
+            <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-surface">
+              Avaliar um novo cliente agora?
+            </h2>
+            <p className="text-xs sm:text-sm text-surface/70 max-w-2xl">
+              Colete a localização exata do cliente (Estado, Cidade, Rua e Bairro) para identificar concorrentes vizinhos e as palavras mais buscadas no Google Ads da região.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={abrirModalAuditoria}
+            className="w-full md:w-auto shrink-0 flex items-center justify-center gap-2 rounded-xl bg-mint px-6 py-3.5 text-sm font-bold text-ink transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:bg-mint/90 cursor-pointer"
+          >
+            <span className="text-base">🎯</span>
+            <span className="uppercase tracking-wide">Começar Novo Cliente / Analisar Empresa</span>
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-12 gap-3.5">
         <section className="tile col-span-12 md:col-span-6 lg:col-span-3">
           <div className="flex items-center justify-between">
