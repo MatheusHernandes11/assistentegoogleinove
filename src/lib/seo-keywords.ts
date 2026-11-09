@@ -1,5 +1,5 @@
 import { empresa, empresas, lider, voce, type Empresa } from "./data";
-import { buscarCoordenadasBrasil, normalizarTexto } from "./geo-brasil";
+import { buscarCoordenadasBrasil, extrairBairroOuRua, normalizarTexto } from "./geo-brasil";
 
 export type IntencaoBusca = "fundo" | "meio" | "topo";
 
@@ -159,27 +159,45 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
 } {
   const seg = empresa.segmento || "Empresa Local";
   const cid = empresa.cidade || "Brasil";
+  const uf = empresa.uf ? ` - ${empresa.uf}` : "";
+  const bairroOuRua = extrairBairroOuRua(empresa.endereco);
+  const locDesc = bairroOuRua ? `${bairroOuRua}, ${cid}` : `${cid}${uf}`;
+
   const baseConfig = obterBaseSegmento(seg, cid);
-  const geo = buscarCoordenadasBrasil(cid);
+  const geo = buscarCoordenadasBrasil(cid, empresa.uf);
   const fatorCidade = geo.fatorBusca || 1.2;
 
   const concs = listaConcorrentes && listaConcorrentes.length > 0 ? listaConcorrentes : empresas.filter((e) => !e.voce);
   const topConcorrentes = concs.slice(0, 5);
   const topLider = lider();
 
-  const keywords: KeywordAnalise[] = baseConfig.termosBase.map((t, idx) => {
-    const termoFinal = t.termo.replace("{cidade}", cid);
+  // Lista de termos estratégicos enriquecidos com hiperlocalização (Rua / Bairro / Cidade)
+  const termosProcessados = [...baseConfig.termosBase];
+
+  // Se houver rua ou bairro especificado, injeta termos hiperlocais prioritários no topo
+  if (bairroOuRua) {
+    termosProcessados.unshift(
+      { termo: `${seg} em ${bairroOuRua}`, intencao: "fundo" as IntencaoBusca, cpcBase: 5.4, volBase: 1950 },
+      { termo: `melhor ${seg} ${bairroOuRua} ${cid}`, intencao: "fundo" as IntencaoBusca, cpcBase: 6.2, volBase: 1400 },
+      { termo: `${seg} perto de mim em ${bairroOuRua}`, intencao: "fundo" as IntencaoBusca, cpcBase: 6.8, volBase: 2100 }
+    );
+  }
+
+  const keywords: KeywordAnalise[] = termosProcessados.map((t, idx) => {
+    let termoFinal = t.termo.replace("{cidade}", cid);
+    if (bairroOuRua && termoFinal.includes("{bairro}")) {
+      termoFinal = termoFinal.replace("{bairro}", bairroOuRua);
+    }
+
     const vol = Math.round(t.volBase * fatorCidade * (0.85 + ((idx * 7) % 30) / 100));
     const cpc = Number((t.cpcBase * (0.9 + ((idx * 3) % 25) / 100)).toFixed(2));
 
     // Determina quais concorrentes utilizam ou dominam esse termo
-    // O líder domina a maioria dos termos de fundo de funil
     const concorrentesQueUsam: string[] = [];
     if (topLider && topLider.nome && topLider.nome !== "—") {
       concorrentesQueUsam.push(topLider.nome);
     }
     topConcorrentes.slice(1).forEach((c, cIdx) => {
-      // Distribui presença entre os outros concorrentes
       if ((idx + cIdx) % 2 === 0 && c.nome) {
         concorrentesQueUsam.push(c.nome);
       }
@@ -188,7 +206,6 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
     const taxa = topConcorrentes.length > 0 ? Math.round((concorrentesQueUsam.length / Math.max(1, topConcorrentes.length)) * 100) : 75;
 
     // Posição da sua empresa nesta busca
-    // Se a empresa do cliente tem poucas avaliações ou score baixo, ela fica invisível
     let posicaoSua: number | null = null;
     let status: "invisivel" | "fora_top3" | "top3" = "invisivel";
 
@@ -211,11 +228,11 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
     // Argumento pronto para o vendedor falar na reunião
     let argumento = "";
     if (status === "invisivel") {
-      argumento = `Você NÃO aparece nessa busca. Os concorrentes (${concorrentesQueUsam.slice(0, 2).join(" e ")}) capturam cerca de ${perdaCliques} potenciais clientes por mês aqui.`;
+      argumento = `Você NÃO aparece nessa busca em ${locDesc}. Os concorrentes locais (${concorrentesQueUsam.slice(0, 2).join(" e ")}) capturam cerca de ${perdaCliques} potenciais clientes por mês aqui.`;
     } else if (status === "fora_top3") {
-      argumento = `Você está na ${posicaoSua}ª posição. 82% das pessoas clicam apenas no Top 3. O líder ${topLider.nome || "concorrente"} fica com a maior fatia.`;
+      argumento = `Você está na ${posicaoSua}ª posição em ${locDesc}. 82% das pessoas clicam apenas no Top 3. O líder vizinho ${topLider.nome || "concorrente"} fica com a maior fatia.`;
     } else {
-      argumento = `Você tem presença, mas ${topLider.nome || "o líder"} disputa o clique com você. Necessário blindar com anúncio em Google Ads.`;
+      argumento = `Você tem presença, mas ${topLider.nome || "o líder"} disputa o clique com você em ${locDesc}. Necessário blindar com anúncio em Google Ads.`;
     }
 
     return {
@@ -251,10 +268,10 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
   const scoreSEO = Math.min(100, Math.max(12, Math.round(((palavrasTop3 * 100) + (palavrasMeio * 45)) / keywords.length)));
 
   const pontosVenda: string[] = [
-    `Você está invisível em ${taxaInvisibilidade}% das principais buscas comerciais de ${cid}.`,
-    `Seus concorrentes (${topLider.nome || "líderes"}) estão absorvendo cerca de ${totalPerdaCliques.toLocaleString("pt-BR")} cliques qualificados todo mês.`,
+    `Você está invisível em ${taxaInvisibilidade}% das principais buscas comerciais de ${locDesc}.`,
+    `Seus concorrentes locais (${topLider.nome || "líderes do raio"}) estão absorvendo cerca de ${totalPerdaCliques.toLocaleString("pt-BR")} cliques qualificados todo mês na sua porta.`,
     `Para comprar essa mesma quantidade de cliques no Google Ads hoje, você precisaria investir R$ ${custoOportunidade.toLocaleString("pt-BR")}/mês.`,
-    `A palavra "${keywords[0]?.termo}" gera ${keywords[0]?.volumeMensal} buscas/mês com CPC de R$ ${keywords[0]?.cpcMedio.toFixed(2)} e você está fora do Top 3.`,
+    `A busca "${keywords[0]?.termo}" gera ${keywords[0]?.volumeMensal} buscas/mês com CPC de R$ ${keywords[0]?.cpcMedio.toFixed(2)} e você está fora do Top 3 no seu raio de atendimento.`,
   ];
 
   return {

@@ -29,7 +29,10 @@ function Painel() {
   const mediaScore = calcMedia();
 
   return (
-    <AppShell title="Painel de presença local" subtitle={`Raio de ${empresa.raio} km em ${empresa.cidade} · ${empresa.segmento}`}>
+    <AppShell
+      title="Painel de presença local"
+      subtitle={`${empresa.endereco ? `${empresa.endereco}, ` : ""}${empresa.cidade} ${empresa.uf ? `(${empresa.uf})` : ""} · Raio de ${empresa.raio} km · ${empresa.segmento}`}
+    >
       <div className="grid grid-cols-12 gap-3.5">
         <section className="tile col-span-12 md:col-span-6 lg:col-span-3">
           <div className="flex items-center justify-between">

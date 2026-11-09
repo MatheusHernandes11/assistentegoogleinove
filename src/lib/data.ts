@@ -1,4 +1,4 @@
-import { buscarCoordenadasBrasil, normalizarTexto } from "./geo-brasil";
+import { buscarCoordenadasBrasil, extrairBairroOuRua, normalizarTexto } from "./geo-brasil";
 
 export type Empresa = {
   id: string; placeId?: string | undefined; nome: string; nota: number; avaliacoes: number; fotos: number;
@@ -196,18 +196,25 @@ export function gerarAuditoriaNacional(perfil: Perfil): Auditoria {
     }
   }
 
-  // Gera distribuição geográfica realista em torno do centro
+  const bairroOuRua = extrairBairroOuRua(perfil.endereco);
+
+  // Gera distribuição geográfica realista em torno do centro hiperlocal
   const concorrentes: Omit<Empresa, "id" | "voce" | "x" | "y">[] = listaNomes.map((nome, i) => {
     const angulo = (i * (360 / Math.max(1, listaNomes.length)) + (i * 15)) * (Math.PI / 180);
-    const dist = Math.round((0.5 + (i * (raioKm - 0.7) / Math.max(1, listaNomes.length))) * 10) / 10;
+    const dist = Math.round((0.4 + (i * (raioKm - 0.5) / Math.max(1, listaNomes.length))) * 10) / 10;
     const dLat = (dist / 111) * Math.cos(angulo);
     const dLng = (dist / (111 * Math.cos((centro.lat * Math.PI) / 180))) * Math.sin(angulo);
 
     const isLider = i === 0;
+    let enderConcorrente = `${cid} - Centro`;
+    if (bairroOuRua) {
+      enderConcorrente = dist < 0.8 ? `${perfil.endereco || bairroOuRua} (a ${Math.round(dist * 1000)}m)` : `${bairroOuRua} · a ${dist} km`;
+    }
+
     return {
       placeId: `gen-c-${i}`,
       nome,
-      endereco: `${cid} - Região Central`,
+      endereco: enderConcorrente,
       nota: isLider ? 4.9 : Number((4.4 + ((i * 3) % 5) / 10).toFixed(1)),
       avaliacoes: isLider ? 680 + (i * 25) : Math.max(45, Math.round(480 / (i + 1))),
       fotos: isLider ? 140 : Math.max(18, Math.round(90 / (i + 1))),

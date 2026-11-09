@@ -45,7 +45,9 @@ function Reuniao() {
             <span className="grid size-9 place-items-center rounded-lg bg-mint font-display font-semibold text-ink">I</span>
             <div>
               <p className="font-display font-semibold tracking-tight text-lg">INOVE LOCAL · Diagnóstico Comercial</p>
-              <p className="text-xs text-surface/60">{empresa.nome} · {empresa.cidade} ({empresa.segmento})</p>
+              <p className="text-xs text-surface/60">
+                {empresa.nome} · {empresa.endereco ? `${empresa.endereco}, ` : ""}{empresa.cidade} {empresa.uf ? `(${empresa.uf})` : ""} · {empresa.segmento} (Raio {empresa.raio} km)
+              </p>
             </div>
           </div>
           <div className="no-print flex gap-2 text-sm">

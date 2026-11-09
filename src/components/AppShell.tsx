@@ -98,6 +98,48 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
           </div>
         </div>
 
+        {/* Ficha & Localização do Cliente Ativo */}
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-surface p-3.5 ring-1 ring-border shadow-2xs">
+          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
+            <div className="flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-mint/15 font-bold text-mint text-xs">🏢</span>
+              <div>
+                <span className="block text-[10px] uppercase font-semibold text-muted-foreground">Cliente Atual</span>
+                <span className="font-semibold text-ink">{empresa.nome || "Não definido"}</span>
+              </div>
+            </div>
+            
+            <div className="hidden sm:block h-6 w-px bg-border" />
+            
+            <div className="flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-paper font-bold text-muted-foreground text-xs">📍</span>
+              <div>
+                <span className="block text-[10px] uppercase font-semibold text-muted-foreground">Endereço & Raio</span>
+                <span className="font-medium text-ink">
+                  {empresa.endereco ? `${empresa.endereco}, ` : ""}{empresa.cidade} {empresa.uf ? `(${empresa.uf})` : ""} · {empresa.raio} km
+                </span>
+              </div>
+            </div>
+
+            <div className="hidden md:block h-6 w-px bg-border" />
+
+            <div className="hidden md:flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-paper font-bold text-muted-foreground text-xs">🏷️</span>
+              <div>
+                <span className="block text-[10px] uppercase font-semibold text-muted-foreground">Segmento / Nicho</span>
+                <span className="font-medium text-ink">{empresa.segmento || "Comércio / Serviços"}</span>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={abrirAuditoria}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-ink px-3 py-1.5 text-xs font-medium text-surface transition hover:bg-ink/85 shadow-2xs"
+          >
+            <span>🎯 Trocar Cliente / Localização</span>
+          </button>
+        </div>
+
         {children ? (
           children
         ) : !temDados() ? (

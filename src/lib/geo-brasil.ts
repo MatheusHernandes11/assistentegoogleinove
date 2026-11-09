@@ -109,6 +109,31 @@ export function normalizarTexto(txt: string) {
   return txt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 }
 
+/** Extrai o nome mais representativo do bairro ou rua para compor termos de busca hiperlocais */
+export function extrairBairroOuRua(endereco: string | undefined): string {
+  if (!endereco) return "";
+  const limpo = endereco.trim();
+  if (!limpo) return "";
+
+  // Se houver hífen, por exemplo "Av. Paulista, 1000 - Bela Vista", pega o bairro
+  if (limpo.includes("-")) {
+    const partes = limpo.split("-");
+    const ult = partes[partes.length - 1]?.trim();
+    if (ult && ult.length > 2 && !ult.match(/^[0-9]+$/)) return ult;
+  }
+
+  // Se houver vírgula, por exemplo "Rua das Flores, Centro"
+  if (limpo.includes(",")) {
+    const partes = limpo.split(",");
+    const ult = partes[partes.length - 1]?.trim();
+    if (ult && ult.length > 2 && !ult.match(/^[0-9]+$/)) return ult;
+    const prim = partes[0]?.trim();
+    if (prim && prim.length > 2) return prim;
+  }
+
+  return limpo;
+}
+
 /** Localiza coordenadas geográficas de qualquer cidade do Brasil */
 export function buscarCoordenadasBrasil(cidadeNome: string, uf?: string): { lat: number; lng: number; nomeFormatado: string; fatorBusca: number } {
   const cNorm = normalizarTexto(cidadeNome);
