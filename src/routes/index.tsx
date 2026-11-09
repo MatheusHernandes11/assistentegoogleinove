@@ -19,15 +19,14 @@ export const Route = createFileRoute("/")({
 });
 
 function Painel() {
-  useAuditoria();
-  if (!temDados()) return <AppShell title="Painel de presença local" subtitle="Dados reais do Google Maps" />;
+  const { versao } = useAuditoria();
+  const tem = temDados();
+  const analise = useMemo(() => (tem ? analisarKeywordsConcorrentes() : null), [tem, versao]);
+  if (!tem || !analise) return <AppShell title="Painel de presença local" subtitle="Dados reais do Google Maps" />;
+  const { keywords, diagnostico } = analise;
   const s = score(voce), L = lider(), sl = score(L), pos = posicao();
   const top = ranking().filter((e) => !e.voce).slice(0, 2);
   const mediaScore = calcMedia();
-
-  const { keywords, diagnostico } = useMemo(() => {
-    return analisarKeywordsConcorrentes();
-  }, [empresa.segmento, empresa.cidade, empresa.raio, voce.avaliacoes]);
 
   return (
     <AppShell title="Painel de presença local" subtitle={`Raio de ${empresa.raio} km em ${empresa.cidade} · ${empresa.segmento}`}>
