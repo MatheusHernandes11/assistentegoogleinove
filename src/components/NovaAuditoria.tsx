@@ -1,12 +1,16 @@
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { aplicarAuditoria, empresa, gerarAuditoriaNacional } from "@/lib/data";
 import { ESTADOS_BRASIL } from "@/lib/geo-brasil";
 import { auditarEmpresa } from "@/lib/places.functions";
 import { useUsuario } from "@/lib/use-auditoria";
 
 export function useAbrirAuditoria() {
-  return () => window.dispatchEvent(new Event("abrir-auditoria"));
+  return () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("abrir-auditoria"));
+    }
+  };
 }
 
 const PRESETS_BRASIL = [
@@ -35,9 +39,12 @@ export function NovaAuditoria() {
     raio: "5",
   });
 
-  if (typeof window !== "undefined") {
+  useEffect(() => {
     window.onabrirauditoria = () => setAberto(true);
-  }
+    return () => {
+      delete window.onabrirauditoria;
+    };
+  }, []);
 
   function carregarPreset(p: typeof PRESETS_BRASIL[number]) {
     setF(p);
@@ -117,7 +124,6 @@ export function NovaAuditoria() {
                   try {
                     resultado = await auditar({ data: perfil });
                   } catch (serverErr) {
-                    // Fallback imediato no cliente para garantir que a venda nunca pare
                     console.warn("Usando inteligência analítica direta:", serverErr);
                     const gerada = gerarAuditoriaNacional(perfil);
                     resultado = gerada.resultado;

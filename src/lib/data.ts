@@ -1,11 +1,19 @@
 import { buscarCoordenadasBrasil, normalizarTexto } from "./geo-brasil";
 
 export type Empresa = {
-  id: string; placeId?: string; nome: string; nota: number; avaliacoes: number; fotos: number;
-  categorias: number; site: boolean; distancia: number; lat: number; lng: number; x: number; y: number; voce?: boolean;
+  id: string; placeId?: string | undefined; nome: string; nota: number; avaliacoes: number; fotos: number;
+  categorias: number; site: boolean; distancia: number; lat: number; lng: number; x: number; y: number; voce?: boolean | undefined;
+  endereco?: string | undefined;
 };
 
-export type Perfil = { nome: string; cidade: string; uf?: string; endereco: string; segmento: string; raio: number };
+export type Perfil = {
+  nome: string;
+  cidade: string;
+  uf?: string | undefined;
+  endereco: string;
+  segmento: string;
+  raio: number;
+};
 
 export const empresa: Perfil & { ultimaAvaliacao: string | null; centro: { lat: number; lng: number } | null; real: boolean } = {
   nome: "", cidade: "", uf: "", endereco: "", segmento: "", raio: 5, ultimaAvaliacao: null, centro: null, real: false,
@@ -81,10 +89,12 @@ export function aplicarAuditoria(a: Auditoria) {
 
 export function carregarSalvo() {
   try {
-    const raw = localStorage.getItem("inove-auditoria");
-    if (raw) {
-      aplicarAuditoria(JSON.parse(raw));
-      return;
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem("inove-auditoria");
+      if (raw) {
+        aplicarAuditoria(JSON.parse(raw));
+        return;
+      }
     }
   } catch { /* ignora */ }
 
@@ -162,7 +172,7 @@ export function gerarAuditoriaNacional(perfil: Perfil): Auditoria {
   };
 
   const sNorm = normalizarTexto(seg);
-  let listaNomes = nomesPorSegmento["odonto"]!;
+  let listaNomes = nomesPorSegmento["odonto"] ?? [];
   for (const [k, v] of Object.entries(nomesPorSegmento)) {
     if (sNorm.includes(k)) {
       listaNomes = v;
@@ -172,8 +182,8 @@ export function gerarAuditoriaNacional(perfil: Perfil): Auditoria {
 
   // Gera distribuição geográfica realista em torno do centro
   const concorrentes: Omit<Empresa, "id" | "voce" | "x" | "y">[] = listaNomes.map((nome, i) => {
-    const angulo = (i * (360 / listaNomes.length) + (i * 15)) * (Math.PI / 180);
-    const dist = Math.round((0.5 + (i * (raioKm - 0.7) / listaNomes.length)) * 10) / 10;
+    const angulo = (i * (360 / Math.max(1, listaNomes.length)) + (i * 15)) * (Math.PI / 180);
+    const dist = Math.round((0.5 + (i * (raioKm - 0.7) / Math.max(1, listaNomes.length))) * 10) / 10;
     const dLat = (dist / 111) * Math.cos(angulo);
     const dLng = (dist / (111 * Math.cos((centro.lat * Math.PI) / 180))) * Math.sin(angulo);
 
@@ -236,7 +246,16 @@ export function pesquisarKeywords(q: string): Keyword[] {
   const seed = [...base].reduce((s, c) => s + c.charCodeAt(0), 0);
   const termos = [base, `${base} perto de mim`, `melhor ${base}`, `${base} 24 horas`, `${base} preço`];
   const conc = ["Alta", "Alta", "Média", "Baixa", "Média"] as const;
-  return termos.map((termo, i) => ({ termo, volume: Math.round((1900 / (i + 1)) * (0.8 + ((seed + i) % 5) / 10)), cpc: 2 + ((seed + i * 3) % 50) / 10, concorrencia: conc[i]!, posicao: null }));
+  return termos.map((termo, i) => {
+    const concValor = conc[i] ?? "Média";
+    return {
+      termo,
+      volume: Math.round((1900 / (i + 1)) * (0.8 + ((seed + i) % 5) / 10)),
+      cpc: 2 + ((seed + i * 3) % 50) / 10,
+      concorrencia: concValor,
+      posicao: null,
+    };
+  });
 }
 
 /** Pontos críticos reais: só entram se houver desvantagem frente ao líder. */

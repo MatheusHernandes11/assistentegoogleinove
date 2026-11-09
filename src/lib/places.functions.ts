@@ -85,7 +85,15 @@ export const auditarEmpresa = createServerFn({ method: "POST" })
     }
 
     // 2. Fallback Analítico Nacional para qualquer empresa e cidade do Brasil
-    const gerada = gerarAuditoriaNacional(data);
+    const perfilEnvio = {
+      nome: data.nome,
+      cidade: data.cidade,
+      endereco: data.endereco,
+      segmento: data.segmento,
+      raio: data.raio,
+      ...(data.uf !== undefined ? { uf: data.uf } : {}),
+    };
+    const gerada = gerarAuditoriaNacional(perfilEnvio);
     return gerada.resultado;
   });
 
