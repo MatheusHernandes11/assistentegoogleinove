@@ -113,57 +113,59 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
       title="SEO de Ads & Palavras-Chave dos Concorrentes"
       subtitle={`Mineração de termos de busca, leilão do Google Ads e presença comercial em ${empresa.cidade}`}
     >
-      {/* 1. CARDS DE IMPACTO COMERCIAL */}
+      {/* 1. CARDS DE DADOS REAIS DO GOOGLE MAPS */}
       <div className="grid grid-cols-12 gap-3.5 mb-6">
         <section className="tile col-span-12 sm:col-span-6 lg:col-span-3">
-          <span className="eyebrow">Score de Presença em Buscas</span>
+          <span className="eyebrow">Posição no Google Maps</span>
           <div className="mt-4 flex items-end gap-1.5">
-            <span className={`font-display text-5xl font-semibold leading-none ${diagnostico.scoreSEOAds < 50 ? "text-coral" : "text-amber"}`}>
-              {diagnostico.scoreSEOAds}
+            <span className={`font-display text-5xl font-semibold leading-none ${posicao() <= 3 ? "text-mint" : "text-coral"}`}>
+              {posicao()}º
             </span>
-            <span className="text-muted-foreground text-sm">/ 100</span>
+            <span className="text-muted-foreground text-sm">/ {empresas.length}</span>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            {diagnostico.scoreSEOAds < 50
-              ? "🔴 Presença crítica: alta dependência de indicação ou cliente passando direto pro concorrente."
-              : "🟡 Presença regular, mas perdendo as buscas mais valiosas."}
+            {posicao() <= 3 ? "🟢 No Top 3 do Google Maps." : "🔴 Fora do Top 3: concorrentes recebem os primeiros contatos."}
           </p>
         </section>
 
         <section className="tile col-span-12 sm:col-span-6 lg:col-span-3">
-          <span className="eyebrow">Invisibilidade Comercial</span>
-          <div className="mt-4 flex items-end gap-1.5">
-            <span className="font-display text-5xl font-semibold leading-none text-coral">
-              {diagnostico.taxaInvisibilidade}%
-            </span>
+          <span className="eyebrow">Líder Atual do Raio</span>
+          <div className="mt-4">
+            <p className="font-display text-lg font-bold text-ink truncate" title={topLider.nome}>
+              {topLider.nome}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              ★ {fmt(topLider.nota, 1)} · <strong className="text-ink">{topLider.avaliacoes}</strong> avaliações reais
+            </p>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            Das principais palavras comerciais pesquisadas na sua cidade, você está fora da 1ª página.
+            Leva a maioria das chamadas orgânicas na região.
           </p>
         </section>
 
         <section className="tile col-span-12 sm:col-span-6 lg:col-span-3">
-          <span className="eyebrow">Cliques Perdidos / Mês</span>
+          <span className="eyebrow">Diferença de Avaliações</span>
           <div className="mt-4 flex items-end gap-1.5">
             <span className="font-display text-5xl font-semibold leading-none text-ink">
-              {diagnostico.buscasPerdidasParaConcorrentes.toLocaleString("pt-BR")}
+              {Math.max(0, topLider.avaliacoes - voce.avaliacoes)}
             </span>
+            <span className="text-muted-foreground text-xs">para o líder</span>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            Potenciais clientes que pesquisam seu serviço todo mês e vão para o <strong>{topLider.nome || "concorrente"}</strong>.
+            Você tem {voce.avaliacoes} avaliações contra {topLider.avaliacoes} do líder no Google Maps.
           </p>
         </section>
 
         <section className="tile col-span-12 sm:col-span-6 lg:col-span-3">
-          <span className="eyebrow">Custo de Oportunidade Ads</span>
+          <span className="eyebrow">Termos do Segmento</span>
           <div className="mt-4 flex items-end gap-1.5">
-            <span className="font-display text-4xl font-semibold leading-none text-mint">
-              R$ {diagnostico.custoOportunidadeAds.toLocaleString("pt-BR")}
+            <span className="font-display text-5xl font-semibold leading-none text-mint">
+              {todasKeywords.length}
             </span>
-            <span className="text-muted-foreground text-xs">/mês</span>
+            <span className="text-muted-foreground text-xs">buscas</span>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            Quanto custaria comprar esses mesmos cliques via anúncios no Google Ads.
+            Termos estratégicos que clientes buscam para {empresa.segmento} em {empresa.cidade}.
           </p>
         </section>
       </div>
@@ -306,88 +308,78 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
             <thead className="bg-paper border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-5 py-3.5">Palavra-Chave / Termo</th>
-                <th className="px-4 py-3.5">Intenção</th>
-                <th className="px-4 py-3.5">Volume Estimado</th>
-                <th className="px-4 py-3.5">CPC Google Ads</th>
-                <th className="px-4 py-3.5">Concorrentes que Usam</th>
-                <th className="px-4 py-3.5">Sua Situação</th>
-                <th className="px-4 py-3.5">Perda Estimada</th>
+                <th className="px-4 py-3.5">Intenção Comercial</th>
+                <th className="px-4 py-3.5">Quem Domina no Maps</th>
+                <th className="px-4 py-3.5">Sua Ficha no Maps</th>
+                <th className="px-4 py-3.5 text-center">Verificação Oficial</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {keywordsFiltradas.map((k) => (
-                <tr key={k.id} className="transition hover:bg-paper/60">
-                  <td className="px-5 py-4">
-                    <p className="font-medium text-ink">{k.termo}</p>
-                    <p className="text-[11px] text-muted-foreground">{k.argumentoVenda}</p>
-                  </td>
+              {keywordsFiltradas.map((k) => {
+                const queryGoogleMaps = encodeURIComponent(`${k.termo} ${empresa.cidade}`);
+                return (
+                  <tr key={k.id} className="transition hover:bg-paper/60">
+                    <td className="px-5 py-4">
+                      <p className="font-medium text-ink">{k.termo}</p>
+                      <p className="text-[11px] text-muted-foreground">{k.argumentoVenda}</p>
+                    </td>
 
-                  <td className="px-4 py-4">
-                    <span
-                      className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                        k.intencao === "fundo"
-                          ? "bg-coral/15 text-coral"
-                          : k.intencao === "meio"
-                          ? "bg-amber/15 text-amber"
-                          : "bg-ink/10 text-muted-foreground"
-                      }`}
-                    >
-                      {k.intencao === "fundo" ? "Alta Intenção 🔥" : k.intencao === "meio" ? "Comparação 🎯" : "Informativa 💡"}
-                    </span>
-                  </td>
-
-                  <td className="px-4 py-4 font-mono font-medium">
-                    {k.volumeMensal.toLocaleString("pt-BR")}{" "}
-                    <span className="text-[10px] text-muted-foreground">buscas/mês</span>
-                  </td>
-
-                  <td className="px-4 py-4 font-mono">
-                    <span className="font-semibold text-ink">R$ {k.cpcMedio.toFixed(2)}</span>
-                    <span className="block text-[10px] text-muted-foreground">
-                      Concorrência {k.concorrenciaAds}
-                    </span>
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-mono text-xs font-semibold text-coral">
-                        {k.taxaConcorrentes}% dos concorrentes
+                    <td className="px-4 py-4">
+                      <span
+                        className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                          k.intencao === "fundo"
+                            ? "bg-coral/15 text-coral"
+                            : k.intencao === "meio"
+                            ? "bg-amber/15 text-amber"
+                            : "bg-ink/10 text-muted-foreground"
+                        }`}
+                      >
+                        {k.intencao === "fundo" ? "Alta Intenção 🔥" : k.intencao === "meio" ? "Comparação 🎯" : "Informativa 💡"}
                       </span>
-                      <div className="flex flex-wrap gap-1">
-                        {k.concorrentesQueUsam.slice(0, 2).map((nome, nIdx) => (
-                          <span
-                            key={nIdx}
-                            className="rounded bg-paper px-1.5 py-0.5 text-[10px] text-muted-foreground ring-1 ring-border"
-                          >
-                            {nome.length > 22 ? `${nome.slice(0, 20)}...` : nome}
-                          </span>
-                        ))}
+                    </td>
+
+                    <td className="px-4 py-4">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-semibold text-xs text-ink truncate max-w-[200px]" title={k.concorrentesQueUsam[0] || topLider.nome}>
+                          {k.concorrentesQueUsam[0] || topLider.nome}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground">
+                          Líder da região em {empresa.cidade}
+                        </span>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  <td className="px-4 py-4">
-                    {k.status === "invisivel" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-coral/10 px-2.5 py-0.5 text-xs font-medium text-coral ring-1 ring-coral/25">
-                        <span className="size-1.5 rounded-full bg-coral" />
-                        Invisível (Fora do Top 10)
-                      </span>
-                    ) : k.status === "fora_top3" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber/15 px-2.5 py-0.5 text-xs font-medium text-amber ring-1 ring-amber/25">
-                        {k.posicaoSua}º lugar (Fora do Top 3)
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint ring-1 ring-mint/25">
-                        ✓ Top 3 da Região
-                      </span>
-                    )}
-                  </td>
+                    <td className="px-4 py-4">
+                      {k.status === "invisivel" ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-coral/10 px-2.5 py-0.5 text-xs font-medium text-coral ring-1 ring-coral/25">
+                          <span className="size-1.5 rounded-full bg-coral" />
+                          Fora do Top 3
+                        </span>
+                      ) : k.status === "fora_top3" ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber/15 px-2.5 py-0.5 text-xs font-medium text-amber ring-1 ring-amber/25">
+                          {k.posicaoSua}º lugar
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint ring-1 ring-mint/25">
+                          ✓ Top 3 da Região
+                        </span>
+                      )}
+                    </td>
 
-                  <td className="px-4 py-4 font-mono text-xs text-coral">
-                    ~{k.perdaMensalCliques.toLocaleString("pt-BR")} cliques/mês
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-4 py-4 text-center">
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${queryGoogleMaps}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-lg bg-paper px-2.5 py-1 text-xs font-medium text-ink ring-1 ring-border hover:bg-mint/10 hover:text-ink transition cursor-pointer"
+                      >
+                        <span>Abrir Maps</span>
+                        <span className="text-[10px]">↗</span>
+                      </a>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

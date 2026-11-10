@@ -98,23 +98,23 @@ function Painel() {
           </div>
         </Link>
 
-        {/* NOVO: BANNER DE PALAVRAS-CHAVE DOS CONCORRENTES & GOOGLE ADS */}
+        {/* BANNER DE RANKING NO GOOGLE MAPS */}
         <section className="tile col-span-12 border-l-4 border-l-mint bg-surface p-5">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <span className="eyebrow text-mint">SEO de Ads & Palavras-Chave dos Concorrentes</span>
+              <span className="eyebrow text-mint">Ranking Local do Google Maps</span>
               <h2 className="mt-1 font-display text-xl font-semibold">
-                Seus concorrentes dominam {diagnostico.taxaInvisibilidade}% das buscas mais rentáveis
+                {L.nome} lidera o raio de {empresa.raio} km com {L.avaliacoes} avaliações reais
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Termos como <strong>"{keywords[0]?.termo}"</strong> geram {diagnostico.buscasPerdidasParaConcorrentes.toLocaleString("pt-BR")} buscas/mês captadas por {L.nome}. Equivalente a <strong>R$ {diagnostico.custoOportunidadeAds.toLocaleString("pt-BR")}/mês</strong> em Google Ads.
+                Sua empresa está em <strong>{pos}º lugar</strong> entre {empresas.length} concorrentes mapeados. Veja quem domina as buscas no Google Maps e consulte as palavras mais disputadas.
               </p>
             </div>
             <Link
               to="/palavras-chave"
               className="inline-flex items-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-sm font-medium text-surface transition hover:bg-ink/90"
             >
-              <span>Ver Palavras dos Concorrentes</span>
+              <span>Ver Ranking de Palavras</span>
               <span>→</span>
             </Link>
           </div>

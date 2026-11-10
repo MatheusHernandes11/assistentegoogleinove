@@ -97,12 +97,16 @@ function Reuniao() {
             </div>
             <div className="flex gap-4">
               <div className="rounded-xl bg-surface/5 p-4 ring-1 ring-surface/10 text-right">
-                <p className="text-xs text-surface/50">Buscas Perdidas p/ Concorrência</p>
-                <p className="font-display text-2xl font-bold text-coral">~{diagnostico.buscasPerdidasParaConcorrentes.toLocaleString("pt-BR")} <span className="text-xs font-normal">cliques/mês</span></p>
+                <p className="text-xs text-surface/50">Líder no Google Maps</p>
+                <p className="font-display text-lg font-bold text-coral truncate max-w-[200px]" title={L.nome}>
+                  {L.nome}
+                </p>
               </div>
               <div className="rounded-xl bg-surface/5 p-4 ring-1 ring-surface/10 text-right">
-                <p className="text-xs text-surface/50">Equivalente em Google Ads</p>
-                <p className="font-display text-2xl font-bold text-mint">R$ {diagnostico.custoOportunidadeAds.toLocaleString("pt-BR")}<span className="text-xs font-normal">/mês</span></p>
+                <p className="text-xs text-surface/50">Gap de Avaliações</p>
+                <p className="font-display text-lg font-bold text-mint">
+                  {Math.max(0, L.avaliacoes - voce.avaliacoes)} avaliações
+                </p>
               </div>
             </div>
           </div>
@@ -111,24 +115,38 @@ function Reuniao() {
             <table className="w-full text-left text-sm">
               <thead className="border-b border-surface/10 bg-surface/10 text-xs uppercase tracking-wider text-surface/60">
                 <tr>
-                  <th className="px-5 py-3">Busca Comercial mais Valiosa</th>
-                  <th className="px-4 py-3">Volume Mensal</th>
-                  <th className="px-4 py-3">Custo do Clique (Ads)</th>
+                  <th className="px-5 py-3">Busca Comercial</th>
+                  <th className="px-4 py-3">Intenção de Compra</th>
                   <th className="px-4 py-3">Quem Domina Hoje</th>
                   <th className="px-4 py-3">Sua Situação</th>
+                  <th className="px-4 py-3 text-center">Verificação no Maps</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface/10">
                 {keywords.slice(0, 5).map((k) => (
                   <tr key={k.id}>
                     <td className="px-5 py-3.5 font-medium">{k.termo}</td>
-                    <td className="px-4 py-3.5 font-mono">{k.volumeMensal.toLocaleString("pt-BR")} buscas</td>
-                    <td className="px-4 py-3.5 font-mono text-mint">R$ {k.cpcMedio.toFixed(2)}</td>
-                    <td className="px-4 py-3.5 text-xs text-surface/80">{k.concorrentesQueUsam[0] || L.nome}</td>
+                    <td className="px-4 py-3.5">
+                      <span className="rounded-full bg-surface/10 px-2 py-0.5 text-xs">
+                        {k.intencao === "fundo" ? "Alta Intenção 🔥" : "Comparação 🎯"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-xs text-surface/90 font-semibold">{k.concorrentesQueUsam[0] || L.nome}</td>
                     <td className="px-4 py-3.5">
                       <span className="rounded-full bg-coral/20 px-2.5 py-0.5 text-xs text-coral">
                         Fora do Top 3 ❌
                       </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-center">
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${k.termo} ${empresa.cidade}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded bg-surface/10 px-2 py-1 text-xs text-mint hover:bg-surface/20"
+                      >
+                        <span>Abrir no Google</span>
+                        <span>↗</span>
+                      </a>
                     </td>
                   </tr>
                 ))}
