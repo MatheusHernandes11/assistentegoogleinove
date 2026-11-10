@@ -25,8 +25,14 @@ const auditoriaInicialPadrao: Auditoria = gerarAuditoriaNacional({
   raio: 5,
 });
 
-export const empresa: Perfil & { ultimaAvaliacao: string | null; centro: { lat: number; lng: number } | null; real: boolean } = {
+export const empresa: Perfil & {
+  placeId?: string | undefined;
+  ultimaAvaliacao: string | null;
+  centro: { lat: number; lng: number } | null;
+  real: boolean;
+} = {
   ...auditoriaInicialPadrao.perfil,
+  placeId: auditoriaInicialPadrao.resultado.voce.placeId,
   ultimaAvaliacao: auditoriaInicialPadrao.resultado.ultimaAvaliacao,
   centro: auditoriaInicialPadrao.resultado.centro,
   real: true,
@@ -97,7 +103,12 @@ let versao = 0;
 const ouvintes = new Set<() => void>();
 
 export function aplicarAuditoria(a: Auditoria) {
-  Object.assign(empresa, a.perfil, { ultimaAvaliacao: a.resultado.ultimaAvaliacao, centro: a.resultado.centro, real: true });
+  Object.assign(empresa, a.perfil, {
+    placeId: a.resultado.voce.placeId,
+    ultimaAvaliacao: a.resultado.ultimaAvaliacao,
+    centro: a.resultado.centro,
+    real: true,
+  });
   const c0 = a.resultado.centro, escala = 40 / Math.max(1, a.perfil.raio);
   const pos = (e: { lat: number; lng: number }) => ({
     x: Math.max(3, Math.min(97, 50 + (e.lng - c0.lng) * 111 * Math.cos((c0.lat * Math.PI) / 180) * escala)),

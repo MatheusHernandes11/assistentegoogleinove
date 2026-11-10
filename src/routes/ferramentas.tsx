@@ -35,21 +35,31 @@ function FerramentasPage() {
 
   const [aba, setAba] = useState<AbaTipo>("raiox");
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
+  const [urlAvaliacaoCustom, setUrlAvaliacaoCustom] = useState("");
   const [copiado, setCopiado] = useState(false);
   const [telefone, setTelefone] = useState("");
   const [urlSite, setUrlSite] = useState("www.mpinvest.com.br");
   const [carregandoSpeed, setCarregandoSpeed] = useState(false);
   const [speedRes, setSpeedRes] = useState<ResultadoPageSpeed | null>(null);
 
-  const saude = useMemo(() => diagnosticarSaudeFicha(), [empresa.nome, voce.avaliacoes, voce.fotos]);
-  const gap = useMemo(() => calcularGapReputacao(), [empresa.nome, voce.avaliacoes, lider().avaliacoes]);
+  const saude = useMemo(() => diagnosticarSaudeFicha(), [empresa.nome, voce.avaliacoes, voce.fotos, empresa.ultimaAvaliacao]);
+  const gap = useMemo(() => calcularGapReputacao(), [empresa.nome, voce.avaliacoes, lider().avaliacoes, voce.placeId, empresa.placeId]);
   const trends = useMemo(() => obterDiagnosticoTrends(empresa.segmento), [empresa.segmento]);
 
   useEffect(() => {
-    if (gap.linkDiretoAvaliacao) {
-      gerarQRCodeDataUrl(gap.linkDiretoAvaliacao).then((url) => setQrCodeUrl(url));
+    const linkInicial = gap.linkDiretoAvaliacao;
+    setUrlAvaliacaoCustom(linkInicial);
+    if (linkInicial) {
+      gerarQRCodeDataUrl(linkInicial).then((url) => setQrCodeUrl(url));
     }
   }, [gap.linkDiretoAvaliacao]);
+
+  function atualizarLinkAvaliacao(novoLink: string) {
+    setUrlAvaliacaoCustom(novoLink);
+    if (novoLink.trim()) {
+      gerarQRCodeDataUrl(novoLink.trim()).then((url) => setQrCodeUrl(url));
+    }
+  }
 
   if (!temDados()) {
     return <AppShell title="Ferramentas Google" subtitle="Analise uma empresa primeiro" />;
@@ -137,27 +147,37 @@ function FerramentasPage() {
             </div>
 
             <div className="tile col-span-12 md:col-span-4 bg-surface p-6">
-              <span className="eyebrow text-muted-foreground">Taxa de Resposta a Clientes</span>
-              <div className="mt-4 flex items-baseline gap-2">
-                <span className="font-display text-5xl font-bold leading-none text-coral">
-                  {saude.taxaRespostaAvaliacoes}%
+              <div className="flex items-center justify-between">
+                <span className="eyebrow text-muted-foreground">Última Avaliação Recebida</span>
+                <span className="rounded-full bg-mint/15 px-2 py-0.5 text-[10px] font-bold text-mint ring-1 ring-mint/25">
+                  🟢 Real Google Maps
                 </span>
               </div>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="font-display text-5xl font-bold leading-none text-ink">
+                  {saude.diasUltimaAvaliacao !== null ? `Há ${saude.diasUltimaAvaliacao}` : "30+"}
+                </span>
+                <span className="text-sm text-muted-foreground">dias atrás</span>
+              </div>
               <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
-                O líder do seu raio responde <strong>mais de 85%</strong> das avaliações. O Google prioriza perfis que interagem rapidamente com quem avalia.
+                Data real extraída via API do Google Places. Empresas ativas no Top 3 recebem avaliações toda semana.
               </p>
             </div>
 
             <div className="tile col-span-12 md:col-span-4 bg-surface p-6">
-              <span className="eyebrow text-muted-foreground">Atualização (Google Posts)</span>
-              <div className="mt-4 flex items-baseline gap-2">
-                <span className="font-display text-5xl font-bold leading-none text-amber">
-                  {saude.diasSemPostagemGoogle}
+              <div className="flex items-center justify-between">
+                <span className="eyebrow text-muted-foreground">Publicações & Ofertas</span>
+                <span className="rounded-full bg-amber/15 px-2 py-0.5 text-[10px] font-bold text-amber ring-1 ring-amber/25">
+                  📋 Regra Oficial
                 </span>
-                <span className="text-sm text-muted-foreground">dias sem postar</span>
+              </div>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="font-display text-4xl font-bold leading-none text-amber">
+                  A cada 7 dias
+                </span>
               </div>
               <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
-                Fichas sem posts há mais de 7 dias sofrem penalidade de frescor (*freshness penalty*), perdendo destaque para concorrentes ativos.
+                Fichas sem posts semanais perdem relevância no Google Maps. A API pública não expõe posts de terceiros — pergunte ao cliente se ele costuma postar novidades.
               </p>
             </div>
           </div>
@@ -225,6 +245,32 @@ function FerramentasPage() {
               )}
             </div>
 
+            <div className="text-left space-y-1.5 rounded-xl bg-paper p-3 ring-1 ring-border">
+              <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground block">
+                Link de Avaliação Vinculado ao QR Code:
+              </label>
+              <div className="flex gap-1.5">
+                <input
+                  value={urlAvaliacaoCustom}
+                  onChange={(e) => atualizarLinkAvaliacao(e.target.value)}
+                  placeholder="https://search.google.com/local/writereview?placeid=..."
+                  className="flex-1 rounded-lg bg-surface px-3 py-1.5 text-xs font-mono ring-1 ring-border outline-none focus:ring-mint"
+                />
+                <a
+                  href={urlAvaliacaoCustom}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-lg bg-mint px-3 py-1.5 text-xs font-bold text-ink hover:bg-mint/90 transition flex items-center shrink-0 cursor-pointer shadow-xs"
+                  title="Abrir no Google para conferir"
+                >
+                  Testar ↗
+                </a>
+              </div>
+              <p className="text-[10px] text-muted-foreground leading-tight">
+                Você pode colar o link curto oficial da ficha do cliente (ex: <code>g.page/r/.../review</code>) ou usar o link direto gerado pelo sistema.
+              </p>
+            </div>
+
             <div className="flex flex-col gap-2">
               <a
                 href={qrCodeUrl}
@@ -235,7 +281,7 @@ function FerramentasPage() {
               </a>
               <button
                 type="button"
-                onClick={() => copiarTexto(gap.linkDiretoAvaliacao)}
+                onClick={() => copiarTexto(urlAvaliacaoCustom)}
                 className="w-full rounded-xl bg-paper py-2.5 text-xs font-semibold text-ink ring-1 ring-border hover:bg-surface transition cursor-pointer"
               >
                 {copiado ? "✓ Link Copiado!" : "🔗 Copiar Link Direto do Google"}

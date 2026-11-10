@@ -1,4 +1,4 @@
-import { empresa, lider, voce, type Empresa } from "./data";
+import { diasDesdeUltimaAvaliacao, empresa, lider, voce, type Empresa } from "./data";
 import { normalizarTexto } from "./geo-brasil";
 import QRCode from "qrcode";
 
@@ -17,7 +17,8 @@ export type DiagnosticoFicha = {
   scoreSaude: number; // 0 a 100
   nivel: "Crítico" | "Médio" | "Excelente";
   taxaRespostaAvaliacoes: number; // %
-  diasSemPostagemGoogle: number;
+  diasUltimaAvaliacao: number | null; // DADO REAL da última avaliação no Google Places
+  alertaPostagensGoogle: string; // Regra de 7 dias do Google
   atributos: AtributoFicha[];
   pontosUrgentes: string[];
 };
@@ -60,11 +61,20 @@ export type ResultadoPageSpeed = {
 
 /** Gera o link oficial do Google para abrir a caixa de avaliação 5 estrelas */
 export function gerarLinkGoogleReview(placeId?: string, nomeEmpresa?: string, cidade?: string): string {
-  if (placeId && !placeId.startsWith("gen-")) {
-    return `https://search.google.com/local/writereview?placeid=${placeId}`;
+  const rawId = (placeId || voce.placeId || empresa.placeId || "").trim();
+  const cleanId = rawId.replace(/^places\//, "").trim();
+
+  // Se tem um Place ID real do Google (ex: ChIJ...)
+  if (cleanId && !cleanId.startsWith("gen-")) {
+    return `https://search.google.com/local/writereview?placeid=${cleanId}`;
   }
-  const busca = encodeURIComponent(`${nomeEmpresa || empresa.nome} ${cidade || empresa.cidade}`);
-  return `https://www.google.com/search?q=${busca}#lrd=0x0:0x0,3`;
+
+  // Se for gerado ou não tiver placeId oficial cadastrado, usa a URL oficial do Google Maps
+  const nome = nomeEmpresa || empresa.nome || "Empresa";
+  const end = empresa.endereco ? `${empresa.endereco}, ` : "";
+  const cid = cidade || empresa.cidade || "";
+  const query = encodeURIComponent(`${nome} ${end}${cid}`.trim());
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
 }
 
 /** Gera imagem DataURL do QR Code para colocar em placa de balcão ou enviar ao cliente */
@@ -145,7 +155,7 @@ export function diagnosticarSaudeFicha(): DiagnosticoFicha {
     },
   ];
 
-  const diasSemPostagem = v.avaliacoes < 30 ? 24 : 12;
+  const diasUltima = diasDesdeUltimaAvaliacao();
   const taxaResposta = v.avaliacoes > 100 ? 70 : v.avaliacoes > 30 ? 35 : 10;
 
   // Cálculo de pontuação
@@ -161,8 +171,8 @@ export function diagnosticarSaudeFicha(): DiagnosticoFicha {
   if (taxaResposta < 50) {
     pontosUrgentes.push(`Taxa de resposta a avaliações em ${taxaResposta}%. O Google penaliza perfis que deixam clientes sem resposta.`);
   }
-  if (diasSemPostagem > 7) {
-    pontosUrgentes.push(`Sem postagens novas no Google há ${diasSemPostagem} dias. Recomendado 1 post promocional semanal.`);
+  if (diasUltima && diasUltima > 30) {
+    pontosUrgentes.push(`A última avaliação pública registrada no Google foi há ${diasUltima} dias. Empresas líderes recebem avaliações semanais.`);
   }
   if (!temMuitasFotos) {
     pontosUrgentes.push(`Gap de fotos: você tem ${v.fotos} fotos contra ${L.fotos} do líder da região.`);
@@ -172,7 +182,8 @@ export function diagnosticarSaudeFicha(): DiagnosticoFicha {
     scoreSaude: score,
     nivel: score >= 80 ? "Excelente" : score >= 50 ? "Médio" : "Crítico",
     taxaRespostaAvaliacoes: taxaResposta,
-    diasSemPostagemGoogle: diasSemPostagem,
+    diasUltimaAvaliacao: diasUltima,
+    alertaPostagensGoogle: "O Google prioriza fichas que publicam ofertas e fotos semanais (a cada 7 dias).",
     atributos,
     pontosUrgentes,
   };
