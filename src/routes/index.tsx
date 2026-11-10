@@ -147,6 +147,33 @@ function Painel() {
           </div>
         </section>
 
+        {/* NOVO: BANNER ESPIÃO DE ADS & BIBLIOTECA DO GOOGLE */}
+        <section className="tile col-span-12 bg-gradient-to-r from-paper via-surface to-surface p-5 ring-1 ring-border/80 border-l-4 border-l-ink">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-4">
+              <span className="flex size-11 items-center justify-center rounded-xl bg-ink text-surface font-bold text-xl shrink-0">
+                🔎
+              </span>
+              <div>
+                <span className="eyebrow text-muted-foreground">Inteligência Competitiva de Google Ads</span>
+                <h3 className="font-display text-lg font-bold">
+                  Espião de Concorrentes & Biblioteca de Anúncios do Google
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Acesse os anúncios ativos dos concorrentes na Biblioteca Oficial de Transparência do Google e descubra quais palavras eles mais compram.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/anuncios"
+              className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-xs sm:text-sm font-semibold text-surface transition hover:bg-ink/90 shadow-sm"
+            >
+              <span>Espiar Anúncios do Concorrente</span>
+              <span>→</span>
+            </Link>
+          </div>
+        </section>
+
         <section className="tile col-span-12 lg:col-span-8">
           <div className="flex items-center justify-between">
             <span className="eyebrow">Comparação de presença</span>

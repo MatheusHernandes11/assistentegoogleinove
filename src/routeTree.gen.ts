@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnunciosRouteImport } from './routes/anuncios'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FerramentasRouteImport } from './routes/ferramentas'
 import { Route as MapaRouteImport } from './routes/mapa'
@@ -20,6 +21,11 @@ import { Route as ReuniaoRouteImport } from './routes/reuniao'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnunciosRoute = AnunciosRouteImport.update({
+  id: '/anuncios',
+  path: '/anuncios',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -55,6 +61,7 @@ const ReuniaoRoute = ReuniaoRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/anuncios': typeof AnunciosRoute
   '/auth': typeof AuthRoute
   '/ferramentas': typeof FerramentasRoute
   '/mapa': typeof MapaRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/anuncios': typeof AnunciosRoute
   '/auth': typeof AuthRoute
   '/ferramentas': typeof FerramentasRoute
   '/mapa': typeof MapaRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/anuncios': typeof AnunciosRoute
   '/auth': typeof AuthRoute
   '/ferramentas': typeof FerramentasRoute
   '/mapa': typeof MapaRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/anuncios'
     | '/auth'
     | '/ferramentas'
     | '/mapa'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/anuncios'
     | '/auth'
     | '/ferramentas'
     | '/mapa'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/anuncios'
     | '/auth'
     | '/ferramentas'
     | '/mapa'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnunciosRoute: typeof AnunciosRoute
   AuthRoute: typeof AuthRoute
   FerramentasRoute: typeof FerramentasRoute
   MapaRoute: typeof MapaRoute
@@ -128,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anuncios': {
+      id: '/anuncios'
+      path: '/anuncios'
+      fullPath: '/anuncios'
+      preLoaderRoute: typeof AnunciosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -177,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnunciosRoute: AnunciosRoute,
   AuthRoute: AuthRoute,
   FerramentasRoute: FerramentasRoute,
   MapaRoute: MapaRoute,
