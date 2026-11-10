@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { fmt } from "@/components/AppShell";
 import { empresa, empresas, lider, pontosCriticos, posicao, score, temDados, voce } from "@/lib/data";
 import { analisarKeywordsConcorrentes } from "@/lib/seo-keywords";
+import { gerarLinkWhatsAppEnvio } from "@/lib/google-tools";
 
 export const Route = createFileRoute("/reuniao")({
   head: () => ({
@@ -174,11 +175,19 @@ function Reuniao() {
           ))}
         </div>
 
-        <div className="no-print mt-14 flex justify-center gap-4">
-          <button onClick={() => window.print()} className="rounded-lg bg-surface/10 px-6 py-4 font-display text-base font-semibold text-surface ring-1 ring-surface/20 hover:bg-surface/20 transition">
+        <div className="no-print mt-14 flex flex-wrap justify-center gap-4">
+          <button onClick={() => window.print()} className="rounded-lg bg-surface/10 px-6 py-4 font-display text-base font-semibold text-surface ring-1 ring-surface/20 hover:bg-surface/20 transition cursor-pointer">
             Imprimir Proposta / Gerar PDF
           </button>
-          <button className="rounded-lg bg-mint px-8 py-4 font-display text-lg font-semibold text-ink hover:bg-mint/90 transition shadow-lg">
+          <a
+            href={gerarLinkWhatsAppEnvio()}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-4 font-display text-base font-semibold text-white hover:bg-emerald-700 transition shadow-lg cursor-pointer"
+          >
+            <span>📲 Enviar Diagnóstico no WhatsApp</span>
+          </a>
+          <button className="rounded-lg bg-mint px-8 py-4 font-display text-lg font-semibold text-ink hover:bg-mint/90 transition shadow-lg cursor-pointer">
             Fechar Parceria com a Inove Local
           </button>
         </div>

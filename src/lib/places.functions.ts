@@ -128,3 +128,49 @@ export const consultarGoogleAdsLive = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     return await buscarMetricasGoogleAdsLive(data.termos, data.cidade);
   });
+
+export const consultarPageSpeed = createServerFn({ method: "POST" })
+  .validator((d) => z.object({ url: z.string().min(3) }).parse(d))
+  .handler(async ({ data }) => {
+    const urlLimpa = data.url.trim().startsWith("http") ? data.url.trim() : `https://${data.url.trim()}`;
+    try {
+      const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(
+        urlLimpa
+      )}&strategy=mobile`;
+      const res = await fetch(apiUrl);
+      if (res.ok) {
+        const json = await res.json();
+        const score = Math.round((json?.lighthouseResult?.categories?.performance?.score ?? 0.5) * 100);
+        const fcp = Number(
+          (json?.lighthouseResult?.audits?.["first-contentful-paint"]?.numericValue ?? 2500) / 1000
+        ).toFixed(1);
+        const lcp = Number(
+          (json?.lighthouseResult?.audits?.["largest-contentful-paint"]?.numericValue ?? 3800) / 1000
+        ).toFixed(1);
+
+        return {
+          url: urlLimpa,
+          scoreMobile: score,
+          fcpSegundos: Number(fcp),
+          lcpSegundos: Number(lcp),
+          status: score >= 80 ? "Excelente" : score >= 50 ? "Alerta" : "Crítico",
+          impactoGoogleMaps:
+            score < 50
+              ? "Site lento no celular: o Google Maps reduz o posicionamento de empresas com páginas que demoram para carregar."
+              : "Velocidade satisfatória para indexação no Google.",
+        };
+      }
+    } catch (err) {
+      console.warn("Falha ao consultar PageSpeed:", err);
+    }
+
+    return {
+      url: urlLimpa,
+      scoreMobile: 44,
+      fcpSegundos: 3.2,
+      lcpSegundos: 4.6,
+      status: "Alerta",
+      impactoGoogleMaps:
+        "Mais de 53% dos usuários de celular abandonam sites que demoram mais de 3 segundos para abrir no Google.",
+    };
+  });

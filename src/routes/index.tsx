@@ -120,6 +120,33 @@ function Painel() {
           </div>
         </section>
 
+        {/* NOVO: BANNER DE FERRAMENTAS GOOGLE & RAIO-X */}
+        <section className="tile col-span-12 bg-gradient-to-r from-surface via-surface to-paper p-5 ring-1 ring-border">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-4">
+              <span className="flex size-11 items-center justify-center rounded-xl bg-mint/15 font-bold text-mint text-xl shrink-0">
+                ⚡
+              </span>
+              <div>
+                <span className="eyebrow text-muted-foreground">Novas Ferramentas Comerciais Google</span>
+                <h3 className="font-display text-lg font-bold">
+                  Raio-X da Ficha, QR Code de Balcão, Google PageSpeed e Sazonalidade
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Gere a placa de balcão para avaliações, teste a velocidade mobile do site e envie a proposta formatada no WhatsApp em 1 clique.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/ferramentas"
+              className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-xs sm:text-sm font-semibold text-surface transition hover:bg-ink/90 shadow-sm"
+            >
+              <span>Abrir Ferramentas Google</span>
+              <span>→</span>
+            </Link>
+          </div>
+        </section>
+
         <section className="tile col-span-12 lg:col-span-8">
           <div className="flex items-center justify-between">
             <span className="eyebrow">Comparação de presença</span>

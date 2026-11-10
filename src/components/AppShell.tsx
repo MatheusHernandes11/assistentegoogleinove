@@ -9,6 +9,7 @@ const nav = [
   { to: "/mapa", label: "Mapa" },
   { to: "/palavras-chave", label: "Palavras-chave" },
   { to: "/radar", label: "Radar" },
+  { to: "/ferramentas", label: "Ferramentas Google" },
 ] as const;
 
 export function AppShell({ title, subtitle, children }: { title: string; subtitle: string; children?: ReactNode }) {

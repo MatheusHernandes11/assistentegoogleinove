@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as FerramentasRouteImport } from './routes/ferramentas'
 import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as PalavrasChaveRouteImport } from './routes/palavras-chave'
 import { Route as RadarRouteImport } from './routes/radar'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FerramentasRoute = FerramentasRouteImport.update({
+  id: '/ferramentas',
+  path: '/ferramentas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapaRoute = MapaRouteImport.update({
@@ -50,6 +56,7 @@ const ReuniaoRoute = ReuniaoRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/ferramentas': typeof FerramentasRoute
   '/mapa': typeof MapaRoute
   '/palavras-chave': typeof PalavrasChaveRoute
   '/radar': typeof RadarRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/ferramentas': typeof FerramentasRoute
   '/mapa': typeof MapaRoute
   '/palavras-chave': typeof PalavrasChaveRoute
   '/radar': typeof RadarRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/ferramentas': typeof FerramentasRoute
   '/mapa': typeof MapaRoute
   '/palavras-chave': typeof PalavrasChaveRoute
   '/radar': typeof RadarRoute
@@ -74,13 +83,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/mapa' | '/palavras-chave' | '/radar' | '/reuniao'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/ferramentas'
+    | '/mapa'
+    | '/palavras-chave'
+    | '/radar'
+    | '/reuniao'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/mapa' | '/palavras-chave' | '/radar' | '/reuniao'
+  to:
+    | '/'
+    | '/auth'
+    | '/ferramentas'
+    | '/mapa'
+    | '/palavras-chave'
+    | '/radar'
+    | '/reuniao'
   id:
     | '__root__'
     | '/'
     | '/auth'
+    | '/ferramentas'
     | '/mapa'
     | '/palavras-chave'
     | '/radar'
@@ -90,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  FerramentasRoute: typeof FerramentasRoute
   MapaRoute: typeof MapaRoute
   PalavrasChaveRoute: typeof PalavrasChaveRoute
   RadarRoute: typeof RadarRoute
@@ -110,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ferramentas': {
+      id: '/ferramentas'
+      path: '/ferramentas'
+      fullPath: '/ferramentas'
+      preLoaderRoute: typeof FerramentasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mapa': {
@@ -146,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  FerramentasRoute: FerramentasRoute,
   MapaRoute: MapaRoute,
   PalavrasChaveRoute: PalavrasChaveRoute,
   RadarRoute: RadarRoute,
