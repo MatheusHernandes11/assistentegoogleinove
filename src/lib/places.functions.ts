@@ -62,7 +62,7 @@ export const auditarEmpresa = createServerFn({ method: "POST" })
   }).parse(d))
   .handler(async ({ data }): Promise<Auditoria["resultado"]> => {
     try {
-      // 1. Tenta consulta ao Google Places oficial se houver credenciais
+      // Consulta ao Google Places oficial
       const [alvo] = await places("places:searchText",
         { textQuery: `${data.nome} ${data.endereco} ${data.cidade}`, pageSize: 1, languageCode: "pt-BR", regionCode: "BR" },
         CAMPOS.split(",").map((c) => `places.${c}`).join(",") + ",places.reviews.publishTime");
@@ -82,20 +82,17 @@ export const auditarEmpresa = createServerFn({ method: "POST" })
         };
       }
     } catch (err) {
-      console.warn("Consulta Google Places indisponível ou sem chave. Usando inteligência analítica nacional:", err);
+      console.error("Erro na consulta do Google Places:", err);
+      throw new Error(
+        err instanceof Error
+          ? err.message
+          : `Não foi possível consultar os dados reais no Google Places para "${data.nome}" em "${data.cidade}".`
+      );
     }
 
-    // 2. Fallback Analítico Nacional para qualquer empresa e cidade do Brasil
-    const perfilEnvio = {
-      nome: data.nome,
-      cidade: data.cidade,
-      endereco: data.endereco,
-      segmento: data.segmento,
-      raio: data.raio,
-      ...(data.uf !== undefined ? { uf: data.uf } : {}),
-    };
-    const gerada = gerarAuditoriaNacional(perfilEnvio);
-    return gerada.resultado;
+    throw new Error(
+      `Nenhuma ficha real encontrada no Google Maps para "${data.nome}" em "${data.cidade}". Verifique se o nome comercial e endereço coincidem com a ficha do Google.`
+    );
   });
 
 export const rankingPalavra = createServerFn({ method: "POST" })
@@ -109,18 +106,12 @@ export const rankingPalavra = createServerFn({ method: "POST" })
       if (r && r.length > 0) {
         return r.map((p) => ({ placeId: p.id, nome: p.displayName?.text ?? "", nota: p.rating ?? 0, avaliacoes: p.userRatingCount ?? 0 }));
       }
-    } catch {
-      // continua para fallback
+    } catch (e) {
+      console.warn("Google Places indisponível para ranking:", e);
     }
 
-    // Fallback gerado baseado em relevância de busca
-    return [
-      { placeId: "gen-lider", nome: `Líder em ${data.termo}`, nota: 4.9, avaliacoes: 520 },
-      { placeId: "gen-2", nome: `Especialista ${data.termo} Centro`, nota: 4.8, avaliacoes: 310 },
-      { placeId: "gen-3", nome: `Clínica & Atendimento ${data.termo}`, nota: 4.7, avaliacoes: 215 },
-      { placeId: "gen-4", nome: `Referência Regional`, nota: 4.6, avaliacoes: 140 },
-      { placeId: "gen-5", nome: `Serviço Local Autorizado`, nota: 4.4, avaliacoes: 88 },
-    ];
+    // Não retorna dados falsos: apenas dados reais se existirem
+    return [];
   });
 
 export const consultarGoogleAdsLive = createServerFn({ method: "POST" })
@@ -164,13 +155,6 @@ export const consultarPageSpeed = createServerFn({ method: "POST" })
       console.warn("Falha ao consultar PageSpeed:", err);
     }
 
-    return {
-      url: urlLimpa,
-      scoreMobile: 44,
-      fcpSegundos: 3.2,
-      lcpSegundos: 4.6,
-      status: "Alerta",
-      impactoGoogleMaps:
-        "Mais de 53% dos usuários de celular abandonam sites que demoram mais de 3 segundos para abrir no Google.",
-    };
+    // Não retorna dados falsos: se o Google não responder, retorna nulo
+    return null;
   });

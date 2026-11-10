@@ -1,7 +1,7 @@
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { aplicarAuditoria, empresa, gerarAuditoriaNacional } from "@/lib/data";
+import { aplicarAuditoria, empresa } from "@/lib/data";
 import { ESTADOS_BRASIL } from "@/lib/geo-brasil";
 import { auditarEmpresa } from "@/lib/places.functions";
 import { useUsuario, useModalAuditoria, abrirModalAuditoria } from "@/lib/use-auditoria";
@@ -139,16 +139,8 @@ export function NovaAuditoria() {
             };
 
             try {
-              let resultado;
-              try {
-                setEtapaStatus(`Buscando concorrentes no raio de ${f.raio} km...`);
-                resultado = await auditar({ data: perfil });
-              } catch (serverErr) {
-                console.warn("Usando inteligência analítica direta:", serverErr);
-                setEtapaStatus("Calculando palavras-chave, CPC de Google Ads e gap comercial...");
-                const gerada = gerarAuditoriaNacional(perfil);
-                resultado = gerada.resultado;
-              }
+              setEtapaStatus(`Consultando dados reais no Google Maps...`);
+              const resultado = await auditar({ data: perfil });
               aplicarAuditoria({ perfil, resultado });
               fechar();
             } catch (err) {

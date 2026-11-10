@@ -15,42 +15,28 @@ export type Perfil = {
   raio: number;
 };
 
-// Dados padrão iniciais (garante que o SSR e a primeira abertura nunca fiquem em branco)
-const auditoriaInicialPadrao: Auditoria = gerarAuditoriaNacional({
-  nome: "Clínica Odonto Prime",
-  cidade: "São Paulo",
-  uf: "SP",
-  endereco: "Av. Paulista, 1000",
-  segmento: "Clínica Odontológica",
-  raio: 5,
-});
-
+// Estado inicial limpo (somente dados reais do Google)
 export const empresa: Perfil & {
   placeId?: string | undefined;
   ultimaAvaliacao: string | null;
   centro: { lat: number; lng: number } | null;
   real: boolean;
 } = {
-  ...auditoriaInicialPadrao.perfil,
-  placeId: auditoriaInicialPadrao.resultado.voce.placeId,
-  ultimaAvaliacao: auditoriaInicialPadrao.resultado.ultimaAvaliacao,
-  centro: auditoriaInicialPadrao.resultado.centro,
-  real: true,
+  nome: "",
+  cidade: "",
+  uf: undefined,
+  endereco: "",
+  segmento: "",
+  raio: 5,
+  placeId: undefined,
+  ultimaAvaliacao: null,
+  centro: null,
+  real: false,
 };
 
-const c0 = auditoriaInicialPadrao.resultado.centro;
-const escalaInit = 40 / 5;
-const posInit = (e: { lat: number; lng: number }) => ({
-  x: Math.max(3, Math.min(97, 50 + (e.lng - c0.lng) * 111 * Math.cos((c0.lat * Math.PI) / 180) * escalaInit)),
-  y: Math.max(3, Math.min(97, 50 - (e.lat - c0.lat) * 111 * escalaInit)),
-});
+export const empresas: Empresa[] = [];
 
-export const empresas: Empresa[] = [
-  { ...auditoriaInicialPadrao.resultado.voce, ...posInit(auditoriaInicialPadrao.resultado.voce), id: "voce", voce: true },
-  ...auditoriaInicialPadrao.resultado.concorrentes.map((c, i) => ({ ...c, ...posInit(c), id: `c${i}` })),
-];
-
-export const temDados = () => empresas.length > 0;
+export const temDados = () => Boolean(empresa.real && empresas.length > 0 && empresa.nome);
 const vazio: Empresa = { id: "voce", nome: "—", nota: 0, avaliacoes: 0, fotos: 0, categorias: 0, site: false, distancia: 0, lat: 0, lng: 0, x: 50, y: 50, voce: true };
 const atual = () => (empresas[0] ?? vazio) as unknown as Record<string | symbol, unknown>;
 export const voce = new Proxy({} as Empresa, {

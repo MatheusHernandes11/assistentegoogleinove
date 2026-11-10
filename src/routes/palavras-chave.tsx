@@ -73,15 +73,15 @@ function KeywordsPage() {
           termo,
           categoria: empresa.segmento || "Geral",
           intencao: "fundo",
-          volumeMensal: Math.round(1400 * (0.8 + Math.random() * 0.5)),
-          cpcMedio: Number((3.5 + Math.random() * 4.5).toFixed(2)),
+          volumeMensal: 0,
+          cpcMedio: 0,
           concorrenciaAds: "Alta",
-          concorrentesQueUsam: topLider ? [topLider.nome] : [],
-          taxaConcorrentes: 65,
+          concorrentesQueUsam: res.map((r) => r.nome),
+          taxaConcorrentes: res.length > 0 ? 100 : 0,
           posicaoSua: null,
           status: "invisivel",
-          perdaMensalCliques: 650,
-          argumentoVenda: `Busca pesquisada ao vivo: concorrentes aparecem e sua empresa está fora do Top 3.`,
+          perdaMensalCliques: 0,
+          argumentoVenda: `Busca pesquisada ao vivo no Google Maps: concorrentes reais detectados.`,
         };
         setTermosExtras((prev) => [novo, ...prev]);
       }

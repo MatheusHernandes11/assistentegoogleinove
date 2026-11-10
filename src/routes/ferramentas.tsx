@@ -41,6 +41,7 @@ function FerramentasPage() {
   const [urlSite, setUrlSite] = useState("www.mpinvest.com.br");
   const [carregandoSpeed, setCarregandoSpeed] = useState(false);
   const [speedRes, setSpeedRes] = useState<ResultadoPageSpeed | null>(null);
+  const [speedErro, setSpeedErro] = useState<string | null>(null);
 
   const saude = useMemo(() => diagnosticarSaudeFicha(), [empresa.nome, voce.avaliacoes, voce.fotos, empresa.ultimaAvaliacao]);
   const gap = useMemo(() => calcularGapReputacao(), [empresa.nome, voce.avaliacoes, lider().avaliacoes, voce.placeId, empresa.placeId]);
@@ -68,11 +69,17 @@ function FerramentasPage() {
   async function rodarTestePageSpeed() {
     if (!urlSite.trim()) return;
     setCarregandoSpeed(true);
+    setSpeedErro(null);
+    setSpeedRes(null);
     try {
       const res = await testarSpeed({ data: { url: urlSite } });
-      setSpeedRes(res);
+      if (res) {
+        setSpeedRes(res);
+      } else {
+        setSpeedErro("O Google PageSpeed não conseguiu analisar esta URL. Verifique se o site está online e acessível publicamente.");
+      }
     } catch (err) {
-      console.error(err);
+      setSpeedErro(err instanceof Error ? err.message : "Falha ao testar no Google PageSpeed.");
     } finally {
       setCarregandoSpeed(false);
     }
@@ -166,18 +173,30 @@ function FerramentasPage() {
 
             <div className="tile col-span-12 md:col-span-4 bg-surface p-6">
               <div className="flex items-center justify-between">
-                <span className="eyebrow text-muted-foreground">Publicações & Ofertas</span>
-                <span className="rounded-full bg-amber/15 px-2 py-0.5 text-[10px] font-bold text-amber ring-1 ring-amber/25">
-                  📋 Regra Oficial
+                <span className="eyebrow text-muted-foreground">Website no Google Maps</span>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                    voce.site
+                      ? "bg-mint/15 text-mint ring-1 ring-mint/25"
+                      : "bg-coral/15 text-coral ring-1 ring-coral/25"
+                  }`}
+                >
+                  🟢 Dado Real Google
                 </span>
               </div>
               <div className="mt-4 flex items-baseline gap-2">
-                <span className="font-display text-4xl font-bold leading-none text-amber">
-                  A cada 7 dias
+                <span
+                  className={`font-display text-3xl font-bold leading-none ${
+                    voce.site ? "text-mint" : "text-coral"
+                  }`}
+                >
+                  {voce.site ? "Site Cadastrado" : "Sem Website"}
                 </span>
               </div>
               <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
-                Fichas sem posts semanais perdem relevância no Google Maps. A API pública não expõe posts de terceiros — pergunte ao cliente se ele costuma postar novidades.
+                {voce.site
+                  ? "Sua empresa possui link de website verificado no perfil do Google Maps."
+                  : "Fichas sem website oficial perdem relevância e sofrem desvantagem no algoritmo do Google Maps."}
               </p>
             </div>
           </div>
@@ -365,6 +384,12 @@ function FerramentasPage() {
                 {carregandoSpeed ? "Analisando com Google..." : "⚡ Testar Velocidade ao Vivo"}
               </button>
             </div>
+
+            {speedErro && (
+              <p className="rounded-xl bg-coral/10 p-3.5 text-xs text-coral ring-1 ring-coral/25">
+                {speedErro}
+              </p>
+            )}
           </div>
 
           {speedRes && (
@@ -424,41 +449,42 @@ function FerramentasPage() {
         <div className="tile bg-surface p-6 space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <span className="eyebrow text-mint font-bold">Google Trends Regional</span>
+              <span className="eyebrow text-mint font-bold">Google Trends Oficial</span>
               <h3 className="font-display text-xl font-bold">
-                Curva de Sazonalidade de Buscas: {trends.nicho}
+                Demanda Real de Buscas: {empresa.segmento || "Seu Segmento"}
               </h3>
               <p className="text-xs text-muted-foreground">
-                Mapeamento do volume de interesse de compra ao longo dos 12 meses do ano.
+                Consulte o volume de interesse em tempo real direto dos servidores do Google Trends Brasil.
               </p>
             </div>
-            <div className="rounded-xl bg-mint/15 px-4 py-2 ring-1 ring-mint/30">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">Momento Atual</span>
-              <span className="font-display text-sm font-bold text-ink">{trends.statusDemanda}</span>
+            <a
+              href={`https://trends.google.com.br/trends/explore?geo=BR&q=${encodeURIComponent(empresa.segmento || "Consórcios")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-xs sm:text-sm font-semibold text-surface transition hover:bg-ink/90 shadow-sm cursor-pointer"
+            >
+              <span>Abrir no Google Trends Oficial</span>
+              <span>↗</span>
+            </a>
+          </div>
+
+          <div className="rounded-xl bg-paper p-5 ring-1 ring-border space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-ink">
+              📈 Dados Oficiais do Google sem Estimativas
+            </h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              O Google Trends exibe os dados reais de comportamento do consumidor brasileiro para <strong>"{empresa.segmento}"</strong>, mostrando se a demanda do seu setor está em alta, estável ou em época de pico no Brasil.
+            </p>
+            <div className="pt-2 flex flex-wrap gap-2">
+              <a
+                href={`https://trends.google.com.br/trends/explore?geo=BR&q=${encodeURIComponent(empresa.segmento || "Consórcios")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg bg-surface px-3 py-1.5 text-xs font-medium text-ink ring-1 ring-border hover:bg-paper transition"
+              >
+                🔍 Comparar com concorrentes no Google Trends ↗
+              </a>
             </div>
-          </div>
-
-          {/* Gráfico Visual de Barras Mensais */}
-          <div className="grid grid-cols-12 gap-2 pt-4 items-end h-48 border-b border-border pb-4">
-            {trends.meses.map((m) => (
-              <div key={m.mes} className="flex flex-col items-center gap-1.5 h-full justify-end">
-                <span className="text-[10px] font-mono font-semibold text-muted-foreground">{m.indice}</span>
-                <div
-                  className={`w-full max-w-[32px] rounded-t-lg transition-all ${
-                    m.isAtual ? "bg-mint ring-2 ring-ink" : m.isPico ? "bg-coral" : "bg-ink/15 hover:bg-ink/25"
-                  }`}
-                  style={{ height: `${m.indice}%` }}
-                />
-                <span className={`text-[11px] font-semibold ${m.isAtual ? "text-mint font-bold" : "text-muted-foreground"}`}>
-                  {m.mes}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="rounded-xl bg-paper p-4 ring-1 ring-border space-y-1">
-            <span className="text-xs font-bold text-ink">💡 Conselho para o Fechamento de Vendas:</span>
-            <p className="text-xs text-muted-foreground leading-relaxed">{trends.conselhoEstrategico}</p>
           </div>
         </div>
       )}
