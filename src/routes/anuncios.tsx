@@ -35,6 +35,7 @@ function EspiaoAnunciosPage() {
 
   const [termoPesquisa, setTermoPesquisa] = useState("");
   const [copiado, setCopiado] = useState(false);
+  const [avisoCopiadoId, setAvisoCopiadoId] = useState<string | null>(null);
 
   const topLider = lider();
   const concs = concorrentes();
@@ -47,6 +48,18 @@ function EspiaoAnunciosPage() {
   // Alvo para busca livre na Biblioteca de Anúncios do Google
   const alvoBuscaAtual = termoPesquisa.trim() || topLider.nome || empresa.segmento || "";
   const linkTransparenciaOficial = gerarLinkGoogleAdsTransparency(alvoBuscaAtual);
+
+  function abrirBibliotecaComCopia(nomeEmpresa: string, id?: string) {
+    const nomeLimpo = nomeEmpresa.split("|")[0]?.split("-")[0]?.trim() || nomeEmpresa;
+    if (nomeLimpo) {
+      navigator.clipboard.writeText(nomeLimpo);
+      if (id) {
+        setAvisoCopiadoId(id);
+        setTimeout(() => setAvisoCopiadoId(null), 3500);
+      }
+    }
+    window.open("https://adstransparency.google.com/?region=BR", "_blank");
+  }
 
   function copiarResumoComercial() {
     const texto = `🔍 *ESPIONAGEM DE ANÚNCIOS DOS CONCORRENTES NO GOOGLE ADS*
@@ -113,14 +126,23 @@ _Relatório de dados reais gerado pelo Inove Local_`;
                 className="flex-1 rounded-xl bg-surface/10 px-4 py-3 text-sm text-surface placeholder:text-surface/50 ring-1 ring-surface/20 outline-none focus:ring-2 focus:ring-mint backdrop-blur-sm"
               />
               <a
-                href={linkTransparenciaOficial}
+                href={`https://www.google.com.br/search?q=${encodeURIComponent(`${termoPesquisa.trim() || topLider.nome || empresa.segmento} ${empresa.cidade}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-mint px-5 py-3 text-xs sm:text-sm font-bold text-ink transition hover:bg-mint/90 shadow-md whitespace-nowrap cursor-pointer"
               >
-                <span>Abrir na Biblioteca do Google</span>
+                <span>Ver Anúncios no Google</span>
                 <span className="text-xs font-mono">↗</span>
               </a>
+              <button
+                type="button"
+                onClick={() => abrirBibliotecaComCopia(termoPesquisa.trim() || topLider.nome || empresa.segmento || "", "topo")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-surface/20 hover:bg-surface/30 text-surface px-4 py-3 text-xs font-semibold ring-1 ring-surface/30 transition whitespace-nowrap cursor-pointer"
+                title="Copiar nome e abrir a Biblioteca de Transparência do Google"
+              >
+                <span>{avisoCopiadoId === "topo" ? "✓ Nome Copiado!" : "Biblioteca Ads"}</span>
+                <span className="text-xs font-mono">↗</span>
+              </button>
             </div>
 
             {/* Atalhos Rápidos dos Concorrentes Reais do Raio */}
@@ -222,14 +244,25 @@ _Relatório de dados reais gerado pelo Inove Local_`;
               {/* Botões de Ação Oficial */}
               <div className="pt-3 border-t border-border/60 flex flex-wrap gap-2">
                 <a
-                  href={c.linkTransparenciaGoogle}
+                  href={c.linkBuscaGoogleAds}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-ink px-3.5 py-2 text-xs font-semibold text-surface hover:bg-ink/90 transition shadow-xs cursor-pointer text-center"
+                  title="Abrir busca do Google com anúncios patrocinados ativos deste concorrente"
                 >
                   <span>Ver Anúncios no Google</span>
                   <span className="text-xs font-mono">↗</span>
                 </a>
+
+                <button
+                  type="button"
+                  onClick={() => abrirBibliotecaComCopia(c.nome, c.id)}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-paper px-3 py-2 text-xs font-medium text-ink ring-1 ring-border hover:bg-surface transition cursor-pointer"
+                  title="Copiar nome do concorrente e abrir a Biblioteca Oficial de Transparência do Google"
+                >
+                  <span>{avisoCopiadoId === c.id ? "✓ Copiado!" : "Biblioteca Ads"}</span>
+                  <span className="text-xs font-mono">↗</span>
+                </button>
 
                 <a
                   href={c.linkGoogleMaps}
@@ -237,7 +270,7 @@ _Relatório de dados reais gerado pelo Inove Local_`;
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-paper px-3 py-2 text-xs font-medium text-ink ring-1 ring-border hover:bg-surface transition cursor-pointer"
                 >
-                  <span>Ficha no Maps</span>
+                  <span>Maps</span>
                   <span className="text-xs font-mono">↗</span>
                 </a>
               </div>

@@ -9,14 +9,14 @@ export type ConcorrenteRealAds = {
   endereco: string;
   distancia: number;
   site: boolean;
+  linkBuscaGoogleAds: string;
   linkTransparenciaGoogle: string;
   linkGoogleMaps: string;
 };
 
 /** Gera o link oficial da Biblioteca de Anúncios do Google (Google Ads Transparency Center) */
-export function gerarLinkGoogleAdsTransparency(termoOuEmpresa: string): string {
-  const busca = encodeURIComponent(termoOuEmpresa.trim());
-  return `https://adstransparency.google.com/?region=BR&query=${busca}`;
+export function gerarLinkGoogleAdsTransparency(termoOuEmpresa?: string): string {
+  return `https://adstransparency.google.com/?region=BR`;
 }
 
 /** Gera link de busca no Google com foco em anúncios patrocinados da região */
@@ -48,6 +48,7 @@ export function obterConcorrentesReaisParaAds(listaConcs?: Empresa[]): Concorren
       endereco: c.endereco || "",
       distancia: c.distancia,
       site: Boolean(c.site),
+      linkBuscaGoogleAds: gerarLinkBuscaGooglePatrocinados(nomeLimpo, empresa.cidade),
       linkTransparenciaGoogle: gerarLinkGoogleAdsTransparency(nomeLimpo),
       linkGoogleMaps: `https://www.google.com/maps/search/?api=1&query=${queryMaps}`,
     };
