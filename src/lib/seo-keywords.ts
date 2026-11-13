@@ -729,18 +729,18 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
   });
 
   const totalInvisivel = keywords.filter((k) => k.status === "invisivel").length;
-  const taxaInvisibilidade = Math.round((totalInvisivel / keywords.length) * 100);
+  const taxaInvisibilidade = keywords.length > 0 ? Math.round((totalInvisivel / keywords.length) * 100) : 0;
 
   const palavrasTop3 = keywords.filter((k) => k.status === "top3").length;
   const palavrasMeio = keywords.filter((k) => k.status === "fora_top3").length;
-  const scoreSEO = Math.min(
-    100,
-    Math.max(12, Math.round((palavrasTop3 * 100 + palavrasMeio * 45) / keywords.length))
-  );
+  const scoreSEO = keywords.length > 0
+    ? Math.min(100, Math.max(12, Math.round((palavrasTop3 * 100 + palavrasMeio * 45) / keywords.length)))
+    : 0;
 
+  const primeiroTermo = keywords[0]?.termo || `${seg} em ${cid}`;
   const pontosVenda: string[] = [
-    `Nas buscas de maior intenção de compra de ${locDesc}, seu cliente encontra primeiro o ${topLider.nome || "líder da região"}.`,
-    `Termos com intenção de contratação imediata (como "${keywords[0]?.termo}") exigem presença no Top 3 do Google Maps e anúncios patrocinados no Google Ads.`,
+    `Nas buscas de maior intenção de compra de ${locDesc}, seu cliente encontra primeiro o ${topLider?.nome || "líder da região"}.`,
+    `Termos com intenção de contratação imediata (como "${primeiroTermo}") exigem presença no Top 3 do Google Maps e anúncios patrocinados no Google Ads.`,
     `A busca por termos específicos de alto ticket e formas de parcelamento é onde se concentram os clientes mais rentáveis do seu mercado.`,
     `Mais de 75% dos consumidores pesquisam no Google antes de entrar em contato via WhatsApp para verificar se a empresa possui avaliações positivas recentes.`,
   ];

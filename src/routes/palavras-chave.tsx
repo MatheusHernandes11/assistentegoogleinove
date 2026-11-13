@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo } from "react";
 import { AppShell, fmt } from "@/components/AppShell";
-import { empresa, temDados, voce, lider, concorrentes } from "@/lib/data";
+import { empresa, empresas, temDados, voce, lider, concorrentes, posicao } from "@/lib/data";
 import { rankingPalavra } from "@/lib/places.functions";
 import { useAuditoria } from "@/lib/use-auditoria";
 import { analisarKeywordsConcorrentes, type IntencaoBusca, type KeywordAnalise } from "@/lib/seo-keywords";
@@ -40,7 +40,24 @@ function KeywordsPage() {
 
   // Análise competitiva gerada dinamicamente com base na empresa e concorrentes atuais
   const { keywords: keywordsBase, diagnostico } = useMemo(() => {
-    return analisarKeywordsConcorrentes();
+    try {
+      return analisarKeywordsConcorrentes();
+    } catch (e) {
+      console.error("Erro ao analisar keywords:", e);
+      return {
+        keywords: [] as KeywordAnalise[],
+        diagnostico: {
+          scoreSEOAds: 0,
+          totalVolumeBuscas: 0,
+          buscasPerdidasParaConcorrentes: 0,
+          custoOportunidadeAds: 0,
+          taxaInvisibilidade: 0,
+          palavrasMaisDisputadas: [] as KeywordAnalise[],
+          oportunidadesOuro: [] as KeywordAnalise[],
+          pontosVendaComercial: [] as string[],
+        },
+      };
+    }
   }, [empresa.segmento, empresa.cidade, empresa.raio, voce.avaliacoes]);
 
   const todasKeywords = useMemo(() => {
