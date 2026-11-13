@@ -128,7 +128,7 @@ function Reuniao() {
                     <td className="px-5 py-3.5 font-medium">{k.termo}</td>
                     <td className="px-4 py-3.5">
                       <span className="rounded-full bg-surface/10 px-2 py-0.5 text-xs">
-                        {k.intencao === "fundo" ? "Alta Intenção 🔥" : "Comparação 🎯"}
+                        {k.rotuloGatilho || (k.intencao === "fundo" ? "Alta Intenção 🔥" : "Comparação 🎯")}
                       </span>
                     </td>
                     <td className="px-4 py-3.5 text-xs text-surface/90 font-semibold">{k.concorrentesQueUsam[0] || L.nome}</td>
@@ -156,9 +156,9 @@ function Reuniao() {
 
           {script && (
             <div className="mt-4 rounded-xl bg-mint/10 p-5 ring-1 ring-mint/25">
-              <p className="text-xs uppercase tracking-wider font-semibold text-mint">Script Comercial para Falar ao Cliente:</p>
+              <p className="text-xs uppercase tracking-wider font-semibold text-mint">Script Comercial para Falar ao Cliente (Visão do Gestor de Tráfego):</p>
               <p className="mt-1 text-sm text-surface/90 leading-relaxed">
-                "{empresa.nome}, enquanto você depende apenas de indicações boca a boca, o <strong>{L.nome}</strong> e outros concorrentes estão absorvendo mais de <strong>{diagnostico.buscasPerdidasParaConcorrentes.toLocaleString("pt-BR")} pessoas</strong> que procuram ativamente por <em>'{keywords[0]?.termo}'</em> na sua cidade todo mês. Se você fosse pagar para o Google Ads trazer esse volume, custaria mais de <strong>R$ {diagnostico.custoOportunidadeAds.toLocaleString("pt-BR")}/mês</strong>. Com o nosso método de posicionamento orgânico e gestão de campanhas locais, nós vamos colocar sua empresa na frente deles."
+                "{empresa.nome}, o consumidor de {empresa.segmento} não pesquisa de forma genérica. Quando ele tem uma necessidade urgente ou dinheiro na mão para contratar, ele digita buscas específicas de comportamento de compra como <em>'{keywords[0]?.termo}'</em> e <em>'{keywords[1]?.termo}'</em>. Hoje, quem domina o topo do Google Maps e leva esses contatos qualificados no seu raio de atendimento é o <strong>{L.nome}</strong>. Com o nosso método de autoridade no Google Maps e anúncios de alta intenção, nós vamos colocar sua empresa na frente desses compradores prontos para fechar."
               </p>
             </div>
           )}

@@ -19,7 +19,13 @@ export const Route = createFileRoute("/palavras-chave")({
   component: KeywordsPage,
 });
 
-type FiltroTipo = "todas" | "fundo" | "concorrentes" | "invisiveis" | "ouro";
+type FiltroTipo =
+  | "todas"
+  | "urgencia"
+  | "preco"
+  | "alto_ticket"
+  | "hiperlocal"
+  | "confianca";
 
 function KeywordsPage() {
   useAuditoria();
@@ -43,10 +49,11 @@ function KeywordsPage() {
 
   const keywordsFiltradas = useMemo(() => {
     return todasKeywords.filter((k) => {
-      if (filtro === "fundo") return k.intencao === "fundo";
-      if (filtro === "concorrentes") return k.taxaConcorrentes >= 50;
-      if (filtro === "invisiveis") return k.status === "invisivel";
-      if (filtro === "ouro") return k.intencao === "fundo" && k.concorrenciaAds !== "Alta";
+      if (filtro === "urgencia") return k.gatilho === "urgencia";
+      if (filtro === "preco") return k.gatilho === "preco_parcelamento";
+      if (filtro === "alto_ticket") return k.gatilho === "alto_ticket";
+      if (filtro === "hiperlocal") return k.gatilho === "hiperlocal";
+      if (filtro === "confianca") return k.gatilho === "confianca";
       return true;
     });
   }, [todasKeywords, filtro]);
@@ -73,6 +80,9 @@ function KeywordsPage() {
           termo,
           categoria: empresa.segmento || "Geral",
           intencao: "fundo",
+          gatilho: "urgencia",
+          rotuloGatilho: "🔥 Pesquisa ao Vivo",
+          visaoGestorTrafego: "Termo pesquisado ao vivo para verificar posicionamento real no Google Maps.",
           volumeMensal: 0,
           cpcMedio: 0,
           concorrenciaAds: "Alta",
@@ -256,47 +266,55 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
           </button>
         </form>
 
-        {/* Abas de Filtros */}
+        {/* Abas de Filtros de Tráfego & Comportamento do Consumidor */}
         <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-3">
           <button
             onClick={() => setFiltro("todas")}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-              filtro === "todas" ? "bg-ink text-surface" : "bg-paper text-muted-foreground hover:text-ink"
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              filtro === "todas" ? "bg-ink text-surface" : "bg-paper text-muted-foreground hover:text-ink ring-1 ring-border"
             }`}
           >
-            Todas ({todasKeywords.length})
+            Todas as Buscas ({todasKeywords.length})
           </button>
           <button
-            onClick={() => setFiltro("fundo")}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-              filtro === "fundo" ? "bg-coral text-surface" : "bg-paper text-muted-foreground hover:text-ink"
+            onClick={() => setFiltro("urgencia")}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              filtro === "urgencia" ? "bg-coral text-surface shadow-xs" : "bg-paper text-muted-foreground hover:text-ink ring-1 ring-border"
             }`}
           >
-            Alta Conversão / Fundo de Funil 🔥
+            🔥 Urgência & Fundo de Funil ({todasKeywords.filter((k) => k.gatilho === "urgencia").length})
           </button>
           <button
-            onClick={() => setFiltro("concorrentes")}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-              filtro === "concorrentes" ? "bg-ink text-surface" : "bg-paper text-muted-foreground hover:text-ink"
+            onClick={() => setFiltro("preco")}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              filtro === "preco" ? "bg-amber text-surface shadow-xs" : "bg-paper text-muted-foreground hover:text-ink ring-1 ring-border"
             }`}
           >
-            Dominadas pelos Concorrentes ⚔️
+            💰 Cotação & Preço ({todasKeywords.filter((k) => k.gatilho === "preco_parcelamento").length})
           </button>
           <button
-            onClick={() => setFiltro("invisiveis")}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-              filtro === "invisiveis" ? "bg-amber text-surface" : "bg-paper text-muted-foreground hover:text-ink"
+            onClick={() => setFiltro("alto_ticket")}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              filtro === "alto_ticket" ? "bg-mint text-ink shadow-xs" : "bg-paper text-muted-foreground hover:text-ink ring-1 ring-border"
             }`}
           >
-            Onde Você Está Invisível ❌
+            💎 Alto Ticket & Especialidades ({todasKeywords.filter((k) => k.gatilho === "alto_ticket").length})
           </button>
           <button
-            onClick={() => setFiltro("ouro")}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-              filtro === "ouro" ? "bg-mint text-ink font-semibold" : "bg-paper text-muted-foreground hover:text-ink"
+            onClick={() => setFiltro("hiperlocal")}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              filtro === "hiperlocal" ? "bg-ink text-surface shadow-xs" : "bg-paper text-muted-foreground hover:text-ink ring-1 ring-border"
             }`}
           >
-            Oportunidades de Ouro 🏆
+            📍 Hiperlocal no Bairro ({todasKeywords.filter((k) => k.gatilho === "hiperlocal").length})
+          </button>
+          <button
+            onClick={() => setFiltro("confianca")}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              filtro === "confianca" ? "bg-purple-600 text-surface shadow-xs" : "bg-paper text-muted-foreground hover:text-ink ring-1 ring-border"
+            }`}
+          >
+            🏆 Prova Social & Avaliações ({todasKeywords.filter((k) => k.gatilho === "confianca").length})
           </button>
         </div>
       </div>
@@ -307,8 +325,8 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
           <table className="w-full text-left text-sm">
             <thead className="bg-paper border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
-                <th className="px-5 py-3.5">Palavra-Chave / Termo</th>
-                <th className="px-4 py-3.5">Intenção Comercial</th>
+                <th className="px-5 py-3.5">Palavra-Chave / Termo do Consumidor</th>
+                <th className="px-4 py-3.5">Comportamento de Compra</th>
                 <th className="px-4 py-3.5">Quem Domina no Maps</th>
                 <th className="px-4 py-3.5">Sua Ficha no Maps</th>
                 <th className="px-4 py-3.5 text-center">Verificação Oficial</th>
@@ -319,22 +337,23 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
                 const queryGoogleMaps = encodeURIComponent(`${k.termo} ${empresa.cidade}`);
                 return (
                   <tr key={k.id} className="transition hover:bg-paper/60">
-                    <td className="px-5 py-4">
-                      <p className="font-medium text-ink">{k.termo}</p>
-                      <p className="text-[11px] text-muted-foreground">{k.argumentoVenda}</p>
+                    <td className="px-5 py-4 max-w-md">
+                      <p className="font-semibold text-ink text-sm leading-snug">
+                        {k.termo}
+                      </p>
+                      {k.visaoGestorTrafego && (
+                        <div className="mt-1.5 rounded-lg bg-paper p-2.5 ring-1 ring-border/80">
+                          <p className="text-[11px] text-muted-foreground leading-relaxed">
+                            <strong className="text-ink">🧠 Psicologia de Compra:</strong> {k.visaoGestorTrafego}
+                          </p>
+                        </div>
+                      )}
+                      <p className="mt-1 text-[11px] text-muted-foreground">{k.argumentoVenda}</p>
                     </td>
 
                     <td className="px-4 py-4">
-                      <span
-                        className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                          k.intencao === "fundo"
-                            ? "bg-coral/15 text-coral"
-                            : k.intencao === "meio"
-                            ? "bg-amber/15 text-amber"
-                            : "bg-ink/10 text-muted-foreground"
-                        }`}
-                      >
-                        {k.intencao === "fundo" ? "Alta Intenção 🔥" : k.intencao === "meio" ? "Comparação 🎯" : "Informativa 💡"}
+                      <span className="inline-block rounded-full bg-paper px-2.5 py-1 text-xs font-semibold text-ink ring-1 ring-border whitespace-nowrap">
+                        {k.rotuloGatilho || "Intenção Comercial"}
                       </span>
                     </td>
 
@@ -351,16 +370,16 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
 
                     <td className="px-4 py-4">
                       {k.status === "invisivel" ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-coral/10 px-2.5 py-0.5 text-xs font-medium text-coral ring-1 ring-coral/25">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-coral/10 px-2.5 py-0.5 text-xs font-medium text-coral ring-1 ring-coral/25 whitespace-nowrap">
                           <span className="size-1.5 rounded-full bg-coral" />
                           Fora do Top 3
                         </span>
                       ) : k.status === "fora_top3" ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-amber/15 px-2.5 py-0.5 text-xs font-medium text-amber ring-1 ring-amber/25">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber/15 px-2.5 py-0.5 text-xs font-medium text-amber ring-1 ring-amber/25 whitespace-nowrap">
                           {k.posicaoSua}º lugar
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint ring-1 ring-mint/25">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint ring-1 ring-mint/25 whitespace-nowrap">
                           ✓ Top 3 da Região
                         </span>
                       )}
@@ -371,7 +390,7 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
                         href={`https://www.google.com/maps/search/?api=1&query=${queryGoogleMaps}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-lg bg-paper px-2.5 py-1 text-xs font-medium text-ink ring-1 ring-border hover:bg-mint/10 hover:text-ink transition cursor-pointer"
+                        className="inline-flex items-center gap-1 rounded-lg bg-paper px-2.5 py-1 text-xs font-medium text-ink ring-1 ring-border hover:bg-mint/10 hover:text-ink transition cursor-pointer whitespace-nowrap"
                       >
                         <span>Abrir Maps</span>
                         <span className="text-[10px]">↗</span>
