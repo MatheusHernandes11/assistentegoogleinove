@@ -228,33 +228,58 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
         </div>
       </section>
 
-      {/* 3. TERMOS MAIS USADOS PELOS CONCORRENTES LÍDERES */}
-      <section className="tile mb-6">
-        <div className="flex items-center justify-between">
+      {/* 3. O QUE AS PESSOAS MAIS BUSCAM NO GOOGLE NESSE NEGÓCIO */}
+      <section className="tile mb-6 border-l-4 border-l-amber bg-surface p-5 sm:p-6 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <span className="eyebrow">Mineração Competitiva</span>
-            <h3 className="font-display text-lg font-semibold">
-              Termos que os Principais Concorrentes Mais Utilizam
+            <span className="rounded-full bg-amber/15 px-2.5 py-0.5 text-xs font-semibold text-amber">
+              🧠 Comportamento Real do Consumidor · O que as Pessoas Digitam no Google
+            </span>
+            <h3 className="mt-1 font-display text-xl font-semibold">
+              O que as pessoas buscam no Google para {empresa.segmento} em {empresa.cidade}:
             </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Expressões reais digitadas por clientes que estão com dúvida, urgência imediata ou dinheiro na mão querendo contratar.
+            </p>
           </div>
           <span className="text-xs text-muted-foreground">
-            Líder monitorado: <strong className="text-ink">{topLider.nome}</strong> ({topLider.avaliacoes} avaliações)
+            Líder que hoje absorve essas buscas: <strong className="text-ink">{topLider.nome}</strong> ({topLider.avaliacoes} avaliações)
           </span>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {todasKeywords.slice(0, 8).map((k) => (
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {todasKeywords.slice(0, 6).map((k) => (
             <div
               key={k.id}
-              className="flex items-center gap-2 rounded-lg bg-paper px-3 py-2 text-xs ring-1 ring-border"
+              className="flex flex-col justify-between rounded-lg bg-paper p-3.5 ring-1 ring-border/80 transition hover:ring-mint"
             >
-              <span className="font-semibold">{k.termo}</span>
-              <span className="rounded-full bg-coral/10 px-1.5 py-0.5 font-mono text-[10px] font-medium text-coral">
-                {k.taxaConcorrentes}% dos concorrentes
-              </span>
-              <span className="text-muted-foreground font-mono">
-                R$ {k.cpcMedio.toFixed(2)} CPC
-              </span>
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-block rounded-full bg-surface px-2 py-0.5 font-mono text-[10px] font-semibold text-ink ring-1 ring-border">
+                    {k.rotuloGatilho}
+                  </span>
+                  <a
+                    href={`https://www.google.com/search?q=${encodeURIComponent(`${k.termo} ${empresa.cidade}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-medium text-mint hover:underline"
+                    title="Ver resultado real no Google"
+                  >
+                    <span>Ver no Google</span>
+                    <span>↗</span>
+                  </a>
+                </div>
+
+                <p className="mt-2.5 font-display text-sm font-bold text-ink leading-snug">
+                  "{k.termo}"
+                </p>
+              </div>
+
+              <div className="mt-3 border-t border-border/60 pt-2">
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  <strong className="text-ink font-medium">Por que buscam:</strong> {k.visaoGestorTrafego}
+                </p>
+              </div>
             </div>
           ))}
         </div>

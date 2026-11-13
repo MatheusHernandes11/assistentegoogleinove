@@ -66,12 +66,20 @@ const BASE_COMPORTAMENTAL_NICHOS: Record<
     ],
     termos: [
       {
-        termo: "comprar carta de crédito contemplada segura",
+        termo: "consórcio imobiliário como funciona simulação {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Fuga dos Juros de Financiamento",
+        visaoGestorTrafego:
+          "Consumidor assustado com as taxas do banco querendo comprar casa ou apartamento pagando metade da parcela de um financiamento.",
+      },
+      {
+        termo: "comprar carta de crédito contemplada segura {cidade}",
         intencao: "fundo",
         gatilho: "urgencia",
-        rotuloGatilho: "🔥 Comprador Imediato",
+        rotuloGatilho: "🔥 Comprador Imediato com Entrada",
         visaoGestorTrafego:
-          "Consumidor com capital na mão buscando crédito liberado imediatamente para fechar imóvel ou veículo sem esperar sorteio.",
+          "Cliente que já achou o imóvel ou veículo e tem capital na mão. Quer crédito liberado na hora sem depender de sorteio.",
       },
       {
         termo: "tabela consórcio contemplado imobiliário entrega imediata {cidade}",
@@ -79,55 +87,47 @@ const BASE_COMPORTAMENTAL_NICHOS: Record<
         gatilho: "preco_parcelamento",
         rotuloGatilho: "💰 Cotação com Dinheiro na Mão",
         visaoGestorTrafego:
-          "Cliente comparando valores de entrada e parcelas mensais. Altíssima intenção de compra no balcão ou WhatsApp.",
+          "Cliente comparando valores de entrada e parcelas mensais. Altíssima intenção de fechar no balcão ou WhatsApp.",
       },
       {
-        termo: "simular consórcio imobiliário parcelas reduzidas sem juros",
-        intencao: "fundo",
-        gatilho: "preco_parcelamento",
-        rotuloGatilho: "💰 Fuga dos Juros Bancários",
-        visaoGestorTrafego:
-          "Consumidor assustado com as taxas de juros de financiamento tradicional buscando a alternativa mais econômica.",
-      },
-      {
-        termo: "como funciona lance embutido no consórcio imobiliário",
+        termo: "consórcio vale a pena ou financiamento comparativo",
         intencao: "meio",
         gatilho: "alto_ticket",
-        rotuloGatilho: "💎 Objeção Técnica / Qualificado",
+        rotuloGatilho: "💎 Decisão Financeira Racional",
         visaoGestorTrafego:
-          "Lead sofisticado que quer usar parte da própria carta para acelerar a contemplação sem descapitalizar.",
+          "Lead qualificado e calculista avaliando o custo total do dinheiro antes de assinar contrato com banco ou administradora.",
       },
       {
-        termo: "carta de crédito contemplada para comprar terreno e construir {cidade}",
-        intencao: "fundo",
+        termo: "como funciona lance embutido no consórcio",
+        intencao: "meio",
         gatilho: "alto_ticket",
-        rotuloGatilho: "💎 Projeto Específico de Alto Valor",
+        rotuloGatilho: "💎 Estratégia de Contemplação Rápida",
         visaoGestorTrafego:
-          "Família ou investidor com projeto de obra aprovado que precisa do recurso aprovado para iniciar a construção.",
+          "Cliente que quer ser contemplado nos primeiros meses usando parte do valor da própria carta sem tirar do bolso.",
       },
       {
-        termo: "consórcio de frotas e caminhões pesados taxas reduzidas",
+        termo: "simular consórcio de carro sem entrada whatsapp {cidade}",
         intencao: "fundo",
-        gatilho: "alto_ticket",
-        rotuloGatilho: "💎 Lead Corporativo / PJ",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Atendimento Rápido no WhatsApp",
         visaoGestorTrafego:
-          "Empresário ou transportador autônomo renovando frotas. Ticket médio elevado de R$ 300 mil a R$ 1 milhão.",
+          "Usuário no celular querendo receber tabela de parcelas simuladas no WhatsApp em menos de 5 minutos.",
       },
       {
         termo: "consórcio contemplado de confiança avaliações 5 estrelas {cidade}",
         intencao: "meio",
         gatilho: "confianca",
-        rotuloGatilho: "🏆 Blindagem Contra Golpes",
+        rotuloGatilho: "🏆 Medo de Golpe / Busca de Credibilidade",
         visaoGestorTrafego:
-          "O maior medo do comprador de consórcio é cair em golpe de falsa contemplação. Perfis do Maps com muitas avaliações fecham o contrato.",
+          "O maior medo do cliente é golpe de contemplação falsa. Fichas no Google com muitas avaliações fecham a venda com facilidade.",
       },
       {
-        termo: "simular consórcio de automóvel sem entrada whatsapp {cidade}",
+        termo: "consórcio de moto menor parcela mensal {cidade}",
         intencao: "fundo",
-        gatilho: "urgencia",
-        rotuloGatilho: "🔥 Atendimento Rápido Celular",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Parcela Baixa / Acessível",
         visaoGestorTrafego:
-          "Usuário no celular querendo receber a tabela simulada diretamente no WhatsApp em menos de 5 minutos.",
+          "Trabalhador ou entregador buscando parcela que caiba no bolso (R$ 150 a R$ 350) para sair do transporte público.",
       },
     ],
   },
@@ -515,6 +515,226 @@ const BASE_COMPORTAMENTAL_NICHOS: Record<
       },
     ],
   },
+
+  gastronomia: {
+    categorias: [
+      "Pizzaria & Rodízio",
+      "Hamburgueria Artesanal",
+      "Restaurante & Almoço",
+      "Delivery WhatsApp",
+      "Comida Japonesa & Sushi",
+    ],
+    termos: [
+      {
+        termo: "pizzaria aberta agora entrega rápida {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Fome Imediata / Aberto Agora",
+        visaoGestorTrafego:
+          "Consumidor no sofá com fome querendo pedir jantar sem demora. Quem tem horário atualizado no Maps recebe a ligação.",
+      },
+      {
+        termo: "rodízio de pizza preço por pessoa promoção hoje {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Cotação de Rodízio em Família",
+        visaoGestorTrafego:
+          "Grupos de amigos ou famílias comparando valores de rodízio e dias de promoção para comemoração.",
+      },
+      {
+        termo: "melhor hamburguer artesanal perto de mim {cidade}",
+        intencao: "fundo",
+        gatilho: "confianca",
+        rotuloGatilho: "🏆 Escolha por Avaliações & Fotos",
+        visaoGestorTrafego:
+          "Consumidor olhando fotos do lanche e nota do Google Maps antes de decidir onde comer à noite.",
+      },
+      {
+        termo: "restaurante para almoço self service por quilo perto de mim",
+        intencao: "fundo",
+        gatilho: "hiperlocal",
+        rotuloGatilho: "📍 Almoço Rápido no Trabalho",
+        visaoGestorTrafego:
+          "Trabalhador no horário de almoço buscando comida gostosa a menos de 5 minutos do escritório.",
+      },
+      {
+        termo: "pedir delivery comida no whatsapp com cardápio {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Pedido Direto sem Taxa",
+        visaoGestorTrafego:
+          "Cliente que prefere falar direto no WhatsApp do estabelecimento para não pagar taxa abusiva de app.",
+      },
+      {
+        termo: "restaurante com espaço kids e brinquedoteca para crianças {cidade}",
+        intencao: "meio",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Experiência Familiar Completa",
+        visaoGestorTrafego:
+          "Pais com filhos pequenos que só saem para jantar em lugares onde as crianças tenham espaço seguro para brincar.",
+      },
+    ],
+  },
+
+  petshop: {
+    categorias: [
+      "Clínica Veterinária 24h",
+      "Banho e Tosa",
+      "Vacinação & Exames",
+      "Rações & Pet Care",
+      "Castração Popular",
+    ],
+    termos: [
+      {
+        termo: "veterinário 24 horas emergência aberto agora perto de mim",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Emergência Crítica do Pet",
+        visaoGestorTrafego:
+          "Animal engasgado, atropelado ou vomitando no meio da madrugada. O tutor corre na primeira clínica 24h com telefone no Google.",
+      },
+      {
+        termo: "banho e tosa busca e entrega whatsapp {cidade}",
+        intencao: "fundo",
+        gatilho: "hiperlocal",
+        rotuloGatilho: "📍 Comodidade Leva e Traz",
+        visaoGestorTrafego:
+          "Tutor sem tempo que precisa que o pet shop venha buscar o cachorro em casa e devolva cheiroso e tosado.",
+      },
+      {
+        termo: "quanto custa castração de cachorro e gato preço {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Cotação Cirúrgica Preventiva",
+        visaoGestorTrafego:
+          "Donos de pets comparando valor de cirurgia com anestesia inalatória e exames pré-operatórios.",
+      },
+      {
+        termo: "veterinário especialista em dermatologia coceira no cachorro {cidade}",
+        intencao: "meio",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Tratamento Específico Crônico",
+        visaoGestorTrafego:
+          "Tutor desesperado com animal com dermatite e alergia que não melhora com consulta veterinária comum.",
+      },
+    ],
+  },
+
+  academia: {
+    categorias: [
+      "Musculação & Hipertrofia",
+      "Pilates & Reabilitação",
+      "Crossfit & Funcional",
+      "Natação Infantil & Adulto",
+      "Lutas & Artes Marciais",
+    ],
+    termos: [
+      {
+        termo: "academia musculação mensalidade sem taxa de matrícula {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Cotação de Mensalidade & Planos",
+        visaoGestorTrafego:
+          "Aluno querendo treinar mas fugindo de taxas escondidas de anuidade e matrícula cara.",
+      },
+      {
+        termo: "academia aberta sábado e domingo perto de mim",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Treino no Fim de Semana",
+        visaoGestorTrafego:
+          "Público focado que não quer ficar sem treinar aos sábados e domingos.",
+      },
+      {
+        termo: "estúdio de pilates com fisioterapeuta para dor na coluna {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Saúde, Postura e Reabilitação",
+        visaoGestorTrafego:
+          "Pessoas 30+ com dor lombar ou hérnia de disco buscando atendimento personalizado com fisioterapeuta.",
+      },
+      {
+        termo: "aula experimental crossfit ou funcional grátis {cidade}",
+        intencao: "meio",
+        gatilho: "confianca",
+        rotuloGatilho: "🏆 Quebra de Objeção / Test Drive",
+        visaoGestorTrafego:
+          "Iniciante com medo de não aguentar a intensidade querendo fazer aula avulsa para conhecer a turma.",
+      },
+    ],
+  },
+
+  assistencia_celular: {
+    categorias: [
+      "Troca de Tela iPhone",
+      "Bateria & Conector",
+      "Reparo em Placa",
+      "Conserto Notebook & PC",
+      "Recuperação de Dados",
+    ],
+    termos: [
+      {
+        termo: "troca de tela de iphone no mesmo dia valor {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Celular Quebrado / Urgência Máxima",
+        visaoGestorTrafego:
+          "Pessoa sem celular para trabalhar. Quem trocar a tela em 1 hora leva o serviço no balcão.",
+      },
+      {
+        termo: "conserto de celular perto de mim que busca em casa",
+        intencao: "fundo",
+        gatilho: "hiperlocal",
+        rotuloGatilho: "📍 Delivery & Comodidade",
+        visaoGestorTrafego:
+          "Cliente sem tempo para ir até o centro da cidade querendo motoboy que colete o aparelho para orçamento.",
+      },
+      {
+        termo: "quanto custa trocar bateria de celular xiaomi e samsung {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Cotação de Bateria Viciada",
+        visaoGestorTrafego:
+          "Usuário com aparelho descarregando em poucas horas cotando peças originais com garantia de 3 a 6 meses.",
+      },
+    ],
+  },
+
+  beleza: {
+    categorias: [
+      "Barbearia Tradicional",
+      "Cabelo & Mechas",
+      "Manicure & Pedicure",
+      "Mega Hair & Extensão",
+      "Maquiagem & Penteado",
+    ],
+    termos: [
+      {
+        termo: "barbearia aberta agora sem fila agendamento online {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Corte Imediato / Sem Espera",
+        visaoGestorTrafego:
+          "Homem com evento ou reunião querendo cortar cabelo e alinhar a barba sem ficar 1 hora esperando em sofá.",
+      },
+      {
+        termo: "salão de beleza especialista em mechas loiras antes e depois {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Procedimento Capilar de Alto Ticket",
+        visaoGestorTrafego:
+          "Mulher com medo de corte químico que só entrega o cabelo para cabeleireiros com fotos reais de antes e depois.",
+      },
+      {
+        termo: "manicure e pedicure unha de gel perto de mim {cidade}",
+        intencao: "fundo",
+        gatilho: "hiperlocal",
+        rotuloGatilho: "📍 Manutenção Periódica de Unhas",
+        visaoGestorTrafego:
+          "Clientes procurando profissionais com horário livre para fazer unhas no fim de semana ou pós expediente.",
+      },
+    ],
+  },
 };
 
 /**
@@ -552,8 +772,23 @@ function obterEstrategiaNicho(segmento: string, cidade: string, bairro?: string)
   if (sNorm.includes("solar") || sNorm.includes("fotovolt") || sNorm.includes("placa")) {
     return BASE_COMPORTAMENTAL_NICHOS["energia_solar"]!;
   }
+  if (sNorm.includes("pizz") || sNorm.includes("restauran") || sNorm.includes("lanch") || sNorm.includes("comid") || sNorm.includes("burger") || sNorm.includes("hamburg") || sNorm.includes("sushi") || sNorm.includes("delivery")) {
+    return BASE_COMPORTAMENTAL_NICHOS["gastronomia"]!;
+  }
+  if (sNorm.includes("pet") || sNorm.includes("veterin") || sNorm.includes("cao") || sNorm.includes("gato") || sNorm.includes("racao") || sNorm.includes("tosa")) {
+    return BASE_COMPORTAMENTAL_NICHOS["petshop"]!;
+  }
+  if (sNorm.includes("academ") || sNorm.includes("trein") || sNorm.includes("fit") || sNorm.includes("pilates") || sNorm.includes("cross") || sNorm.includes("musculacao")) {
+    return BASE_COMPORTAMENTAL_NICHOS["academia"]!;
+  }
+  if (sNorm.includes("celular") || sNorm.includes("iphone") || sNorm.includes("computad") || sNorm.includes("noteb") || sNorm.includes("informatica") || sNorm.includes("conserto")) {
+    return BASE_COMPORTAMENTAL_NICHOS["assistencia_celular"]!;
+  }
+  if (sNorm.includes("barbea") || sNorm.includes("salao") || sNorm.includes("cabel") || sNorm.includes("manicur") || sNorm.includes("barba")) {
+    return BASE_COMPORTAMENTAL_NICHOS["beleza"]!;
+  }
 
-  // GESTOR DE TRÁFEGO UNIVERSAL: Decompõe qualquer nicho específico nas 5 dores de consumo
+  // GESTOR DE TRÁFEGO UNIVERSAL: Decompõe qualquer negócio específico nas buscas reais do consumidor
   const segLimpo = segmento.trim() || "Serviço";
   return {
     categorias: [
@@ -565,51 +800,60 @@ function obterEstrategiaNicho(segmento: string, cidade: string, bairro?: string)
     ],
     termos: [
       {
-        termo: `onde contratar ${segLimpo} de confiança avaliações 5 estrelas {cidade}`,
-        intencao: "fundo" as IntencaoBusca,
-        gatilho: "confianca" as GatilhoComportamento,
-        rotuloGatilho: "🏆 Prova Social & Confiança",
-        visaoGestorTrafego: `Consumidor querendo evitar prestadores amadores e buscando empresas recomendadas no Google em ${cidade}.`,
-      },
-      {
-        termo: `${segLimpo} quanto custa orçamento parcelado no cartão {cidade}`,
+        termo: `quanto custa ${segLimpo} em {cidade} orçamento`,
         intencao: "fundo" as IntencaoBusca,
         gatilho: "preco_parcelamento" as GatilhoComportamento,
-        rotuloGatilho: "💰 Cotação com Dinheiro na Mão",
-        visaoGestorTrafego:
-          "Consumidor já decidiu contratar e está comparando formas de pagamento e facilidade de contratação.",
+        rotuloGatilho: "💰 Cotação de Preço Direta",
+        visaoGestorTrafego: `Consumidor com a decisão tomada comparando preços e formas de pagamento antes de fechar negócio.`,
       },
       {
-        termo: `${segLimpo} urgente atendimento hoje perto de mim`,
+        termo: `${segLimpo} bom e barato perto de mim em {cidade}`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "hiperlocal" as GatilhoComportamento,
+        rotuloGatilho: "📍 Custo-Benefício & Proximidade",
+        visaoGestorTrafego: `Busca comum de quem quer resolver rápido perto de onde mora sem pagar caro.`,
+      },
+      {
+        termo: `melhor ${segLimpo} em {cidade} avaliações 5 estrelas`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "confianca" as GatilhoComportamento,
+        rotuloGatilho: "🏆 Prova Social & Reputação",
+        visaoGestorTrafego: `Cliente que não quer dor de cabeça com amadores e escolhe a empresa mais elogiada no Google Maps.`,
+      },
+      {
+        termo: `${segLimpo} urgente aberto agora atendimento hoje`,
         intencao: "fundo" as IntencaoBusca,
         gatilho: "urgencia" as GatilhoComportamento,
-        rotuloGatilho: "🔥 Urgência & Imediatez",
-        visaoGestorTrafego:
-          "Cliente com dor ou necessidade crítica querendo ser atendido no mesmo dia sem burocracia.",
+        rotuloGatilho: "🔥 Urgência Imediata",
+        visaoGestorTrafego: `Pessoa com problema imediato precisando de resposta rápida hoje mesmo.`,
       },
       {
-        termo: `melhor especialista em ${segLimpo} em {cidade}`,
+        termo: `${segLimpo} orçamento rápido pelo whatsapp {cidade}`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "urgencia" as GatilhoComportamento,
+        rotuloGatilho: "🔥 Conversão Direta no WhatsApp",
+        visaoGestorTrafego: `Pessoa que não quer preencher formulário chato e prefere tirar dúvidas comerciais pelo WhatsApp.`,
+      },
+      {
+        termo: `${segLimpo} parcelado no cartão sem juros {cidade}`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "preco_parcelamento" as GatilhoComportamento,
+        rotuloGatilho: "💰 Facilidade de Parcelamento",
+        visaoGestorTrafego: `Consumidor sensível a desembolso imediato procurando empresas que dividem o pagamento.`,
+      },
+      {
+        termo: `onde contratar ${segLimpo} de confiança em {cidade}`,
         intencao: "meio" as IntencaoBusca,
-        gatilho: "alto_ticket" as GatilhoComportamento,
-        rotuloGatilho: "💎 Serviço Especializado / Alto Padrão",
-        visaoGestorTrafego:
-          "Público que prioriza qualidade técnica e autoridade comprovada em vez de disputar o menor preço.",
-      },
-      {
-        termo: `${segLimpo} atendimento direto no whatsapp {cidade}`,
-        intencao: "fundo" as IntencaoBusca,
-        gatilho: "urgencia" as GatilhoComportamento,
-        rotuloGatilho: "🔥 Conversão Direta no Celular",
-        visaoGestorTrafego:
-          "Usuário no smartphone querendo tirar dúvidas comerciais e agendar diretamente pelo WhatsApp.",
+        gatilho: "confianca" as GatilhoComportamento,
+        rotuloGatilho: "🏆 Medo de Ser Enganado",
+        visaoGestorTrafego: `Pesquisa de recomendação feita por quem já teve experiências ruins no passado.`,
       },
       {
         termo: `${segLimpo} perto de mim em {bairro}`,
         intencao: "fundo" as IntencaoBusca,
         gatilho: "hiperlocal" as GatilhoComportamento,
-        rotuloGatilho: "📍 Proximidade Geográfica no Bairro",
-        visaoGestorTrafego:
-          "Consumidor valorizando comodidade e facilidade de acesso no próprio bairro de moradia ou trabalho.",
+        rotuloGatilho: "📍 Hiperlocal no Bairro",
+        visaoGestorTrafego: `Cliente que valoriza comodidade e quer ser atendido na própria vizinhança.`,
       },
     ],
   };
