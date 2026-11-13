@@ -49,7 +49,7 @@ function EspiaoAnunciosPage() {
   const alvoBuscaAtual = termoPesquisa.trim() || topLider.nome || empresa.segmento || "";
   const linkTransparenciaOficial = gerarLinkGoogleAdsTransparency(alvoBuscaAtual);
 
-  function abrirBibliotecaComCopia(nomeEmpresa: string, id?: string) {
+  function copiarNomeParaTransparencia(nomeEmpresa: string, id?: string) {
     const nomeLimpo = nomeEmpresa.split("|")[0]?.split("-")[0]?.trim() || nomeEmpresa;
     if (nomeLimpo) {
       navigator.clipboard.writeText(nomeLimpo);
@@ -58,7 +58,6 @@ function EspiaoAnunciosPage() {
         setTimeout(() => setAvisoCopiadoId(null), 3500);
       }
     }
-    window.open("https://adstransparency.google.com/?region=BR", "_blank");
   }
 
   function copiarResumoComercial() {
@@ -128,21 +127,25 @@ _Relatório de dados reais gerado pelo Inove Local_`;
               <a
                 href={`https://www.google.com.br/search?q=${encodeURIComponent(`${termoPesquisa.trim() || topLider.nome || empresa.segmento} ${empresa.cidade}`)}`}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noreferrer noopener"
+                referrerPolicy="no-referrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-mint px-5 py-3 text-xs sm:text-sm font-bold text-ink transition hover:bg-mint/90 shadow-md whitespace-nowrap cursor-pointer"
               >
                 <span>Ver Anúncios no Google</span>
                 <span className="text-xs font-mono">↗</span>
               </a>
-              <button
-                type="button"
-                onClick={() => abrirBibliotecaComCopia(termoPesquisa.trim() || topLider.nome || empresa.segmento || "", "topo")}
+              <a
+                href="https://adstransparency.google.com/?region=BR"
+                target="_blank"
+                rel="noreferrer noopener"
+                referrerPolicy="no-referrer"
+                onClick={() => copiarNomeParaTransparencia(termoPesquisa.trim() || topLider.nome || empresa.segmento || "", "topo")}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-surface/20 hover:bg-surface/30 text-surface px-4 py-3 text-xs font-semibold ring-1 ring-surface/30 transition whitespace-nowrap cursor-pointer"
                 title="Copiar nome e abrir a Biblioteca de Transparência do Google"
               >
                 <span>{avisoCopiadoId === "topo" ? "✓ Nome Copiado!" : "Biblioteca Ads"}</span>
                 <span className="text-xs font-mono">↗</span>
-              </button>
+              </a>
             </div>
 
             {/* Atalhos Rápidos dos Concorrentes Reais do Raio */}
@@ -246,28 +249,33 @@ _Relatório de dados reais gerado pelo Inove Local_`;
                 <a
                   href={c.linkBuscaGoogleAds}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noreferrer noopener"
+                  referrerPolicy="no-referrer"
                   className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-ink px-3.5 py-2 text-xs font-semibold text-surface hover:bg-ink/90 transition shadow-xs cursor-pointer text-center"
-                  title="Abrir busca do Google com anúncios patrocinados ativos deste concorrente"
+                  title="Abrir busca oficial do Google com anúncios patrocinados deste concorrente"
                 >
                   <span>Ver Anúncios no Google</span>
                   <span className="text-xs font-mono">↗</span>
                 </a>
 
-                <button
-                  type="button"
-                  onClick={() => abrirBibliotecaComCopia(c.nome, c.id)}
+                <a
+                  href="https://adstransparency.google.com/?region=BR"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  referrerPolicy="no-referrer"
+                  onClick={() => copiarNomeParaTransparencia(c.nome, c.id)}
                   className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-paper px-3 py-2 text-xs font-medium text-ink ring-1 ring-border hover:bg-surface transition cursor-pointer"
                   title="Copiar nome do concorrente e abrir a Biblioteca Oficial de Transparência do Google"
                 >
                   <span>{avisoCopiadoId === c.id ? "✓ Copiado!" : "Biblioteca Ads"}</span>
                   <span className="text-xs font-mono">↗</span>
-                </button>
+                </a>
 
                 <a
                   href={c.linkGoogleMaps}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noreferrer noopener"
+                  referrerPolicy="no-referrer"
                   className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-paper px-3 py-2 text-xs font-medium text-ink ring-1 ring-border hover:bg-surface transition cursor-pointer"
                 >
                   <span>Maps</span>
@@ -276,6 +284,19 @@ _Relatório de dados reais gerado pelo Inove Local_`;
               </div>
             </div>
           ))}
+        </div>
+
+        {/* DICA DE NAVEGAÇÃO & RESOLUÇÃO DE BLOQUEIO */}
+        <div className="rounded-2xl bg-amber-500/10 p-5 ring-1 ring-amber-500/25 space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm">💡</span>
+            <span className="font-semibold text-xs uppercase tracking-wider text-amber-800 dark:text-amber-300">
+              Dica para Visualizar Anúncios sem Bloqueios
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            O botão <strong>"Ver Anúncios no Google"</strong> abre a busca oficial do Google com a exibição direta dos anúncios patrocinados ativos no topo com o selo <em>"Patrocinado"</em>. Caso sua conexão, rede Wi-Fi ou extensão de adblocker no navegador bloqueie o site <em>adstransparency.google.com</em> (erro <em>ERR_BLOCKED_BY_RESPONSE</em> comum devido ao termo "ads" no domínio), basta utilizar o botão <strong>"Ver Anúncios no Google"</strong> que abre normalmente no Google Brasil.
+          </p>
         </div>
 
         {/* STATUS DA API DE GOOGLE ADS (TRANSPARÊNCIA TOTAL) */}
