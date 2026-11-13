@@ -66,68 +66,84 @@ const BASE_COMPORTAMENTAL_NICHOS: Record<
     ],
     termos: [
       {
-        termo: "consórcio imobiliário como funciona simulação {cidade}",
-        intencao: "fundo",
-        gatilho: "preco_parcelamento",
-        rotuloGatilho: "💰 Fuga dos Juros de Financiamento",
-        visaoGestorTrafego:
-          "Consumidor assustado com as taxas do banco querendo comprar casa ou apartamento pagando metade da parcela de um financiamento.",
-      },
-      {
-        termo: "comprar carta de crédito contemplada segura {cidade}",
+        termo: "carta contemplada imobiliária pronta entrega {cidade}",
         intencao: "fundo",
         gatilho: "urgencia",
-        rotuloGatilho: "🔥 Comprador Imediato com Entrada",
+        rotuloGatilho: "🔥 Dinheiro na Mão / Pronta Entrega",
         visaoGestorTrafego:
-          "Cliente que já achou o imóvel ou veículo e tem capital na mão. Quer crédito liberado na hora sem depender de sorteio.",
+          "Cliente que já encontrou a casa ou terreno e tem capital de entrada. Quer crédito liberado na hora sem esperar sorteio mensal.",
       },
       {
-        termo: "tabela consórcio contemplado imobiliário entrega imediata {cidade}",
+        termo: "simulação consórcio imobiliário 200 mil parcela",
         intencao: "fundo",
         gatilho: "preco_parcelamento",
-        rotuloGatilho: "💰 Cotação com Dinheiro na Mão",
+        rotuloGatilho: "💰 Cotação de Parcela Real",
         visaoGestorTrafego:
-          "Cliente comparando valores de entrada e parcelas mensais. Altíssima intenção de fechar no balcão ou WhatsApp.",
+          "Comprador com ticket definido querendo saber exatamente quanto vai pagar por mês antes de falar com vendedor.",
       },
       {
-        termo: "consórcio vale a pena ou financiamento comparativo",
+        termo: "carta de crédito 300 mil consórcio valor da parcela",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Ticket Médio Alto",
+        visaoGestorTrafego:
+          "Família buscando sobrado ou imóvel de médio/alto padrão comparando a parcela do consórcio com o financiamento da Caixa.",
+      },
+      {
+        termo: "consorcio vale a pena ou financiamento imobiliário",
         intencao: "meio",
         gatilho: "alto_ticket",
-        rotuloGatilho: "💎 Decisão Financeira Racional",
+        rotuloGatilho: "💎 Decisão Racional / Fuga dos Juros",
         visaoGestorTrafego:
-          "Lead qualificado e calculista avaliando o custo total do dinheiro antes de assinar contrato com banco ou administradora.",
+          "Lead qualificado assustado com o custo total do financiamento (pagar 3 imóveis ao banco) buscando economizar centenas de milhares de reais.",
       },
       {
-        termo: "como funciona lance embutido no consórcio",
+        termo: "quanto precisa dar de lance para ser contemplado no consórcio",
+        intencao: "meio",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Dúvida Crítica de Fechamento",
+        visaoGestorTrafego:
+          "A principal objeção do comprador é a demora. Quem explicar a média real de lances do grupo fecha o contrato na reunião.",
+      },
+      {
+        termo: "como funciona lance embutido no consórcio de imóvel",
         intencao: "meio",
         gatilho: "alto_ticket",
-        rotuloGatilho: "💎 Estratégia de Contemplação Rápida",
+        rotuloGatilho: "💎 Contemplação sem Descapitalizar",
         visaoGestorTrafego:
-          "Cliente que quer ser contemplado nos primeiros meses usando parte do valor da própria carta sem tirar do bolso.",
+          "Cliente que quer antecipar a contemplação usando até 30% da própria carta de crédito para dar o lance vencedor.",
       },
       {
-        termo: "simular consórcio de carro sem entrada whatsapp {cidade}",
+        termo: "consorcio de carro sem entrada parcelas reduzidas {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Troca de Veículo sem Juros",
+        visaoGestorTrafego:
+          "Motorista que não quer pagar o dobro do carro no financiamento bancário tradicional.",
+      },
+      {
+        termo: "consorcio moto menor parcela mensal whatsapp {cidade}",
         intencao: "fundo",
         gatilho: "urgencia",
-        rotuloGatilho: "🔥 Atendimento Rápido no WhatsApp",
+        rotuloGatilho: "🔥 Parcela de Entrada / Conversão Celular",
         visaoGestorTrafego:
-          "Usuário no celular querendo receber tabela de parcelas simuladas no WhatsApp em menos de 5 minutos.",
+          "Público de entrada ou entregador querendo parcelas de R$ 180 a R$ 300 direto pelo WhatsApp.",
       },
       {
-        termo: "consórcio contemplado de confiança avaliações 5 estrelas {cidade}",
+        termo: "carta de crédito contemplada como não cair em golpe",
         intencao: "meio",
         gatilho: "confianca",
         rotuloGatilho: "🏆 Medo de Golpe / Busca de Credibilidade",
         visaoGestorTrafego:
-          "O maior medo do cliente é golpe de contemplação falsa. Fichas no Google com muitas avaliações fecham a venda com facilidade.",
+          "O maior pavor do comprador de consórcio é cair em fraude na internet. Empresas locais com centenas de avaliações no Google passam segurança total.",
       },
       {
-        termo: "consórcio de moto menor parcela mensal {cidade}",
+        termo: "consorcio para comprar terreno e construir {cidade}",
         intencao: "fundo",
-        gatilho: "preco_parcelamento",
-        rotuloGatilho: "💰 Parcela Baixa / Acessível",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Projeto Familiar de Construção",
         visaoGestorTrafego:
-          "Trabalhador ou entregador buscando parcela que caiba no bolso (R$ 150 a R$ 350) para sair do transporte público.",
+          "Cliente com projeto de obra aprovado que quer usar a carta de crédito para pagar o lote e a construtora.",
       },
     ],
   },
@@ -142,52 +158,52 @@ const BASE_COMPORTAMENTAL_NICHOS: Record<
     ],
     termos: [
       {
-        termo: "implante dentário carga imediata dente no mesmo dia {cidade}",
-        intencao: "fundo",
-        gatilho: "alto_ticket",
-        rotuloGatilho: "💎 Procedimento de Alto Ticket",
-        visaoGestorTrafego:
-          "Paciente com perda dentária visível e pressa estética/funcional. Ticket de R$ 3.000 a R$ 15.000 por procedimento.",
-      },
-      {
-        termo: "protocolo dentário all on 4 preço parcelado no boleto {cidade}",
+        termo: "quanto custa um implante dentário de um dente só {cidade}",
         intencao: "fundo",
         gatilho: "preco_parcelamento",
-        rotuloGatilho: "💰 Cotação com Necessidade de Parcelamento",
+        rotuloGatilho: "💰 Cotação de Procedimento Unitário",
         visaoGestorTrafego:
-          "Consumidor querendo reabilitar a boca toda, mas precisa saber se a clínica aceita parcelamento em até 24x ou boleto.",
+          "Paciente com perda dentária visível querendo saber o valor exato da cirurgia e do dente definitivo antes da avaliação.",
+      },
+      {
+        termo: "prótese dentária protocolo sobre 4 implantes preço parcelado {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Procedimento de Alto Ticket (All-on-4)",
+        visaoGestorTrafego:
+          "Consumidor querendo reabilitar a arcada inteira fixa. Procedimento de R$ 12.000 a R$ 35.000 com alta necessidade de parcelamento no boleto ou cartão.",
       },
       {
         termo: "dentista 24 horas aberto agora perto de mim",
         intencao: "fundo",
         gatilho: "urgencia",
-        rotuloGatilho: "🔥 Dor Crítica / Urgência Máxima",
+        rotuloGatilho: "🔥 Dor Crítica / Urgência Imediata",
         visaoGestorTrafego:
-          "Paciente com dor aguda insuportável no meio da noite ou fim de semana. Quem atender primeiro pelo Google Maps leva o paciente.",
+          "Paciente com dor aguda insuportável no meio da noite ou fim de semana. Quem tiver o telefone visível no Google Maps leva o atendimento.",
       },
       {
-        termo: "quanto custa arrancar siso inflamado consulta hoje {cidade}",
+        termo: "quanto custa arrancar dente do siso inflamado consulta hoje {cidade}",
         intencao: "fundo",
         gatilho: "urgencia",
-        rotuloGatilho: "🔥 Dor Aguda / Resolução no Dia",
+        rotuloGatilho: "🔥 Inflamação / Resolução no Mesmo Dia",
         visaoGestorTrafego:
-          "Consumidor com rosto inchado e dor ao mastigar procurando atendimento com urgência de horário.",
+          "Consumidor com rosto inchado e dor ao mastigar procurando clínica para extração rápida sem esperar dias por vaga.",
       },
       {
-        termo: "aparelho invisível invisalign valor e parcelas {cidade}",
+        termo: "aparelho invisível invisalign valor e parcelas no boleto {cidade}",
         intencao: "meio",
         gatilho: "alto_ticket",
         rotuloGatilho: "💎 Estética Adulta Premium",
         visaoGestorTrafego:
-          "Adulto ou profissional que não quer usar bráquetes de metal e busca clínicas certificadas na cidade.",
+          "Adulto que trabalha com imagem e não quer usar aparelho metálico tradicional, cotando clínicas credenciadas na cidade.",
       },
       {
-        termo: "clareamento dental a laser preço sessão antes e depois {cidade}",
+        termo: "clareamento dental a laser preço da sessão antes e depois {cidade}",
         intencao: "fundo",
         gatilho: "preco_parcelamento",
         rotuloGatilho: "💰 Desejo Estético Rápido",
         visaoGestorTrafego:
-          "Consumidor com evento próximo (casamento, formatura, férias) querendo clarear os dentes rapidamente.",
+          "Consumidor com casamento, formatura ou férias próximas querendo resultado visível em 1 ou 2 sessões.",
       },
       {
         termo: "dentista especialista em tratamento de canal sem dor {cidade}",
@@ -195,15 +211,15 @@ const BASE_COMPORTAMENTAL_NICHOS: Record<
         gatilho: "confianca",
         rotuloGatilho: "🏆 Medo de Dor / Odontofobia",
         visaoGestorTrafego:
-          "Paciente com medo terrível de dentista procurando profissionais elogiados por anestesia indolor e carinho.",
+          "Paciente com trauma de dor procurando profissionais recomendados por anestesia indolor e tratamento humanizado.",
       },
       {
-        termo: "melhor clínica de implantes avaliações 5 estrelas {cidade}",
+        termo: "melhor clínica odontológica de implantes avaliações 5 estrelas {cidade}",
         intencao: "meio",
         gatilho: "confianca",
-        rotuloGatilho: "🏆 Prova Social & Especialistas",
+        rotuloGatilho: "🏆 Escolha por Avaliações Reais",
         visaoGestorTrafego:
-          "Paciente pesquisando a reputação antes de entregar a saúde bucal. Perfis com centenas de avaliações vencem com folga.",
+          "Paciente pesquisando a reputação antes de entregar a saúde bucal. Fichas com mais de 100 avaliações fecham o tratamento com facilidade.",
       },
     ],
   },
@@ -218,60 +234,52 @@ const BASE_COMPORTAMENTAL_NICHOS: Record<
     ],
     termos: [
       {
-        termo: "fui demitido sem justa causa como calcular rescisão advogado {cidade}",
+        termo: "fui mandado embora sem justa causa quanto tenho direito a receber",
         intencao: "fundo",
         gatilho: "urgencia",
         rotuloGatilho: "🔥 Dor Imediata do Trabalhador",
         visaoGestorTrafego:
-          "Trabalhador desorientado que acabou de sair da empresa com dúvidas se recebeu todas as verbas rescisórias.",
+          "Trabalhador dispensado querendo saber se a rescisão foi calculada corretamente antes de assinar a homologação.",
       },
       {
-        termo: "advogado trabalhista online whatsapp atendimento rápido {cidade}",
+        termo: "advogado trabalhista consulta online whatsapp {cidade}",
         intencao: "fundo",
         gatilho: "urgencia",
-        rotuloGatilho: "🔥 Contato Imediato pelo Celular",
+        rotuloGatilho: "🔥 Atendimento Rápido no WhatsApp",
         visaoGestorTrafego:
-          "Cliente que quer tirar uma dúvida jurídica urgente sem precisar marcar hora e ir ao escritório presencialmente de imediato.",
+          "Cliente no celular que precisa tirar uma dúvida jurídica urgente sem ter que se deslocar até um escritório.",
       },
       {
-        termo: "divórcio consensual no cartório rápido partilha de bens advogado {cidade}",
+        termo: "divórcio rápido no cartório quanto custa e como funciona {cidade}",
         intencao: "fundo",
         gatilho: "alto_ticket",
-        rotuloGatilho: "💎 Solução Amigável & Patrimônio",
+        rotuloGatilho: "💎 Resolução Extrajudicial Ágil",
         visaoGestorTrafego:
-          "Casal querendo resolver o término com agilidade e partilhar imóveis/veículos sem desgaste judicial demorado.",
+          "Casal querendo oficializar a separação de forma consensual e rápida com partilha de bens sem desgaste de processo judicial.",
       },
       {
-        termo: "pensão alimentícia atrasada prisão do devedor advogado urgente",
+        termo: "pensão alimentícia atrasada pai não paga pode ser preso urgente",
         intencao: "fundo",
         gatilho: "urgencia",
-        rotuloGatilho: "🔥 Emergência Financeira Familiar",
+        rotuloGatilho: "🔥 Urgência Financeira Familiar",
         visaoGestorTrafego:
-          "Mãe sem receber o sustento dos filhos precisando de execução judicial e bloqueio de contas com urgência.",
+          "Mãe sem receber o sustento dos filhos precisando de execução judicial rápida e penhora de valores com advogado.",
       },
       {
-        termo: "revisão da vida toda inss aposentadoria advogado especialista {cidade}",
-        intencao: "meio",
-        gatilho: "alto_ticket",
-        rotuloGatilho: "💎 Cálculo de Benefício Previdenciário",
-        visaoGestorTrafego:
-          "Aposentado que recebia salários altos antes de 1994 querendo recalcular o benefício para aumentar o salário mensal.",
-      },
-      {
-        termo: "advogado inventário e herança extrajudicial honorários parcelados {cidade}",
+        termo: "advogado para inventário em cartório honorários e custos {cidade}",
         intencao: "fundo",
         gatilho: "preco_parcelamento",
-        rotuloGatilho: "💰 Custo & Viabilidade Sucessória",
+        rotuloGatilho: "💰 Custo & Desbloqueio de Herança",
         visaoGestorTrafego:
-          "Família com bens bloqueados após o falecimento de um parente querendo saber custos de ITCMD e honorários de advogado.",
+          "Herdeiros precisando desbloquear imóveis, contas e veículos de parente falecido cotando custos de imposto e honorários.",
       },
       {
-        termo: "revisão de contrato financiamento veículo juros abusivos advogado",
+        termo: "processo contra banco juros abusivos financiamento de carro",
         intencao: "fundo",
         gatilho: "preco_parcelamento",
         rotuloGatilho: "💰 Alívio de Endividamento",
         visaoGestorTrafego:
-          "Motorista sufocado por parcelas caras de carro buscando renegociação ou devolução de taxas ilegais.",
+          "Motorista com parcela de carro pesada buscando advogado para recalcular taxas ilegais e reduzir a prestação mensal.",
       },
       {
         termo: "escritório de advocacia de confiança recomendado {cidade}",
@@ -279,7 +287,7 @@ const BASE_COMPORTAMENTAL_NICHOS: Record<
         gatilho: "confianca",
         rotuloGatilho: "🏆 Confiança & Reputação Jurídica",
         visaoGestorTrafego:
-          "O cliente de advocacia contrata credibilidade. Fichas no Google com avaliações detalhadas geram clientes qualificados.",
+          "Cliente com causa importante pesquisando avaliações no Google para ter certeza de que o advogado é ético e pontual.",
       },
     ],
   },
@@ -883,30 +891,12 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
   const topConcorrentes = concs.slice(0, 5);
   const topLider = lider();
 
-  // Injeta termos hiperlocais de bairro no topo com alta prioridade de tráfego
+  // Termos estratégicos de alta intenção e conversão do nicho
   const termosFinais = [...estrategia.termos];
-  if (bairroOuRua && bairroOuRua !== "Centro") {
-    termosFinais.unshift(
-      {
-        termo: `${seg} na ${bairroOuRua} {cidade}`,
-        intencao: "fundo",
-        gatilho: "hiperlocal",
-        rotuloGatilho: "📍 Hiperlocal no Bairro",
-        visaoGestorTrafego: `Busca cirúrgica de quem mora ou trabalha na ${bairroOuRua} e quer resolver por perto.`,
-      },
-      {
-        termo: `melhor ${seg} perto de mim em ${bairroOuRua}`,
-        intencao: "fundo",
-        gatilho: "hiperlocal",
-        rotuloGatilho: "📍 Proximidade Imediata",
-        visaoGestorTrafego: `Consumidor no celular usando geolocalização exata para escolher a empresa vizinha mais bem avaliada.`,
-      }
-    );
-  }
 
   const keywords: KeywordAnalise[] = termosFinais.map((t, idx) => {
     let termoProcessado = t.termo.replace("{cidade}", cid);
-    termoProcessado = termoProcessado.replace("{bairro}", bairroOuRua);
+    termoProcessado = termoProcessado.replace("{bairro}", bairroOuRua || "Centro");
 
     // Mapeamento com os concorrentes reais da região
     const concorrentesQueUsam: string[] = [];
