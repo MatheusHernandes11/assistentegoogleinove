@@ -2,7 +2,18 @@ import { useAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { fmt } from "@/components/AppShell";
-import { empresa, empresas, lider, pontosCriticos, posicao, score, temDados, voce } from "@/lib/data";
+import {
+  empresa,
+  empresas,
+  lider,
+  pontosCriticos,
+  posicao,
+  score,
+  temDados,
+  voce,
+  isUS,
+  unidadeDistancia,
+} from "@/lib/data";
 import { analisarKeywordsConcorrentes } from "@/lib/seo-keywords";
 import { gerarLinkWhatsAppEnvio } from "@/lib/google-tools";
 
@@ -31,11 +42,20 @@ function Reuniao() {
 
   const L = lider(), pos = posicao(), s = score(voce);
   const pontos = pontosCriticos();
-  const plano = [
-    ["Mês 1", "Fundação & Blindagem", "Otimização técnica da Ficha no Google, cadastro de 100% dos serviços e categorias estratégicas, 40+ fotos profissionais."],
-    ["Mês 2", "SEO & Prova Social Ativa", "Campanha ativa de avaliações 5 estrelas com QR Code e automação, resposta estratégica com palavras-chave locais e início de Google Ads Pesquisa."],
-    ["Mês 3", "Domínio Regional & Top 3", "Publicações semanais, autoridade de backlinks locais e consolidação no Top 3 do Google Maps, superando o líder da região."],
-  ];
+  const unidade = unidadeDistancia();
+  const eMercadoUS = isUS();
+
+  const plano = eMercadoUS
+    ? [
+        ["Month 1", "Foundation & Trust Badges", "Technical optimization of Google Business Profile, 100% services catalog, Licensed & Insured / BBB badges and 40+ geotagged professional photos."],
+        ["Month 2", "Direct Calls & LSA Guaranteed", "Application for Google Guaranteed / Screened ($2,000 protection), automated review flow targeting <24h owner responses and high-intent Google Search Ads."],
+        ["Month 3", "Local 3-Pack Domination", "Google Maps Top 3 ranking consolidation, Reserve with Google direct appointment integration and outranking local competitors in direct phone call volume."],
+      ]
+    : [
+        ["Mês 1", "Fundação & Blindagem", "Otimização técnica da Ficha no Google, cadastro de 100% dos serviços e categorias estratégicas, 40+ fotos profissionais."],
+        ["Mês 2", "SEO & Prova Social Ativa", "Campanha ativa de avaliações 5 estrelas com QR Code e automação, resposta estratégica com palavras-chave locais e início de Google Ads Pesquisa."],
+        ["Mês 3", "Domínio Regional & Top 3", "Publicações semanais, autoridade de backlinks locais e consolidação no Top 3 do Google Maps, superando o líder da região."],
+      ];
 
   return (
     <div className="pitch min-h-screen bg-ink text-surface">
@@ -45,21 +65,23 @@ function Reuniao() {
           <div className="flex items-center gap-3">
             <span className="grid size-9 place-items-center rounded-lg bg-mint font-display font-semibold text-ink">I</span>
             <div>
-              <p className="font-display font-semibold tracking-tight text-lg">INOVE LOCAL · Diagnóstico Comercial</p>
+              <p className="font-display font-semibold tracking-tight text-lg">
+                INOVE LOCAL · {eMercadoUS ? "US Local Business Audit" : "Diagnóstico Comercial"}
+              </p>
               <p className="text-xs text-surface/60">
-                {empresa.nome} · {empresa.endereco ? `${empresa.endereco}, ` : ""}{empresa.cidade} {empresa.uf ? `(${empresa.uf})` : ""} · {empresa.segmento} (Raio {empresa.raio} km)
+                {empresa.nome} · {empresa.endereco ? `${empresa.endereco}, ` : ""}{empresa.cidade} {empresa.uf ? `(${empresa.uf})` : ""} · {empresa.segmento} ({eMercadoUS ? "Radius" : "Raio"} {empresa.raio} {unidade})
               </p>
             </div>
           </div>
           <div className="no-print flex gap-2 text-sm">
-            <button onClick={() => window.print()} className="rounded-lg bg-mint px-4 py-2 font-medium text-ink hover:bg-mint/90 transition shadow-sm">
-              Exportar PDF / Imprimir Proposta
+            <button onClick={() => window.print()} className="rounded-lg bg-mint px-4 py-2 font-medium text-ink hover:bg-mint/90 transition shadow-sm cursor-pointer">
+              {eMercadoUS ? "Export PDF / Print Proposal" : "Exportar PDF / Imprimir Proposta"}
             </button>
-            <button onClick={() => setScript((v) => !v)} className="rounded-lg px-3 py-1.5 text-surface/70 ring-1 ring-surface/20 hover:text-surface">
-              {script ? "Ocultar roteiro de fala" : "Mostrar roteiro de fala"}
+            <button onClick={() => setScript((v) => !v)} className="rounded-lg px-3 py-1.5 text-surface/70 ring-1 ring-surface/20 hover:text-surface cursor-pointer">
+              {script ? (eMercadoUS ? "Hide pitch script" : "Ocultar roteiro de fala") : (eMercadoUS ? "Show pitch script" : "Mostrar roteiro de fala")}
             </button>
             <Link to="/" className="rounded-lg px-3 py-1.5 text-surface/70 ring-1 ring-surface/20 hover:text-surface">
-              Voltar ao Painel
+              {eMercadoUS ? "Back to Dashboard" : "Voltar ao Painel"}
             </Link>
           </div>
         </div>
@@ -67,22 +89,24 @@ function Reuniao() {
         {/* 1. Diagnóstico de Presença */}
         <section className="grid gap-10 md:grid-cols-3 border-b border-surface/10 pb-12">
           <div>
-            <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Score de Presença Inove</p>
+            <p className="text-xs uppercase tracking-[0.12em] text-surface/50">{eMercadoUS ? "Inove Local Visibility Score" : "Score de Presença Inove"}</p>
             <p className="font-display text-8xl font-semibold leading-none text-coral">{s}<span className="text-3xl text-surface/40">/100</span></p>
             <p className="mt-3 inline-block rounded-full bg-coral/15 px-3 py-1 text-sm text-coral ring-1 ring-coral/30">
-              {pos <= 3 ? "Top 3 da região" : "Alerta Crítico: fora do Top 3"}
+              {pos <= 3 ? (eMercadoUS ? "Google Local 3-Pack" : "Top 3 da região") : (eMercadoUS ? "Critical: Outside Local 3-Pack" : "Alerta Crítico: fora do Top 3")}
             </p>
           </div>
           <div>
-            <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Sua Posição Real</p>
+            <p className="text-xs uppercase tracking-[0.12em] text-surface/50">{eMercadoUS ? "Real Google Maps Rank" : "Sua Posição Real"}</p>
             <p className="font-display text-8xl font-semibold leading-none">{pos}º</p>
-            <p className="mt-3 text-surface/60">entre {empresas.length} concorrentes no raio de {empresa.raio} km</p>
+            <p className="mt-3 text-surface/60">
+              {eMercadoUS ? `out of ${empresas.length} competitors within ${empresa.raio} ${unidade}` : `entre ${empresas.length} concorrentes no raio de ${empresa.raio} ${unidade}`}
+            </p>
           </div>
           <div>
-            <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Dono da Região (Líder Atual)</p>
+            <p className="text-xs uppercase tracking-[0.12em] text-surface/50">{eMercadoUS ? "Market Leader" : "Dono da Região (Líder Atual)"}</p>
             <p className="mt-2 font-display text-3xl font-semibold text-mint">{L.nome}</p>
-            <p className="mt-2 font-mono text-surface/70">★ {fmt(L.nota, 1)} · {L.avaliacoes} avaliações</p>
-            <p className="mt-1 text-xs text-surface/50">Leva a maioria das ligações e cliques locais.</p>
+            <p className="mt-2 font-mono text-surface/70">★ {fmt(L.nota, 1)} · {L.avaliacoes} {eMercadoUS ? "reviews" : "avaliações"}</p>
+            <p className="mt-1 text-xs text-surface/50">{eMercadoUS ? "Captures the vast majority of local calls and bookings." : "Leva a maioria das ligações e cliques locais."}</p>
           </div>
         </section>
 
@@ -156,9 +180,21 @@ function Reuniao() {
 
           {script && (
             <div className="mt-4 rounded-xl bg-mint/10 p-5 ring-1 ring-mint/25">
-              <p className="text-xs uppercase tracking-wider font-semibold text-mint">Script Comercial para Falar ao Cliente (Visão do Gestor de Tráfego):</p>
+              <p className="text-xs uppercase tracking-wider font-semibold text-mint">
+                {eMercadoUS
+                  ? "Pitch Script for Closing (US Traffic & Conversion Specialist View):"
+                  : "Script Comercial para Falar ao Cliente (Visão do Gestor de Tráfego):"}
+              </p>
               <p className="mt-1 text-sm text-surface/90 leading-relaxed">
-                "{empresa.nome}, o consumidor de {empresa.segmento} não pesquisa de forma genérica. Quando ele tem uma necessidade urgente ou dinheiro na mão para contratar, ele digita buscas específicas de comportamento de compra como <em>'{keywords[0]?.termo}'</em> e <em>'{keywords[1]?.termo}'</em>. Hoje, quem domina o topo do Google Maps e leva esses contatos qualificados no seu raio de atendimento é o <strong>{L.nome}</strong>. Com o nosso método de autoridade no Google Maps e anúncios de alta intenção, nós vamos colocar sua empresa na frente desses compradores prontos para fechar."
+                {eMercadoUS ? (
+                  <>
+                    "{empresa.nome}, in the US market, potential clients for {empresa.segmento} do not send WhatsApp messages. When they have urgent demand, a broken pipe, or insurance ready, they search high-intent queries like <em>'{keywords[0]?.termo}'</em> and <em>'{keywords[1]?.termo}'</em> and tap <strong>'Call Now'</strong> or <strong>'Book Online'</strong>. Today, <strong>{L.nome}</strong> dominates the Google 3-Pack and captures those high-ticket calls. With our Local SEO, Google Guaranteed trust verification, and high-intent Ads strategy, we will place your business directly in front of ready-to-book customers."
+                  </>
+                ) : (
+                  <>
+                    "{empresa.nome}, o consumidor de {empresa.segmento} não pesquisa de forma genérica. Quando ele tem uma necessidade urgente ou dinheiro na mão para contratar, ele digita buscas específicas de comportamento de compra como <em>'{keywords[0]?.termo}'</em> e <em>'{keywords[1]?.termo}'</em>. Hoje, quem domina o topo do Google Maps e leva esses contatos qualificados no seu raio de atendimento é o <strong>{L.nome}</strong>. Com o nosso método de autoridade no Google Maps e anúncios de alta intenção, nós vamos colocar sua empresa na frente desses compradores prontos para fechar."
+                  </>
+                )}
               </p>
             </div>
           )}

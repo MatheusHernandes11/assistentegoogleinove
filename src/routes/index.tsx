@@ -2,7 +2,21 @@ import { useAuditoria, abrirModalAuditoria } from "@/lib/use-auditoria";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { AppShell, Bar, fmt } from "@/components/AppShell";
-import { empresa, empresas, lider, media, mediaScore as calcMedia, pontosCriticos, posicao, ranking, score, temDados, voce } from "@/lib/data";
+import {
+  empresa,
+  empresas,
+  lider,
+  media,
+  mediaScore as calcMedia,
+  pontosCriticos,
+  posicao,
+  ranking,
+  score,
+  temDados,
+  voce,
+  isUS,
+  unidadeDistancia,
+} from "@/lib/data";
 import { MapaGoogle, projetar, zoomPara } from "@/components/MapaGoogle";
 import { analisarKeywordsConcorrentes } from "@/lib/seo-keywords";
 
@@ -27,24 +41,28 @@ function Painel() {
   const s = score(voce), L = lider(), sl = score(L), pos = posicao();
   const top = ranking().filter((e) => !e.voce).slice(0, 2);
   const mediaScore = calcMedia();
+  const unidade = unidadeDistancia();
+  const flagPais = isUS() ? "🇺🇸" : "🇧🇷";
 
   return (
     <AppShell
       title="Painel de presença local"
-      subtitle={`${empresa.endereco ? `${empresa.endereco}, ` : ""}${empresa.cidade} ${empresa.uf ? `(${empresa.uf})` : ""} · Raio de ${empresa.raio} km · ${empresa.segmento}`}
+      subtitle={`${flagPais} ${empresa.endereco ? `${empresa.endereco}, ` : ""}${empresa.cidade} ${empresa.uf ? `(${empresa.uf})` : ""} · Raio de ${empresa.raio} ${unidade} · ${empresa.segmento}`}
     >
       {/* BANNER DE AÇÃO EM LARGURA TOTAL: COMEÇAR NOVO CLIENTE */}
       <div className="mb-6 rounded-2xl bg-gradient-to-r from-ink via-ink/95 to-ink p-5 sm:p-6 text-surface shadow-xl ring-1 ring-border">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-1">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/20 px-3 py-1 text-xs font-semibold text-mint ring-1 ring-mint/30">
-              📍 Diagnóstico Comercial Hiperlocal
+              📍 {isUS() ? "US Local Market Intelligence" : "Diagnóstico Comercial Hiperlocal"}
             </span>
             <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-surface">
-              Avaliar um novo cliente agora?
+              {isUS() ? "Auditar empresa nos Estados Unidos ou Brasil?" : "Avaliar um novo cliente agora?"}
             </h2>
             <p className="text-xs sm:text-sm text-surface/70 max-w-2xl">
-              Colete a localização exata do cliente (Estado, Cidade, Rua e Bairro) para identificar concorrentes vizinhos e as palavras mais buscadas no Google Ads da região.
+              {isUS()
+                ? "Alterne entre Brasil 🇧🇷 e Estados Unidos 🇺🇸 no botão ao lado. O sistema ajusta automaticamente para o comportamento de busca nativo, chamadas telefônicas e credenciais LSA."
+                : "Colete a localização exata do cliente (Estado, Cidade, Rua e Bairro) para identificar concorrentes vizinhos e as palavras mais buscadas no Google Ads da região."}
             </p>
           </div>
           <button
@@ -53,7 +71,9 @@ function Painel() {
             className="w-full md:w-auto shrink-0 flex items-center justify-center gap-2 rounded-xl bg-mint px-6 py-3.5 text-sm font-bold text-ink transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:bg-mint/90 cursor-pointer"
           >
             <span className="text-base">🎯</span>
-            <span className="uppercase tracking-wide">Começar Novo Cliente / Analisar Empresa</span>
+            <span className="uppercase tracking-wide">
+              {isUS() ? "Nova Auditoria (EUA / Brasil)" : "Começar Novo Cliente / Analisar Empresa"}
+            </span>
           </button>
         </div>
       </div>
@@ -74,7 +94,7 @@ function Painel() {
         <section className="tile col-span-12 md:col-span-6 lg:col-span-4">
           <div className="flex items-center justify-between">
             <span className="eyebrow">Líder · {L.nome}</span>
-            <span className="rounded-full bg-coral/10 px-2 py-0.5 text-xs font-medium text-coral ring-1 ring-coral/25">{L.distancia} km</span>
+            <span className="rounded-full bg-coral/10 px-2 py-0.5 text-xs font-medium text-coral ring-1 ring-coral/25">{L.distancia} {unidade}</span>
           </div>
           <div className="mt-6 flex items-end gap-1.5">
             <span className="font-display text-6xl font-semibold leading-none tracking-tight">{sl}</span>
@@ -85,7 +105,7 @@ function Painel() {
         </section>
 
         <Link to="/mapa" className="tile col-span-12 block transition hover:ring-mint/40 lg:col-span-5">
-          <span className="eyebrow">Raio {empresa.raio} km · {empresa.cidade}</span>
+          <span className="eyebrow">Raio {empresa.raio} {unidade} · {empresa.cidade}</span>
           <div className="mt-4 flex gap-4">
             <MapaGoogle zoom={zoomPara(empresa.raio)} className="w-full">
               {empresas.map((x) => { const p = projetar(x.lat, x.lng, zoomPara(empresa.raio)); return <span key={x.id} className={`absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-surface ${x.voce ? "bg-mint" : "bg-coral"}`} style={{ left: `${p.x}%`, top: `${p.y}%` }} />; })}
@@ -104,7 +124,7 @@ function Painel() {
             <div>
               <span className="eyebrow text-mint">Ranking Local do Google Maps</span>
               <h2 className="mt-1 font-display text-xl font-semibold">
-                {L.nome} lidera o raio de {empresa.raio} km com {L.avaliacoes} avaliações reais
+                {L.nome} lidera o raio de {empresa.raio} {unidade} com {L.avaliacoes} avaliações reais
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Sua empresa está em <strong>{pos}º lugar</strong> entre {empresas.length} concorrentes mapeados. Veja quem domina as buscas no Google Maps e consulte as palavras mais disputadas.

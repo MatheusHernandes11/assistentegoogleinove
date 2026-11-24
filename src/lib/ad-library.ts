@@ -16,12 +16,16 @@ export type ConcorrenteRealAds = {
 
 /** Gera o link oficial da Biblioteca de Anúncios do Google (Google Ads Transparency Center) */
 export function gerarLinkGoogleAdsTransparency(termoOuEmpresa?: string): string {
-  return `https://adstransparency.google.com/?region=BR`;
+  const region = empresa.pais === "US" ? "US" : "BR";
+  return `https://adstransparency.google.com/?region=${region}`;
 }
 
 /** Gera link de busca no Google com foco em anúncios patrocinados da região */
 export function gerarLinkBuscaGooglePatrocinados(termo: string, cidade?: string): string {
   const q = encodeURIComponent(`${termo} ${cidade ?? ""}`.trim());
+  if (empresa.pais === "US") {
+    return `https://www.google.com/search?q=${q}&gl=us&hl=en`;
+  }
   return `https://www.google.com.br/search?q=${q}`;
 }
 

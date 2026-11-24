@@ -41,13 +41,17 @@ function km(a: { latitude: number; longitude: number }, b: { latitude: number; l
 const CAMPOS = "id,displayName,formattedAddress,rating,userRatingCount,location,photos,types,websiteUri";
 const GENERICOS = new Set(["point_of_interest", "establishment", "health", "store", "food"]);
 
-function mapear(p: Place, centro: { latitude: number; longitude: number }) {
+function mapear(p: Place, centro: { latitude: number; longitude: number }, isUs = false) {
   const loc = p.location ?? centro;
+  const distKm = km(centro, loc);
+  const distancia = isUs
+    ? Math.round((distKm / 1.609) * 10) / 10 // milhas nos EUA
+    : Math.round(distKm * 10) / 10; // km no Brasil
   return {
     placeId: p.id, nome: p.displayName?.text ?? "Sem nome", endereco: p.formattedAddress ?? "",
     nota: p.rating ?? 0, avaliacoes: p.userRatingCount ?? 0, fotos: p.photos?.length ?? 0,
     categorias: (p.types ?? []).filter((t) => !GENERICOS.has(t)).length, site: !!p.websiteUri,
-    lat: loc.latitude, lng: loc.longitude, distancia: Math.round(km(centro, loc) * 10) / 10,
+    lat: loc.latitude, lng: loc.longitude, distancia,
   };
 }
 
@@ -58,26 +62,36 @@ export const auditarEmpresa = createServerFn({ method: "POST" })
     uf: z.string().trim().max(10).optional(),
     endereco: z.string().trim().max(120),
     segmento: z.string().trim().min(2).max(80),
-    raio: z.number().min(1).max(30),
+    raio: z.number().min(1).max(50),
+    pais: z.enum(["BR", "US"]).optional().default("BR"),
   }).parse(d))
   .handler(async ({ data }): Promise<Auditoria["resultado"]> => {
+    const isEua = data.pais === "US";
+    const languageCode = isEua ? "en" : "pt-BR";
+    const regionCode = isEua ? "US" : "BR";
+    const raioMetros = isEua ? Math.round(data.raio * 1609) : Math.round(data.raio * 1000);
+    const queryConcorrentes = isEua
+      ? `${data.segmento} in ${data.cidade}`
+      : `${data.segmento} em ${data.cidade}`;
+    const queryAlvo = `${data.nome} ${data.endereco} ${data.cidade} ${data.uf ? data.uf : ""}`;
+
     try {
-      // Consulta ao Google Places oficial
+      // Consulta ao Google Places oficial no país correspondente
       const [alvo] = await places("places:searchText",
-        { textQuery: `${data.nome} ${data.endereco} ${data.cidade}`, pageSize: 1, languageCode: "pt-BR", regionCode: "BR" },
+        { textQuery: queryAlvo, pageSize: 1, languageCode, regionCode },
         CAMPOS.split(",").map((c) => `places.${c}`).join(",") + ",places.reviews.publishTime");
 
       if (alvo?.location) {
         const centro = alvo.location;
         const conc = await places("places:searchText", {
-          textQuery: `${data.segmento} em ${data.cidade}`, pageSize: 20, languageCode: "pt-BR", regionCode: "BR",
-          locationBias: { circle: { center: centro, radius: data.raio * 1000 } },
+          textQuery: queryConcorrentes, pageSize: 20, languageCode, regionCode,
+          locationBias: { circle: { center: centro, radius: raioMetros } },
         }, CAMPOS.split(",").map((c) => `places.${c}`).join(","));
 
         const ultima = (alvo.reviews ?? []).map((r) => r.publishTime).filter(Boolean).sort().pop() ?? null;
         return {
-          voce: { ...mapear(alvo, centro), distancia: 0 },
-          concorrentes: conc.filter((p) => p.id !== alvo.id).map((p) => mapear(p, centro)).filter((c) => c.distancia <= data.raio),
+          voce: { ...mapear(alvo, centro, isEua), distancia: 0 },
+          concorrentes: conc.filter((p) => p.id !== alvo.id).map((p) => mapear(p, centro, isEua)).filter((c) => c.distancia <= data.raio),
           ultimaAvaliacao: ultima, centro: { lat: centro.latitude, lng: centro.longitude },
         };
       }
@@ -91,17 +105,25 @@ export const auditarEmpresa = createServerFn({ method: "POST" })
     }
 
     throw new Error(
-      `Nenhuma ficha real encontrada no Google Maps para "${data.nome}" em "${data.cidade}". Verifique se o nome comercial e endereço coincidem com a ficha do Google.`
+      `Nenhuma ficha real encontrada no Google Maps (${isEua ? "Estados Unidos" : "Brasil"}) para "${data.nome}" em "${data.cidade}". Verifique se o nome comercial e endereço coincidem com a ficha do Google.`
     );
   });
 
 export const rankingPalavra = createServerFn({ method: "POST" })
-  .validator((d) => z.object({ termo: z.string().trim().min(2).max(100), lat: z.number(), lng: z.number() }).parse(d))
+  .validator((d) => z.object({
+    termo: z.string().trim().min(2).max(100),
+    lat: z.number(),
+    lng: z.number(),
+    pais: z.enum(["BR", "US"]).optional().default("BR"),
+  }).parse(d))
   .handler(async ({ data }) => {
+    const isEua = data.pais === "US";
+    const languageCode = isEua ? "en" : "pt-BR";
+    const regionCode = isEua ? "US" : "BR";
     try {
       const r = await places("places:searchText", {
-        textQuery: data.termo, pageSize: 10, languageCode: "pt-BR", regionCode: "BR",
-        locationBias: { circle: { center: { latitude: data.lat, longitude: data.lng }, radius: 10000 } },
+        textQuery: data.termo, pageSize: 10, languageCode, regionCode,
+        locationBias: { circle: { center: { latitude: data.lat, longitude: data.lng }, radius: 15000 } },
       }, "places.id,places.displayName,places.rating,places.userRatingCount");
       if (r && r.length > 0) {
         return r.map((p) => ({ placeId: p.id, nome: p.displayName?.text ?? "", nota: p.rating ?? 0, avaliacoes: p.userRatingCount ?? 0 }));
@@ -110,7 +132,6 @@ export const rankingPalavra = createServerFn({ method: "POST" })
       console.warn("Google Places indisponível para ranking:", e);
     }
 
-    // Não retorna dados falsos: apenas dados reais se existirem
     return [];
   });
 

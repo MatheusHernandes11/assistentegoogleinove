@@ -52,6 +52,510 @@ export type DiagnosticoSEOAds = {
  * BASE DE INTELIGÊNCIA DE TRÁFEGO PAGO & COMPORTAMENTO DO CONSUMIDOR BRASILEIRO
  * Mapeada com base em padrões de busca de alta conversão no Google Ads e Google Maps.
  */
+/**
+ * BASE DE INTELIGÊNCIA DE TRÁFEGO PAGO & COMPORTAMENTO DO CONSUMIDOR NOS ESTADOS UNIDOS (USA)
+ * Focada na psicologia de compra americana: Free Estimates, Licensed & Insured, 0% APR, Emergency / Same Day, Google Guaranteed.
+ */
+const BASE_COMPORTAMENTAL_US: Record<
+  string,
+  { categorias: string[]; termos: TermoTemplate[] }
+> = {
+  financing_loans: {
+    categorias: [
+      "Auto Loan Refinance",
+      "Home Equity (HELOC)",
+      "Personal Loans",
+      "Hard Money Lending",
+      "Commercial Mortgage",
+    ],
+    termos: [
+      {
+        termo: "auto loan refinance lowest interest rate {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Lower Monthly Payment",
+        visaoGestorTrafego:
+          "Consumidor querendo reduzir a parcela mensal do carro trocando financiamento caro por taxas mais baixas.",
+      },
+      {
+        termo: "home equity line of credit heloc low rates {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Home Equity & Cash Out",
+        visaoGestorTrafego:
+          "Proprietário usando a valorização do imóvel para captar $50k a $200k para reformas ou consolidação de dívidas.",
+      },
+      {
+        termo: "first time home buyer mortgage loan programs {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 First Home / Down Payment Assistance",
+        visaoGestorTrafego:
+          "Comprador do primeiro imóvel buscando programas com entrada reduzida (FHA/Conventional) e subsídios.",
+      },
+      {
+        termo: "hard money lenders fast approval real estate {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Real Estate Investors / Fast Cash",
+        visaoGestorTrafego:
+          "Investidor de fix-and-flip precisando de aprovação e dinheiro na conta em menos de 5 dias.",
+      },
+      {
+        termo: "personal loans bad credit instant approval near me",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Emergency Cash / Low Credit Score",
+        visaoGestorTrafego:
+          "Pessoa com urgência de caixa buscando credores flexíveis para aprovação imediata.",
+      },
+      {
+        termo: "licensed mortgage broker free consultation {cidade}",
+        intencao: "meio",
+        gatilho: "confianca",
+        rotuloGatilho: "🏆 Licensed & Reputable Broker",
+        visaoGestorTrafego:
+          "Consumidor buscando correspondente experiente para comparar dezenas de bancos e achar o melhor Custo Efetivo.",
+      },
+    ],
+  },
+
+  dentist: {
+    categorias: [
+      "Emergency Dentistry",
+      "Dental Implants",
+      "All-on-4 Implants",
+      "Invisalign Provider",
+      "Cosmetic Dentistry",
+    ],
+    termos: [
+      {
+        termo: "emergency dentist open sunday near me",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Acute Toothache / Open Today",
+        visaoGestorTrafego:
+          "Paciente com dor aguda no fim de semana. Quem tiver telefone no Google e atender de imediato recebe o paciente.",
+      },
+      {
+        termo: "dental implants cost without insurance {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 High Out-of-Pocket Cost",
+        visaoGestorTrafego:
+          "Americano sem seguro dental cotando implante unitário ($3k-$5k) e buscando planos de pagamento.",
+      },
+      {
+        termo: "all on 4 dental implants cost monthly payment {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Full Mouth Reconstruction ($15k-$30k)",
+        visaoGestorTrafego:
+          "Paciente com perda de múltiplos dentes buscando reabilitação total fixa com financiamento CareCredit/LendingClub.",
+      },
+      {
+        termo: "invisalign payment plan 0 apr financing {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Clear Aligners 0% Financing",
+        visaoGestorTrafego:
+          "Adulto que trabalha com imagem querendo alinhar o sorriso com parcelas sem juros de $150 a $250/mês.",
+      },
+      {
+        termo: "wisdom teeth removal same day consultation {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Wisdom Teeth Pain",
+        visaoGestorTrafego:
+          "Jovem ou estudante com siso inflamado querendo consulta e extração sem fila.",
+      },
+      {
+        termo: "walk in dentist accepting new patients today {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Walk-In / No Appointment Needed",
+        visaoGestorTrafego:
+          "Paciente que quer ser atendido hoje mesmo sem esperar semanas por um agendamento.",
+      },
+      {
+        termo: "top rated cosmetic dentist 5 star reviews {cidade}",
+        intencao: "meio",
+        gatilho: "confianca",
+        rotuloGatilho: "🏆 Verified 5-Star Reviews",
+        visaoGestorTrafego:
+          "Paciente cotando facetas de porcelana e clareamento que só confia em dentistas com centenas de reviews positivos.",
+      },
+    ],
+  },
+
+  legal_lawyer: {
+    categorias: [
+      "Personal Injury",
+      "Car Accident Attorney",
+      "Divorce & Family Law",
+      "DUI Defense Lawyer",
+      "Immigration Attorney",
+    ],
+    termos: [
+      {
+        termo: "personal injury lawyer free consultation no win no fee {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Contingency Fee (No Win No Fee)",
+        visaoGestorTrafego:
+          "Vítima de acidente querendo contratar sem custos iniciais, pagando apenas porcentagem da indenização ganha.",
+      },
+      {
+        termo: "car accident attorney call now 24/7 near me",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Immediate Accident Call",
+        visaoGestorTrafego:
+          "Acidente de trânsito ocorrido há poucas horas. A pessoa liga do local ou do hospital para saber seus direitos.",
+      },
+      {
+        termo: "divorce lawyer flat fee uncontested {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Predictable Flat Rate",
+        visaoGestorTrafego:
+          "Casal querendo divórcio consensual sem custos surpresa de horas faturadas.",
+      },
+      {
+        termo: "dui defense attorney emergency consultation {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Arrest / License Suspension Risk",
+        visaoGestorTrafego:
+          "Pessoa detida por blitz/álcool com audiência marcada precisando de advogado criminalista de plantão.",
+      },
+      {
+        termo: "immigration lawyer green card visa specialist {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Immigration & Legal Status",
+        visaoGestorTrafego:
+          "Imigrante ou empresa patrocinadora buscando regularização, green card ou visto EB-2 / EB-3 / O-1.",
+      },
+      {
+        termo: "best rated injury law firm licensed {cidade}",
+        intencao: "meio",
+        gatilho: "confianca",
+        rotuloGatilho: "🏆 Established & Licensed Firm",
+        visaoGestorTrafego:
+          "Cliente checando autoridade do escritório, vitórias passadas e milhões recuperados em acordos.",
+      },
+    ],
+  },
+
+  home_services: {
+    categorias: [
+      "Emergency Plumbing 24/7",
+      "HVAC & AC Repair",
+      "Roofing Contractor",
+      "Electrician Licensed",
+      "Pest Control",
+    ],
+    termos: [
+      {
+        termo: "emergency plumber near me 24/7 leak repair",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Flooding / Water Leak Emergency",
+        visaoGestorTrafego:
+          "Cano estourado ou esgoto transbordando. O morador liga para a primeira empresa que atender a chamada no Google Maps.",
+      },
+      {
+        termo: "ac repair same day service free estimate {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Summer Heatwave / Same Day AC",
+        visaoGestorTrafego:
+          "Ar condicionado parou de gelar no calor. Busca por técnicos locais com visita no mesmo dia e orçamento sem compromisso.",
+      },
+      {
+        termo: "roof replacement licensed and insured contractor {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Licensed & Insured ($10k-$25k)",
+        visaoGestorTrafego:
+          "Troca de telhado danificado por tempestade. O americano só contrata profissionais certificados com seguro de responsabilidade civil.",
+      },
+      {
+        termo: "licensed electrician emergency power outage near me",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Electrical Hazard / Sparking",
+        visaoGestorTrafego:
+          "Queda de disjuntor principal ou cheiro de queimado exigindo eletricista certificado de plantão.",
+      },
+      {
+        termo: "water heater replacement same day installation {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Tankless Water Heater Installation",
+        visaoGestorTrafego:
+          "Aquecedor quebrado e casa sem água quente. Busca por substituição imediata e preço justo.",
+      },
+    ],
+  },
+
+  auto_repair: {
+    categorias: [
+      "Brake Repair & Rotors",
+      "Check Engine Diagnostic",
+      "Transmission Repair",
+      "Mobile Mechanic 24/7",
+      "Fast Oil Change",
+    ],
+    termos: [
+      {
+        termo: "brake repair same day service near me",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Grinding Noise / Safety Issue",
+        visaoGestorTrafego:
+          "Pastilhas de freio gastas raspando no disco. Motorista buscando oficina mecânica para troca imediata.",
+      },
+      {
+        termo: "check engine light free diagnostic estimate {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Free Scanner Diagnostic",
+        visaoGestorTrafego:
+          "Luz no painel assustando o motorista, buscando oficina com scanner OBD2 gratuito para orçamento.",
+      },
+      {
+        termo: "transmission repair shop warranty licensed {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Major Engine / Transmission ($3k-$7k)",
+        visaoGestorTrafego:
+          "Reparo de alto valor exigindo garantia por escrito de 2 a 3 anos e mecânicos certificados ASE.",
+      },
+      {
+        termo: "mobile mechanic roadside assistance near me",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Stranded on Road / No Towing Needed",
+        visaoGestorTrafego:
+          "Carro não liga na garagem ou na rua; o cliente quer mecânico móvel que venha consertar no local.",
+      },
+      {
+        termo: "oil change drive thru coupon near me {cidade}",
+        intencao: "fundo",
+        gatilho: "hiperlocal",
+        rotuloGatilho: "📍 15-Minute Drive Thru Oil Change",
+        visaoGestorTrafego:
+          "Serviço rápido de troca de óleo sem agendamento no caminho para o trabalho.",
+      },
+    ],
+  },
+
+  medspa_beauty: {
+    categorias: [
+      "Botox & Dysport",
+      "Lip Fillers",
+      "Laser Hair Removal",
+      "Hydrafacial & Peels",
+      "Barbershop & Hair Salon",
+    ],
+    termos: [
+      {
+        termo: "botox cost per unit medspa near me {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Pricing per Unit ($10-$15/unit)",
+        visaoGestorTrafego:
+          "Paciente cotando o preço por unidade de Botox/Dysport com foco em resultados naturais e clínicas médicas.",
+      },
+      {
+        termo: "lip fillers 1ml natural look before and after {cidade}",
+        intencao: "fundo",
+        gatilho: "confianca",
+        rotuloGatilho: "🏆 Natural Results & Photos",
+        visaoGestorTrafego:
+          "Consumidor exigindo fotos reais de antes e depois para evitar preenchimento labial artificial.",
+      },
+      {
+        termo: "laser hair removal packages walk ins welcome {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Multi-Session Laser Deals",
+        visaoGestorTrafego:
+          "Pacotes de depilação a laser com preços promocionais para pernas, axilas e corpo todo.",
+      },
+      {
+        termo: "barbershop open now walk ins welcome near me",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Walk-In Haircut & Beard",
+        visaoGestorTrafego:
+          "Cliente precisando de corte de cabelo e barba sem ter agendado com dias de antecedência.",
+      },
+    ],
+  },
+
+  real_estate: {
+    categorias: [
+      "Homes for Sale",
+      "No Security Deposit Rentals",
+      "Commercial Real Estate",
+      "Top Real Estate Agent",
+      "Condos & Townhomes",
+    ],
+    termos: [
+      {
+        termo: "homes for sale with pool and fenced yard {cidade}",
+        intencao: "fundo",
+        gatilho: "alto_ticket",
+        rotuloGatilho: "💎 Single Family Home ($400k-$1M+)",
+        visaoGestorTrafego:
+          "Família buscando moradia completa com piscina privativa e segurança.",
+      },
+      {
+        termo: "no deposit apartments for rent move in ready {cidade}",
+        intencao: "fundo",
+        gatilho: "preco_parcelamento",
+        rotuloGatilho: "💰 Low Move-In Cost Rental",
+        visaoGestorTrafego:
+          "Inquilino querendo alugar sem desembolsar 3 meses de aluguel adiantado.",
+      },
+      {
+        termo: "best real estate agent top producer reviews {cidade}",
+        intencao: "meio",
+        gatilho: "confianca",
+        rotuloGatilho: "🏆 Top Producing Realtor",
+        visaoGestorTrafego:
+          "Comprador ou vendedor buscando os corretores mais experientes e bem avaliados da região.",
+      },
+    ],
+  },
+
+  restaurants: {
+    categorias: [
+      "Pizza Delivery Open Late",
+      "Burgers & Craft Beer",
+      "Family Friendly Dinner",
+      "Dog Friendly Patio",
+      "Online Takeout Curbside",
+    ],
+    termos: [
+      {
+        termo: "best pizza delivery open late near me",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Late Night Food / Fast Delivery",
+        visaoGestorTrafego:
+          "Cliente faminto à noite buscando entrega rápida e pizza quente.",
+      },
+      {
+        termo: "dog friendly restaurants outdoor patio {cidade}",
+        intencao: "meio",
+        gatilho: "confianca",
+        rotuloGatilho: "🏆 Pet Friendly Dining",
+        visaoGestorTrafego:
+          "Americanos com cachorros que só frequentam restaurantes com varanda pet-friendly.",
+      },
+      {
+        termo: "online order takeout curbside pickup {cidade}",
+        intencao: "fundo",
+        gatilho: "urgencia",
+        rotuloGatilho: "🔥 Curbside Fast Pickup",
+        visaoGestorTrafego:
+          "Consumidor encomendando refeição pelo celular para retirar no carro sem sair do veículo.",
+      },
+    ],
+  },
+};
+
+/**
+ * Motor Dinâmico de Tráfego USA: Seleciona estratégia e termos do mercado americano.
+ */
+function obterEstrategiaNichoUS(segmento: string, cidade: string) {
+  const sNorm = normalizarTexto(segmento);
+
+  if (sNorm.includes("consorc") || sNorm.includes("loan") || sNorm.includes("finan") || sNorm.includes("credit") || sNorm.includes("mortgage") || sNorm.includes("heloc")) {
+    return BASE_COMPORTAMENTAL_US["financing_loans"]!;
+  }
+  if (sNorm.includes("dent") || sNorm.includes("odonto") || sNorm.includes("implant") || sNorm.includes("invisalign")) {
+    return BASE_COMPORTAMENTAL_US["dentist"]!;
+  }
+  if (sNorm.includes("law") || sNorm.includes("attorney") || sNorm.includes("advog") || sNorm.includes("legal") || sNorm.includes("injury")) {
+    return BASE_COMPORTAMENTAL_US["legal_lawyer"]!;
+  }
+  if (sNorm.includes("plumb") || sNorm.includes("roof") || sNorm.includes("hvac") || sNorm.includes("electric") || sNorm.includes("repar") || sNorm.includes("construct")) {
+    return BASE_COMPORTAMENTAL_US["home_services"]!;
+  }
+  if (sNorm.includes("auto") || sNorm.includes("car") || sNorm.includes("mecanic") || sNorm.includes("brake") || sNorm.includes("tire") || sNorm.includes("mechanic")) {
+    return BASE_COMPORTAMENTAL_US["auto_repair"]!;
+  }
+  if (sNorm.includes("medspa") || sNorm.includes("botox") || sNorm.includes("estet") || sNorm.includes("laser") || sNorm.includes("barber") || sNorm.includes("salon")) {
+    return BASE_COMPORTAMENTAL_US["medspa_beauty"]!;
+  }
+  if (sNorm.includes("real estate") || sNorm.includes("realtor") || sNorm.includes("imove") || sNorm.includes("rent") || sNorm.includes("home") || sNorm.includes("apart")) {
+    return BASE_COMPORTAMENTAL_US["real_estate"]!;
+  }
+  if (sNorm.includes("pizz") || sNorm.includes("restauran") || sNorm.includes("food") || sNorm.includes("bar") || sNorm.includes("burger")) {
+    return BASE_COMPORTAMENTAL_US["restaurants"]!;
+  }
+
+  const segLimpo = segmento.trim() || "Local Service";
+  return {
+    categorias: [
+      `${segLimpo} Licensed & Insured`,
+      `Emergency / Same Day Service`,
+      `Free Estimates & Pricing`,
+      `Verified 5-Star Reviews`,
+      `Local Service Near Me`,
+    ],
+    termos: [
+      {
+        termo: `licensed and insured ${segLimpo} near me {cidade}`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "confianca" as GatilhoComportamento,
+        rotuloGatilho: "🏆 Licensed & Insured Contractor",
+        visaoGestorTrafego: `Consumidor americano exigindo certificação profissional e seguro de responsabilidade civil antes de contratar.`,
+      },
+      {
+        termo: `best ${segLimpo} in {cidade} free estimate`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "preco_parcelamento" as GatilhoComportamento,
+        rotuloGatilho: "💰 Free Estimate & Quote",
+        visaoGestorTrafego: `Cliente querendo orçamento prévio sem taxa de visita para comparar propostas.`,
+      },
+      {
+        termo: `emergency ${segLimpo} open now same day service {cidade}`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "urgencia" as GatilhoComportamento,
+        rotuloGatilho: "🔥 Same Day Emergency Response",
+        visaoGestorTrafego: `Problema urgente que não pode esperar. Quem atender a ligação primeiro ganha o serviço.`,
+      },
+      {
+        termo: `top rated ${segLimpo} 5 star reviews near me`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "confianca" as GatilhoComportamento,
+        rotuloGatilho: "🏆 5-Star Customer Rating",
+        visaoGestorTrafego: `Americano comparando avaliações no Google Maps antes de ligar ou agendar.`,
+      },
+      {
+        termo: `${segLimpo} cost financing 0 apr monthly payment {cidade}`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "preco_parcelamento" as GatilhoComportamento,
+        rotuloGatilho: "💰 0% APR Financing Options",
+        visaoGestorTrafego: `Consumidor buscando parcelamento sem juros via financiamento rápido para serviços de valor mais alto.`,
+      },
+      {
+        termo: `walk in ${segLimpo} near me accepting new clients today`,
+        intencao: "fundo" as IntencaoBusca,
+        gatilho: "urgencia" as GatilhoComportamento,
+        rotuloGatilho: "🔥 Walk-In / Immediate Booking",
+        visaoGestorTrafego: `Cliente querendo atendimento no mesmo dia sem passar por semanas de espera.`,
+      },
+    ],
+  };
+}
+
 const BASE_COMPORTAMENTAL_NICHOS: Record<
   string,
   { categorias: string[]; termos: TermoTemplate[] }
@@ -874,14 +1378,17 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
   keywords: KeywordAnalise[];
   diagnostico: DiagnosticoSEOAds;
 } {
-  const seg = empresa.segmento || "Consórcios";
-  const cid = empresa.cidade || "Londrina";
-  const uf = empresa.uf ? ` - ${empresa.uf}` : "";
-  const bairroOuRua = extrairBairroOuRua(empresa.endereco) || "Centro";
+  const isMercadoUS = empresa.pais === "US";
+  const seg = empresa.segmento || (isMercadoUS ? "Home Services" : "Consórcios");
+  const cid = empresa.cidade || (isMercadoUS ? "Miami" : "Londrina");
+  const uf = empresa.uf ? (isMercadoUS ? `, ${empresa.uf}` : ` - ${empresa.uf}`) : "";
+  const bairroOuRua = extrairBairroOuRua(empresa.endereco) || (isMercadoUS ? "Downtown" : "Centro");
   const locDesc = bairroOuRua ? `${bairroOuRua}, ${cid}` : `${cid}${uf}`;
 
-  const estrategia = obterEstrategiaNicho(seg, cid, bairroOuRua);
-  const geo = buscarCoordenadasBrasil(cid, empresa.uf);
+  const estrategia = isMercadoUS
+    ? obterEstrategiaNichoUS(seg, cid)
+    : obterEstrategiaNicho(seg, cid, bairroOuRua);
+  const geo = buscarCoordenadasBrasil(cid, empresa.uf, isMercadoUS ? "US" : "BR");
   const fatorCidade = geo.fatorBusca || 1.1;
 
   const concs =
@@ -896,7 +1403,7 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
 
   const keywords: KeywordAnalise[] = termosFinais.map((t, idx) => {
     let termoProcessado = t.termo.replace("{cidade}", cid);
-    termoProcessado = termoProcessado.replace("{bairro}", bairroOuRua || "Centro");
+    termoProcessado = termoProcessado.replace("{bairro}", bairroOuRua || (isMercadoUS ? "Downtown" : "Centro"));
 
     // Mapeamento com os concorrentes reais da região
     const concorrentesQueUsam: string[] = [];
@@ -934,12 +1441,22 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
 
     // Argumento pronto do Gestor de Tráfego para apresentar ao cliente
     let argumento = "";
-    if (status === "invisivel") {
-      argumento = `Sua empresa NÃO aparece para o consumidor em momento de compra em ${locDesc}. O líder (${topLider.nome || "concorrente"}) absorve todas essas chamadas.`;
-    } else if (status === "fora_top3") {
-      argumento = `Sua empresa aparece fora do Top 3 em ${locDesc}. 82% das decisões de compra no Maps acontecem exclusivamente nas 3 primeiras fichas.`;
+    if (isMercadoUS) {
+      if (status === "invisivel") {
+        argumento = `Your business does NOT rank in Google Maps for immediate buyers in ${locDesc}. ${topLider.nome || "Top competitors"} capture all direct phone calls and booking requests.`;
+      } else if (status === "fora_top3") {
+        argumento = `Your listing ranks outside the Top 3 Local Pack in ${locDesc}. Over 82% of US local mobile searches result in actions exclusively within the top 3 spots.`;
+      } else {
+        argumento = `Your listing actively competes with ${topLider.nome || "market leaders"} in ${locDesc}. Regular verified client reviews and instant call responsiveness are required to protect this ranking.`;
+      }
     } else {
-      argumento = `Sua ficha disputa presença com ${topLider.nome || "concorrentes"} em ${locDesc}. É essencial manter avaliações semanais para não perder a posição.`;
+      if (status === "invisivel") {
+        argumento = `Sua empresa NÃO aparece para o consumidor em momento de compra em ${locDesc}. O líder (${topLider.nome || "concorrente"}) absorve todas essas chamadas.`;
+      } else if (status === "fora_top3") {
+        argumento = `Sua empresa aparece fora do Top 3 em ${locDesc}. 82% das decisões de compra no Maps acontecem exclusivamente nas 3 primeiras fichas.`;
+      } else {
+        argumento = `Sua ficha disputa presença com ${topLider.nome || "concorrentes"} em ${locDesc}. É essencial manter avaliações semanais para não perder a posição.`;
+      }
     }
 
     return {
@@ -971,13 +1488,20 @@ export function analisarKeywordsConcorrentes(listaConcorrentes?: Empresa[]): {
     ? Math.min(100, Math.max(12, Math.round((palavrasTop3 * 100 + palavrasMeio * 45) / keywords.length)))
     : 0;
 
-  const primeiroTermo = keywords[0]?.termo || `${seg} em ${cid}`;
-  const pontosVenda: string[] = [
-    `Nas buscas de maior intenção de compra de ${locDesc}, seu cliente encontra primeiro o ${topLider?.nome || "líder da região"}.`,
-    `Termos com intenção de contratação imediata (como "${primeiroTermo}") exigem presença no Top 3 do Google Maps e anúncios patrocinados no Google Ads.`,
-    `A busca por termos específicos de alto ticket e formas de parcelamento é onde se concentram os clientes mais rentáveis do seu mercado.`,
-    `Mais de 75% dos consumidores pesquisam no Google antes de entrar em contato via WhatsApp para verificar se a empresa possui avaliações positivas recentes.`,
-  ];
+  const primeiroTermo = keywords[0]?.termo || (isMercadoUS ? `${seg} near me in ${cid}` : `${seg} em ${cid}`);
+  const pontosVenda: string[] = isMercadoUS
+    ? [
+        `In high-intent purchase searches in ${locDesc}, potential clients find ${topLider?.nome || "top competitors"} first on Google Maps Local 3-Pack.`,
+        `Over 70% of US local conversions happen via immediate Phone Call ("Call Now") or Google Instant Booking ("Reserve with Google"), demanding top visibility.`,
+        `American consumers actively filter local providers by "Licensed & Insured", "BBB Accredited", and "Google Guaranteed" before booking or calling.`,
+        `Fast owner response time (<24h) to reviews is a proven direct ranking factor in the Google Maps algorithm in the United States.`,
+      ]
+    : [
+        `Nas buscas de maior intenção de compra de ${locDesc}, seu cliente encontra primeiro o ${topLider?.nome || "líder da região"}.`,
+        `Termos com intenção de contratação imediata (como "${primeiroTermo}") exigem presença no Top 3 do Google Maps e anúncios patrocinados no Google Ads.`,
+        `A busca por termos específicos de alto ticket e formas de parcelamento é onde se concentram os clientes mais rentáveis do seu mercado.`,
+        `Mais de 75% dos consumidores pesquisam no Google antes de entrar em contato via WhatsApp para verificar se a empresa possui avaliações positivas recentes.`,
+      ];
 
   return {
     keywords,

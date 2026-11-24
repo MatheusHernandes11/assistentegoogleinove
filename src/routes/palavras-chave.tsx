@@ -2,7 +2,19 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo } from "react";
 import { AppShell, fmt } from "@/components/AppShell";
-import { empresa, empresas, temDados, voce, lider, concorrentes, posicao } from "@/lib/data";
+import {
+  empresa,
+  empresas,
+  temDados,
+  voce,
+  lider,
+  concorrentes,
+  posicao,
+  isUS,
+  FATORES_MERCADO_US,
+  simboloMoeda,
+  unidadeDistancia,
+} from "@/lib/data";
 import { rankingPalavra } from "@/lib/places.functions";
 import { useAuditoria } from "@/lib/use-auditoria";
 import { analisarKeywordsConcorrentes, type IntencaoBusca, type KeywordAnalise } from "@/lib/seo-keywords";
@@ -120,7 +132,20 @@ function KeywordsPage() {
   }
 
   function copiarArgumentoVenda() {
-    const texto = `DIAGNÓSTICO COMERCIAL - INOVE LOCAL:
+    const moeda = simboloMoeda();
+    const texto = isUS()
+      ? `COMMERCIAL CLOSING SCRIPT - INOVE LOCAL (US MARKET):
+Business: ${empresa.nome} (${empresa.cidade}, ${empresa.uf || ""})
+Category: ${empresa.segmento}
+Market: United States
+
+${diagnostico.pontosVendaComercial.map((p, i) => `${i + 1}. ${p}`).join("\n")}
+
+Local Market Leader: ${topLider.nome} (${topLider.avaliacoes} Google reviews · ${topLider.nota.toFixed(1)} stars)
+Your Listing Reviews: ${voce.avaliacoes} reviews
+Competitive Gap: ${Math.max(0, topLider.avaliacoes - voce.avaliacoes)} reviews behind the leader
+Target Strategy: High-intent direct phone call generation & Google Guaranteed visibility.`
+      : `DIAGNÓSTICO COMERCIAL - INOVE LOCAL:
 Empresa: ${empresa.nome} (${empresa.cidade})
 Segmento: ${empresa.segmento}
 
@@ -128,7 +153,7 @@ ${diagnostico.pontosVendaComercial.map((p, i) => `${i + 1}. ${p}`).join("\n")}
 
 Líder da Região: ${topLider.nome} (${topLider.avaliacoes} avaliações · Nota ${topLider.nota.toFixed(1)})
 Volume de Buscas Perdido p/ Mês: ~${diagnostico.buscasPerdidasParaConcorrentes.toLocaleString("pt-BR")} cliques
-Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString("pt-BR")}/mês`;
+Equivalente em Google Ads: ${moeda} ${diagnostico.custoOportunidadeAds.toLocaleString("pt-BR")}/mês`;
 
     navigator.clipboard.writeText(texto);
     setCopiado(true);
@@ -137,9 +162,49 @@ Equivalente em Google Ads: R$ ${diagnostico.custoOportunidadeAds.toLocaleString(
 
   return (
     <AppShell
-      title="SEO de Ads & Palavras-Chave dos Concorrentes"
-      subtitle={`Mineração de termos de busca, leilão do Google Ads e presença comercial em ${empresa.cidade}`}
+      title={isUS() ? "US SEO & Buyer Search Behavior · Inove Local" : "SEO de Ads & Palavras-Chave dos Concorrentes"}
+      subtitle={
+        isUS()
+          ? `High-intent keyword mining, US Local Pack ranking factors & competitor intelligence in ${empresa.cidade}, ${empresa.uf || ""}`
+          : `Mineração de termos de busca, leilão do Google Ads e presença comercial em ${empresa.cidade}`
+      }
     >
+      {/* DESTAQUE MERCADO AMERICANO: FATORES CRÍTICOS US VS BRASIL */}
+      {isUS() && (
+        <section className="tile mb-6 border-l-4 border-l-indigo-600 bg-gradient-to-r from-surface to-paper p-5 sm:p-6 shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-indigo-500/15 px-2.5 py-0.5 text-xs font-bold text-indigo-600">
+              🇺🇸 INTELIGÊNCIA DE MERCADO AMERICANO (EUA vs BRASIL)
+            </span>
+          </div>
+          <h3 className="mt-2 font-display text-xl font-bold text-ink">
+            Diferenças Decisivas de Comportamento do Consumidor nos Estados Unidos
+          </h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Empresas nos EUA não dependem de WhatsApp. O tráfego e as conversões funcionam sob regras próprias de confiança e contratação direta:
+          </p>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {FATORES_MERCADO_US.map((fator, idx) => (
+              <div key={idx} className="rounded-xl bg-surface p-3.5 ring-1 ring-border shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{fator.icone}</span>
+                  <h4 className="font-semibold text-xs text-ink">{fator.titulo}</h4>
+                </div>
+                <div className="mt-2 space-y-1.5 text-xs">
+                  <div className="rounded bg-paper p-1.5 text-muted-foreground">
+                    <strong className="text-ink">No Brasil:</strong> {fator.brasil}
+                  </div>
+                  <div className="rounded bg-mint/10 p-1.5 text-ink font-medium">
+                    <strong className="text-mint">Nos EUA:</strong> {fator.estadosUnidos}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* 1. CARDS DE DADOS REAIS DO GOOGLE MAPS */}
       <div className="grid grid-cols-12 gap-3.5 mb-6">
         <section className="tile col-span-12 sm:col-span-6 lg:col-span-3">

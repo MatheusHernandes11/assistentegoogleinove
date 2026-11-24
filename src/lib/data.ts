@@ -13,6 +13,7 @@ export type Perfil = {
   endereco: string;
   segmento: string;
   raio: number;
+  pais?: "BR" | "US" | undefined;
 };
 
 // Estado inicial limpo (somente dados reais do Google)
@@ -21,6 +22,7 @@ export const empresa: Perfil & {
   ultimaAvaliacao: string | null;
   centro: { lat: number; lng: number } | null;
   real: boolean;
+  pais: "BR" | "US";
 } = {
   nome: "",
   cidade: "",
@@ -32,7 +34,49 @@ export const empresa: Perfil & {
   ultimaAvaliacao: null,
   centro: null,
   real: false,
+  pais: "BR",
 };
+
+export const isUS = () => empresa.pais === "US";
+export const simboloMoeda = () => (empresa.pais === "US" ? "$" : "R$");
+export const unidadeDistancia = () => (empresa.pais === "US" ? "mi" : "km");
+
+/**
+ * PONTOS DE DESTAQUE & FATORES CRÍTICOS: ESTADOS UNIDOS VS BRASIL
+ * O que muda no comportamento do consumidor, no Google Maps e no fechamento de vendas.
+ */
+export const FATORES_MERCADO_US = [
+  {
+    titulo: "Zero WhatsApp: Phone Call & Instant Booking",
+    icone: "📞",
+    brasil: "90% das conversões acontecem via conversa no WhatsApp.",
+    estadosUnidos: "Consumidor americano liga direto pelo botão 'Call Now' ou agenda pelo 'Reserve with Google' / site. O tempo de resposta telefônica em menos de 3 toques é decisivo.",
+  },
+  {
+    titulo: "Licensed, Insured & Bonded Obrigatório",
+    icone: "🛡️",
+    brasil: "Clientes buscam preço e facilidade de pagamento parcelado.",
+    estadosUnidos: "Americanos temem processos e fraudes. Exigem selos de 'Licensed & Insured' visíveis na ficha e no site para qualquer serviço (construção, auto, saúde, reparos).",
+  },
+  {
+    titulo: "Google Guaranteed & Google Screened (LSA)",
+    icone: "✅",
+    brasil: "Disputa focada nas 3 primeiras posições do Google Maps orgânico.",
+    estadosUnidos: "O selo verde 'Google Guaranteed' dá reembolso de até $2.000 pelo Google. Empresas com o selo têm prioridade absoluta na decisão de contratação nos EUA.",
+  },
+  {
+    titulo: "Owner Response Rate < 24 Horas",
+    icone: "⚡",
+    brasil: "Muitas empresas não respondem avaliações ou respondem meses depois.",
+    estadosUnidos: "Responder a 100% das avaliações em menos de 24h é fator direto no algoritmo do Google US. Reviews negativas sem resposta imediata do dono destroem as ligações.",
+  },
+  {
+    titulo: "Formas de Pagamento: 0% APR Financing & Insurance",
+    icone: "💳",
+    brasil: "Parcelamento no cartão de crédito em 10x/12x, Pix e boleto bancário.",
+    estadosUnidos: "Financiamento pré-aprovado sem juros (0% APR via CareCredit/Synchrony/Affirm) e aceitação de planos de saúde/seguros (In-Network Provider).",
+  },
+];
 
 export const empresas: Empresa[] = [];
 
@@ -94,6 +138,7 @@ export function aplicarAuditoria(a: Auditoria) {
     ultimaAvaliacao: a.resultado.ultimaAvaliacao,
     centro: a.resultado.centro,
     real: true,
+    pais: a.perfil.pais || "BR",
   });
   const c0 = a.resultado.centro, escala = 40 / Math.max(1, a.perfil.raio);
   const pos = (e: { lat: number; lng: number }) => ({

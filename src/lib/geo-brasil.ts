@@ -105,6 +105,51 @@ export const ESTADOS_BRASIL = [
   { sigla: "TO", nome: "Tocantins" },
 ];
 
+export const ESTADOS_EUA = [
+  { sigla: "FL", nome: "Florida" },
+  { sigla: "CA", nome: "California" },
+  { sigla: "TX", nome: "Texas" },
+  { sigla: "NY", nome: "New York" },
+  { sigla: "MA", nome: "Massachusetts" },
+  { sigla: "NJ", nome: "New Jersey" },
+  { sigla: "GA", nome: "Georgia" },
+  { sigla: "IL", nome: "Illinois" },
+  { sigla: "NC", nome: "North Carolina" },
+  { sigla: "PA", nome: "Pennsylvania" },
+  { sigla: "OH", nome: "Ohio" },
+  { sigla: "MI", nome: "Michigan" },
+  { sigla: "CO", nome: "Colorado" },
+  { sigla: "NV", nome: "Nevada" },
+  { sigla: "WA", nome: "Washington" },
+  { sigla: "AZ", nome: "Arizona" },
+  { sigla: "VA", nome: "Virginia" },
+  { sigla: "CT", nome: "Connecticut" },
+  { sigla: "TN", nome: "Tennessee" },
+  { sigla: "MD", nome: "Maryland" },
+];
+
+export const CIDADES_EUA: CidadeBrasil[] = [
+  { nome: "Miami", uf: "FL", lat: 25.7617, lng: -80.1918, populacao: 442241, fatorBusca: 3.8 },
+  { nome: "Orlando", uf: "FL", lat: 28.5383, lng: -81.3792, populacao: 307573, fatorBusca: 3.5 },
+  { nome: "Fort Lauderdale", uf: "FL", lat: 26.1224, lng: -80.1373, populacao: 182760, fatorBusca: 3.0 },
+  { nome: "Tampa", uf: "FL", lat: 27.9506, lng: -82.4572, populacao: 384959, fatorBusca: 3.0 },
+  { nome: "Boca Raton", uf: "FL", lat: 26.3683, lng: -80.1289, populacao: 97422, fatorBusca: 3.2 },
+  { nome: "Boston", uf: "MA", lat: 42.3601, lng: -71.0589, populacao: 675647, fatorBusca: 3.4 },
+  { nome: "Framingham", uf: "MA", lat: 42.2793, lng: -71.4162, populacao: 72362, fatorBusca: 2.8 },
+  { nome: "New York", uf: "NY", lat: 40.7128, lng: -74.0060, populacao: 8336817, fatorBusca: 4.5 },
+  { nome: "Newark", uf: "NJ", lat: 40.7357, lng: -74.1724, populacao: 311549, fatorBusca: 3.0 },
+  { nome: "Los Angeles", uf: "CA", lat: 34.0522, lng: -118.2437, populacao: 3898747, fatorBusca: 4.2 },
+  { nome: "San Diego", uf: "CA", lat: 32.7157, lng: -117.1611, populacao: 1386932, fatorBusca: 3.5 },
+  { nome: "San Francisco", uf: "CA", lat: 37.7749, lng: -122.4194, populacao: 873965, fatorBusca: 4.0 },
+  { nome: "Houston", uf: "TX", lat: 29.7604, lng: -95.3698, populacao: 2304580, fatorBusca: 3.6 },
+  { nome: "Dallas", uf: "TX", lat: 32.7767, lng: -96.7970, populacao: 1304379, fatorBusca: 3.6 },
+  { nome: "Austin", uf: "TX", lat: 30.2672, lng: -97.7431, populacao: 961855, fatorBusca: 3.5 },
+  { nome: "Atlanta", uf: "GA", lat: 33.7490, lng: -84.3880, populacao: 498715, fatorBusca: 3.4 },
+  { nome: "Chicago", uf: "IL", lat: 41.8781, lng: -87.6298, populacao: 2746388, fatorBusca: 3.8 },
+  { nome: "Las Vegas", uf: "NV", lat: 36.1716, lng: -115.1391, populacao: 641903, fatorBusca: 3.5 },
+  { nome: "Seattle", uf: "WA", lat: 47.6062, lng: -122.3321, populacao: 737015, fatorBusca: 3.5 },
+];
+
 export function normalizarTexto(txt: string) {
   return txt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 }
@@ -134,13 +179,14 @@ export function extrairBairroOuRua(endereco: string | undefined): string {
   return limpo;
 }
 
-/** Localiza coordenadas geográficas de qualquer cidade do Brasil */
-export function buscarCoordenadasBrasil(cidadeNome: string, uf?: string): { lat: number; lng: number; nomeFormatado: string; fatorBusca: number } {
+/** Localiza coordenadas geográficas de qualquer cidade do Brasil ou Estados Unidos */
+export function buscarCoordenadasBrasil(cidadeNome: string, uf?: string, pais: "BR" | "US" = "BR"): { lat: number; lng: number; nomeFormatado: string; fatorBusca: number } {
   const cNorm = normalizarTexto(cidadeNome);
   const uNorm = uf ? uf.toUpperCase().trim() : "";
+  const listaCidades = pais === "US" ? CIDADES_EUA : CIDADES_BRASIL;
 
   // 1. Busca exata na lista
-  const match = CIDADES_BRASIL.find((c) => {
+  const match = listaCidades.find((c) => {
     const nomeOk = normalizarTexto(c.nome) === cNorm;
     if (uNorm) return nomeOk && c.uf === uNorm;
     return nomeOk;
@@ -150,13 +196,13 @@ export function buscarCoordenadasBrasil(cidadeNome: string, uf?: string): { lat:
     return {
       lat: match.lat,
       lng: match.lng,
-      nomeFormatado: `${match.nome} - ${match.uf}`,
+      nomeFormatado: `${match.nome} - ${match.uf}${pais === "US" ? " (USA)" : ""}`,
       fatorBusca: match.fatorBusca,
     };
   }
 
   // 2. Busca parcial (contém)
-  const parcial = CIDADES_BRASIL.find((c) => {
+  const parcial = listaCidades.find((c) => {
     const nomeContem = normalizarTexto(c.nome).includes(cNorm) || cNorm.includes(normalizarTexto(c.nome));
     if (uNorm) return nomeContem && c.uf === uNorm;
     return nomeContem;
@@ -166,20 +212,32 @@ export function buscarCoordenadasBrasil(cidadeNome: string, uf?: string): { lat:
     return {
       lat: parcial.lat,
       lng: parcial.lng,
-      nomeFormatado: `${parcial.nome} - ${parcial.uf}`,
+      nomeFormatado: `${parcial.nome} - ${parcial.uf}${pais === "US" ? " (USA)" : ""}`,
       fatorBusca: parcial.fatorBusca,
     };
   }
 
-  // 3. Fallback geográfico proporcional para qualquer outra cidade do Brasil usando hash determinístico centralizado no território nacional
+  // 3. Fallback geográfico proporcional para qualquer outra cidade
   let hash = 0;
   for (let i = 0; i < cidadeNome.length; i++) {
     hash = (hash << 5) - hash + cidadeNome.charCodeAt(i);
     hash |= 0;
   }
-  const latDelta = ((Math.abs(hash) % 2000) / 100) - 10; // variação dentro do território BR
+  const latDelta = ((Math.abs(hash) % 2000) / 100) - 10;
   const lngDelta = ((Math.abs(hash * 3) % 2000) / 100) - 10;
   
+  if (pais === "US") {
+    // Ponto médio USA Continental (39.8283, -98.5795)
+    const lat = Math.max(25, Math.min(48, 38.0 + (latDelta * 0.4)));
+    const lng = Math.max(-124, Math.min(-70, -97.0 + (lngDelta * 0.8)));
+    return {
+      lat: Number(lat.toFixed(4)),
+      lng: Number(lng.toFixed(4)),
+      nomeFormatado: uf ? `${cidadeNome}, ${uf.toUpperCase()} (USA)` : `${cidadeNome} (USA)`,
+      fatorBusca: 2.5,
+    };
+  }
+
   // Ponto médio Brasil (-14.2350, -51.9253)
   const lat = Math.max(-32, Math.min(2, -15.0 + (latDelta * 0.5)));
   const lng = Math.max(-70, Math.min(-35, -48.0 + (lngDelta * 0.5)));
