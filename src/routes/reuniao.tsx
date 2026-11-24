@@ -20,9 +20,9 @@ import { gerarLinkWhatsAppEnvio } from "@/lib/google-tools";
 export const Route = createFileRoute("/reuniao")({
   head: () => ({
     meta: [
-      { title: "Modo Reunião com Cliente · Inove Local" },
+      { title: "Modo Reunião com Cliente · MapRank Pro" },
       { name: "description", content: "Apresentação executiva da presença local e SEO de Ads para fechar contratos." },
-      { property: "og:title", content: "Modo Reunião com Cliente · Inove Local" },
+      { property: "og:title", content: "Modo Reunião com Cliente · MapRank Pro" },
       { property: "og:description", content: "Diagnóstico, pontos críticos, palavras-chave e plano de 90 dias." },
     ],
   }),
@@ -63,10 +63,10 @@ function Reuniao() {
         {/* Cabeçalho da Apresentação */}
         <div className="mb-12 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-lg bg-mint font-display font-semibold text-ink">I</span>
+            <span className="grid size-9 place-items-center rounded-lg bg-mint font-display font-semibold text-ink">M</span>
             <div>
               <p className="font-display font-semibold tracking-tight text-lg">
-                INOVE LOCAL · {eMercadoUS ? "Diagnóstico Comercial (Estados Unidos)" : "Diagnóstico Comercial"}
+                MAPRANK PRO · {eMercadoUS ? "Diagnóstico Comercial (Estados Unidos)" : "Diagnóstico Comercial"}
               </p>
               <p className="text-xs text-surface/60">
                 {empresa.nome} · {empresa.endereco ? `${empresa.endereco}, ` : ""}{empresa.cidade} {empresa.uf ? `(${empresa.uf})` : ""} · {empresa.segmento} (Raio {empresa.raio} {unidade})
@@ -89,7 +89,7 @@ function Reuniao() {
         {/* 1. Diagnóstico de Presença */}
         <section className="grid gap-10 md:grid-cols-3 border-b border-surface/10 pb-12">
           <div>
-            <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Score de Presença Inove</p>
+            <p className="text-xs uppercase tracking-[0.12em] text-surface/50">Score de Presença MapRank</p>
             <p className="font-display text-8xl font-semibold leading-none text-coral">{s}<span className="text-3xl text-surface/40">/100</span></p>
             <p className="mt-3 inline-block rounded-full bg-coral/15 px-3 py-1 text-sm text-coral ring-1 ring-coral/30">
               {pos <= 3 ? "Top 3 do Google Maps" : "Alerta Crítico: fora do Top 3"}
@@ -218,7 +218,7 @@ function Reuniao() {
         </div>
 
         {/* 4. Plano de Implementação */}
-        <h2 className="print-break mt-16 font-display text-3xl font-semibold">Plano Estratégico de 90 Dias (Inove)</h2>
+        <h2 className="print-break mt-16 font-display text-3xl font-semibold">Plano Estratégico de 90 Dias (MapRank Pro)</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {plano.map(([m, t, d]) => (
             <div key={m} className="rounded-[14px] bg-surface/5 p-6 ring-1 ring-surface/10">
@@ -242,7 +242,7 @@ function Reuniao() {
             <span>📲 Enviar Diagnóstico no WhatsApp</span>
           </a>
           <button className="rounded-lg bg-mint px-8 py-4 font-display text-lg font-semibold text-ink hover:bg-mint/90 transition shadow-lg cursor-pointer">
-            Fechar Parceria com a Inove Local
+            Fechar Parceria com a MapRank Pro
           </button>
         </div>
       </div>

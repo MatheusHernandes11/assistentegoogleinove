@@ -13,7 +13,7 @@ import {
 export const Route = createFileRoute("/anuncios")({
   head: () => ({
     meta: [
-      { title: "Espião de Concorrentes & Anúncios do Google Ads · Inove Local" },
+      { title: "Espião de Concorrentes & Anúncios do Google Ads · MapRank Pro" },
       {
         name: "description",
         content:
@@ -75,7 +75,7 @@ ${linkTransparenciaOficial}
 📋 *Concorrentes do Raio para Espiar Anúncios:*
 ${concorrentesReais.slice(0, 5).map((c, i) => `${i + 1}. ${c.nome} (${c.avaliacoes} avaliações) ➔ ${c.linkTransparenciaGoogle}`).join("\n")}
 
-_Relatório de dados reais gerado pelo Inove Local_`;
+_Relatório de dados reais gerado pelo MapRank Pro_`;
 
     navigator.clipboard.writeText(texto);
     setCopiado(true);

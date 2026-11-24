@@ -6,10 +6,10 @@ import { lovable } from "@/integrations/lovable/index";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar · Inove Local" },
-      { name: "description", content: "Acesse o Inove Local para auditar empresas com dados reais do Google." },
-      { property: "og:title", content: "Entrar · Inove Local" },
-      { property: "og:description", content: "Acesse sua conta Inove Local." },
+      { title: "Entrar · MapRank Pro" },
+      { name: "description", content: "Acesse o MapRank Pro para auditar empresas com dados reais do Google." },
+      { property: "og:title", content: "Entrar · MapRank Pro" },
+      { property: "og:description", content: "Acesse sua conta MapRank Pro." },
     ],
   }),
   component: Auth,
@@ -46,8 +46,8 @@ function Auth() {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-glow" />
       <form onSubmit={enviar} className="tile w-full max-w-sm space-y-4">
         <div className="flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-lg bg-ink font-display font-semibold text-surface">I</span>
-          <p className="font-display font-semibold">INOVE LOCAL</p>
+          <span className="grid size-9 place-items-center rounded-lg bg-ink font-display font-semibold text-surface">M</span>
+          <p className="font-display font-semibold">MAPRANK PRO</p>
         </div>
         <h1 className="font-display text-2xl font-semibold">{modo === "entrar" ? "Entrar" : "Criar conta"}</h1>
         <button type="button" onClick={google} className="w-full rounded-lg bg-surface py-2.5 text-sm font-medium ring-1 ring-border hover:ring-ink/30">Continuar com Google</button>

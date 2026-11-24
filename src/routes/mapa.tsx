@@ -8,9 +8,9 @@ import { empresa, empresas, score, temDados, voce } from "@/lib/data";
 export const Route = createFileRoute("/mapa")({
   head: () => ({
     meta: [
-      { title: "Mapa de concorrentes · Inove Local" },
+      { title: "Mapa de Concorrentes · MapRank Pro" },
       { name: "description", content: "Veja cada concorrente no mapa dentro do raio escolhido." },
-      { property: "og:title", content: "Mapa de concorrentes · Inove Local" },
+      { property: "og:title", content: "Mapa de Concorrentes · MapRank Pro" },
       { property: "og:description", content: "Concorrentes no Google Maps por raio de distância." },
     ],
   }),

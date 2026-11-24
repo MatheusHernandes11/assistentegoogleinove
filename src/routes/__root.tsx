@@ -78,8 +78,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Inove Local" },
-      { name: "description", content: "Inteligência para dominar o Google na sua região." },
+      { title: "MapRank Pro · Inteligência Google Maps & Ads" },
+      { name: "description", content: "Auditoria hiperlocal e inteligência competitiva de Google Maps e Ads para dominar o mercado local." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

@@ -89,7 +89,7 @@ export const voce = new Proxy({} as Empresa, {
   getOwnPropertyDescriptor: (_t, k) => ({ enumerable: true, configurable: true, value: atual()[k] }),
 });
 
-/** Inove Score: 35% avaliações, 25% nota, 20% fotos, 10% categorias, 10% site — relativo ao melhor da região */
+/** MapRank Score: 35% avaliações, 25% nota, 20% fotos, 10% categorias, 10% site — relativo ao melhor da região */
 export function score(e: Empresa) {
   const maxAv = Math.max(1, ...empresas.map((x) => x.avaliacoes));
   const maxFo = Math.max(1, ...empresas.map((x) => x.fotos));

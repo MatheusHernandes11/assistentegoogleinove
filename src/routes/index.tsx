@@ -23,9 +23,9 @@ import { analisarKeywordsConcorrentes } from "@/lib/seo-keywords";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Painel de presença local · Inove Local" },
+      { title: "Painel de Presença Local · MapRank Pro" },
       { name: "description", content: "Score de presença no Google, concorrentes e palavras-chave da sua região." },
-      { property: "og:title", content: "Painel de presença local · Inove Local" },
+      { property: "og:title", content: "Painel de Presença Local · MapRank Pro" },
       { property: "og:description", content: "Descubra quem aparece no Google na sua região e como ficar à frente." },
     ],
   }),
@@ -81,7 +81,7 @@ function Painel() {
       <div className="grid grid-cols-12 gap-3.5">
         <section className="tile col-span-12 md:col-span-6 lg:col-span-3">
           <div className="flex items-center justify-between">
-            <span className="eyebrow">Score Inove</span>
+            <span className="eyebrow">Score MapRank</span>
           </div>
           <div className="mt-6 flex items-end gap-1.5">
             <span className="font-display text-6xl font-semibold leading-none tracking-tight">{s}</span>
@@ -242,7 +242,7 @@ function Painel() {
 
         <section className="tile col-span-12 lg:col-span-7">
           <div className="flex items-center justify-between">
-            <span className="eyebrow">Ranking da região · Inove Score</span>
+            <span className="eyebrow">Ranking da região · MapRank Score</span>
             <Link to="/palavras-chave" className="text-xs text-muted-foreground hover:text-ink">Ranking por busca →</Link>
           </div>
           <ol className="mt-4 max-h-72 divide-y divide-border overflow-auto rounded-lg ring-1 ring-border">

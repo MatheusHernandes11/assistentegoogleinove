@@ -7,9 +7,9 @@ import { empresas, ranking, score, temDados, voce, type Empresa } from "@/lib/da
 export const Route = createFileRoute("/radar")({
   head: () => ({
     meta: [
-      { title: "Radar de concorrência · Inove Local" },
+      { title: "Radar de Concorrência · MapRank Pro" },
       { name: "description", content: "Compare sua empresa lado a lado com os concorrentes." },
-      { property: "og:title", content: "Radar de concorrência · Inove Local" },
+      { property: "og:title", content: "Radar de Concorrência · MapRank Pro" },
       { property: "og:description", content: "Comparação detalhada e análise automática de concorrentes." },
     ],
   }),

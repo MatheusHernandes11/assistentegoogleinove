@@ -26,10 +26,10 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-3 sm:px-6 sm:py-4 lg:px-10">
           <Link to="/" className="flex items-center gap-2.5 sm:gap-3">
             <span className="grid size-9 place-items-center rounded-lg bg-ink font-display font-semibold text-surface">
-              I
+              M
             </span>
             <div className="leading-tight">
-              <p className="font-display font-semibold tracking-tight text-sm sm:text-base">INOVE LOCAL</p>
+              <p className="font-display font-semibold tracking-tight text-sm sm:text-base">MAPRANK PRO</p>
               <p className="hidden xs:block text-[10px] sm:text-[11px] text-muted-foreground">Inteligência Google Maps & Ads</p>
             </div>
           </Link>

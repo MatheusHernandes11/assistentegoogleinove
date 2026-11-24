@@ -18,9 +18,9 @@ import { consultarPageSpeed } from "@/lib/places.functions";
 export const Route = createFileRoute("/ferramentas")({
   head: () => ({
     meta: [
-      { title: "Ferramentas & Raio-X Google · Inove Local" },
+      { title: "Ferramentas & Raio-X Google · MapRank Pro" },
       { name: "description", content: "Auditoria de saúde da ficha, QR Code de avaliações, Google PageSpeed e tendências de busca." },
-      { property: "og:title", content: "Ferramentas & Raio-X Google · Inove Local" },
+      { property: "og:title", content: "Ferramentas & Raio-X Google · MapRank Pro" },
       { property: "og:description", content: "Ferramentas comerciais para potencializar sua presença no Google." },
     ],
   }),

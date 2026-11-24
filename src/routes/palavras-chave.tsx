@@ -22,9 +22,9 @@ import { analisarKeywordsConcorrentes, type IntencaoBusca, type KeywordAnalise }
 export const Route = createFileRoute("/palavras-chave")({
   head: () => ({
     meta: [
-      { title: "SEO de Ads & Palavras-Chave dos Concorrentes · Inove Local" },
+      { title: "SEO de Ads & Palavras-Chave dos Concorrentes · MapRank Pro" },
       { name: "description", content: "Análise competitiva de palavras-chave, CPC de Google Ads e termos mais usados pelos concorrentes." },
-      { property: "og:title", content: "SEO de Ads & Palavras-Chave dos Concorrentes · Inove Local" },
+      { property: "og:title", content: "SEO de Ads & Palavras-Chave dos Concorrentes · MapRank Pro" },
       { property: "og:description", content: "Descubra os termos que seus concorrentes mais usam e os clientes que você está perdendo." },
     ],
   }),
@@ -134,7 +134,7 @@ function KeywordsPage() {
   function copiarArgumentoVenda() {
     const moeda = simboloMoeda();
     const texto = isUS()
-      ? `DIAGNÓSTICO COMERCIAL - INOVE LOCAL (MERCADO AMERICANO):
+      ? `DIAGNÓSTICO COMERCIAL - MAPRANK PRO (MERCADO AMERICANO):
 Empresa: ${empresa.nome} (${empresa.cidade}, ${empresa.uf || ""})
 Segmento: ${empresa.segmento}
 Mercado: Estados Unidos (EUA)
@@ -145,7 +145,7 @@ Líder Local no Google Maps: ${topLider.nome} (${topLider.avaliacoes} avaliaçõ
 Avaliações da Sua Ficha: ${voce.avaliacoes} avaliações
 Diferença para o Líder: ${Math.max(0, topLider.avaliacoes - voce.avaliacoes)} avaliações atrás do líder
 Estratégia Prioritária: Geração de ligações telefônicas diretas ("Call Now") e selos de credibilidade (Licensed & Insured / Google Guaranteed).`
-      : `DIAGNÓSTICO COMERCIAL - INOVE LOCAL:
+      : `DIAGNÓSTICO COMERCIAL - MAPRANK PRO:
 Empresa: ${empresa.nome} (${empresa.cidade})
 Segmento: ${empresa.segmento}
 
