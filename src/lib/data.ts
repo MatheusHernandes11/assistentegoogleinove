@@ -152,7 +152,7 @@ export function aplicarAuditoria(a: Auditoria) {
   ouvintes.forEach((f) => f());
   if (typeof window !== "undefined") {
     try {
-      localStorage.setItem("inove-auditoria", JSON.stringify(a));
+      localStorage.setItem("maprank-auditoria", JSON.stringify(a));
     } catch { /* ignora */ }
   }
 }
@@ -160,7 +160,7 @@ export function aplicarAuditoria(a: Auditoria) {
 export function carregarSalvo() {
   try {
     if (typeof window !== "undefined") {
-      const raw = localStorage.getItem("inove-auditoria");
+      const raw = localStorage.getItem("maprank-auditoria") || localStorage.getItem("inove-auditoria");
       if (raw) {
         aplicarAuditoria(JSON.parse(raw));
       }

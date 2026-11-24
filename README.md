@@ -1,6 +1,9 @@
-# Pixel Perfect Replication
+# MapRank Pro · Inteligência de Google Maps & Tráfego Local
 
-Implement exactly the screenshot and nothing else
+Plataforma profissional de auditoria hiperlocal, mineração de palavras-chave de intenção de compra, espionagem de concorrentes no Google Ads e inteligência competitiva para empresas no Brasil 🇧🇷 e nos Estados Unidos 🇺🇸.
+
+- **Nome Comercial**: MapRank Pro
+- **Cobertura**: Brasil e Estados Unidos (Local Pack, Phone Calls, Reserve with Google, Licensed & Insured, LSA Google Guaranteed)
 
 This project was built with [Lovable](https://lovable.dev).
 
