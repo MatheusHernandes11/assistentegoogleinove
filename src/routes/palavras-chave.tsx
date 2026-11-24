@@ -134,17 +134,17 @@ function KeywordsPage() {
   function copiarArgumentoVenda() {
     const moeda = simboloMoeda();
     const texto = isUS()
-      ? `COMMERCIAL CLOSING SCRIPT - INOVE LOCAL (US MARKET):
-Business: ${empresa.nome} (${empresa.cidade}, ${empresa.uf || ""})
-Category: ${empresa.segmento}
-Market: United States
+      ? `DIAGNÓSTICO COMERCIAL - INOVE LOCAL (MERCADO AMERICANO):
+Empresa: ${empresa.nome} (${empresa.cidade}, ${empresa.uf || ""})
+Segmento: ${empresa.segmento}
+Mercado: Estados Unidos (EUA)
 
 ${diagnostico.pontosVendaComercial.map((p, i) => `${i + 1}. ${p}`).join("\n")}
 
-Local Market Leader: ${topLider.nome} (${topLider.avaliacoes} Google reviews · ${topLider.nota.toFixed(1)} stars)
-Your Listing Reviews: ${voce.avaliacoes} reviews
-Competitive Gap: ${Math.max(0, topLider.avaliacoes - voce.avaliacoes)} reviews behind the leader
-Target Strategy: High-intent direct phone call generation & Google Guaranteed visibility.`
+Líder Local no Google Maps: ${topLider.nome} (${topLider.avaliacoes} avaliações reais · Nota ${topLider.nota.toFixed(1)})
+Avaliações da Sua Ficha: ${voce.avaliacoes} avaliações
+Diferença para o Líder: ${Math.max(0, topLider.avaliacoes - voce.avaliacoes)} avaliações atrás do líder
+Estratégia Prioritária: Geração de ligações telefônicas diretas ("Call Now") e selos de credibilidade (Licensed & Insured / Google Guaranteed).`
       : `DIAGNÓSTICO COMERCIAL - INOVE LOCAL:
 Empresa: ${empresa.nome} (${empresa.cidade})
 Segmento: ${empresa.segmento}
@@ -162,10 +162,10 @@ Equivalente em Google Ads: ${moeda} ${diagnostico.custoOportunidadeAds.toLocaleS
 
   return (
     <AppShell
-      title={isUS() ? "US SEO & Buyer Search Behavior · Inove Local" : "SEO de Ads & Palavras-Chave dos Concorrentes"}
+      title={isUS() ? "SEO de Ads & Buscas do Consumidor (Mercado dos EUA)" : "SEO de Ads & Palavras-Chave dos Concorrentes"}
       subtitle={
         isUS()
-          ? `High-intent keyword mining, US Local Pack ranking factors & competitor intelligence in ${empresa.cidade}, ${empresa.uf || ""}`
+          ? `Mineração de termos de alta intenção, fatores de ranking do Google Maps US e inteligência de concorrentes em ${empresa.cidade}${empresa.uf ? `, ${empresa.uf}` : ""}`
           : `Mineração de termos de busca, leilão do Google Ads e presença comercial em ${empresa.cidade}`
       }
     >

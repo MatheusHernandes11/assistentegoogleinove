@@ -23,12 +23,12 @@ const PRESETS_CLIENTES_BR = [
 ];
 
 const PRESETS_CLIENTES_US = [
-  { nome: "Brickell Dental Excellence", cidade: "Miami", uf: "FL", endereco: "1101 Brickell Ave - Downtown", segmento: "Dentist", raio: "3", pais: "US" as const },
-  { nome: "Apex Roofing & Contractors", cidade: "Orlando", uf: "FL", endereco: "500 S Orange Ave - Central", segmento: "Roofing Contractor", raio: "5", pais: "US" as const },
-  { nome: "Boston Premier Injury Lawyers", cidade: "Boston", uf: "MA", endereco: "100 State St - Financial District", segmento: "Personal Injury Lawyer", raio: "5", pais: "US" as const },
-  { nome: "Texas Precision Auto Repair", cidade: "Dallas", uf: "TX", endereco: "2500 Elm St - Deep Ellum", segmento: "Auto Repair", raio: "5", pais: "US" as const },
-  { nome: "Beverly Hills MedSpa", cidade: "Los Angeles", uf: "CA", endereco: "9400 Wilshire Blvd - Beverly Hills", segmento: "MedSpa", raio: "3", pais: "US" as const },
-  { nome: "Manhattan Prime Real Estate", cidade: "New York", uf: "NY", endereco: "350 5th Ave - Midtown", segmento: "Real Estate Agency", raio: "3", pais: "US" as const },
+  { nome: "Brickell Dental Excellence", cidade: "Miami", uf: "FL", endereco: "1101 Brickell Ave - Downtown", segmento: "Odontologia & Implantes", raio: "3", pais: "US" as const },
+  { nome: "Apex Roofing & Contractors", cidade: "Orlando", uf: "FL", endereco: "500 S Orange Ave - Central", segmento: "Empreiteiro de Telhados (Roofing)", raio: "5", pais: "US" as const },
+  { nome: "Boston Premier Injury Lawyers", cidade: "Boston", uf: "MA", endereco: "100 State St - Financial District", segmento: "Advogado de Acidentes", raio: "5", pais: "US" as const },
+  { nome: "Texas Precision Auto Repair", cidade: "Dallas", uf: "TX", endereco: "2500 Elm St - Deep Ellum", segmento: "Oficina Mecânica", raio: "5", pais: "US" as const },
+  { nome: "Beverly Hills MedSpa", cidade: "Los Angeles", uf: "CA", endereco: "9400 Wilshire Blvd - Beverly Hills", segmento: "Clínica de Estética & Botox", raio: "3", pais: "US" as const },
+  { nome: "Manhattan Prime Real Estate", cidade: "New York", uf: "NY", endereco: "350 5th Ave - Midtown", segmento: "Imobiliária", raio: "3", pais: "US" as const },
 ];
 
 const NICHOS_RAPIDOS_BR = [
@@ -44,15 +44,15 @@ const NICHOS_RAPIDOS_BR = [
 ];
 
 const NICHOS_RAPIDOS_US = [
-  "Dentist",
-  "Roofing Contractor",
-  "Personal Injury Lawyer",
-  "Auto Repair",
-  "MedSpa",
-  "Real Estate Agent",
-  "HVAC & Plumbing",
-  "Italian Restaurant",
-  "Veterinary Clinic",
+  "Odontologia & Implantes",
+  "Empreiteiro / Telhados (Roofing)",
+  "Advogado de Acidentes",
+  "Oficina Mecânica",
+  "Estética & Botox (MedSpa)",
+  "Imobiliária",
+  "Climatização (HVAC) & Encanador",
+  "Restaurante",
+  "Veterinário",
 ];
 
 export function NovaAuditoria() {
@@ -119,14 +119,14 @@ export function NovaAuditoria() {
         <div className="flex items-start justify-between border-b border-border/80 pb-4">
           <div>
             <span className="eyebrow text-mint font-bold tracking-wider">
-              {isUS ? "US Local Market Intelligence" : "Dinâmica de Atendimento & Vendas"}
+              {isUS ? "Inteligência de Mercado Americano (EUA)" : "Dinâmica de Atendimento & Vendas"}
             </span>
             <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-ink">
-              {isUS ? "Local Business Audit (United States)" : "Diagnóstico Local do Cliente"}
+              {isUS ? "Diagnóstico de Empresa nos Estados Unidos" : "Diagnóstico Local do Cliente"}
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {isUS
-                ? "Select state, city and address. The system automatically benchmarks against US Google Maps factors (Direct Calls, Licensed & Insured, LSA Google Guaranteed and US Buyer Intent)."
+                ? "Informe o estado, cidade e endereço nos EUA. O sistema audita os fatores determinantes do Google Maps americano: ligações diretas por telefone, selos de garantia Licensed & Insured, LSA Google Guaranteed e termos de alta intenção de compra."
                 : "Primeiro colete a localização exata (região, cidade e rua). Em seguida, iniciamos a busca de concorrentes do raio e palavras-chave de Google Ads."}
             </p>
           </div>
@@ -172,7 +172,7 @@ export function NovaAuditoria() {
                 uf: "FL",
                 cidade: "Miami",
                 endereco: "1101 Brickell Ave",
-                segmento: "Dentist",
+                segmento: "Odontologia & Implantes",
                 raio: "3",
               });
             }}
@@ -183,14 +183,14 @@ export function NovaAuditoria() {
             }`}
           >
             <span className="text-base">🇺🇸</span>
-            <span>United States</span>
+            <span>Estados Unidos (EUA)</span>
           </button>
         </div>
 
         {/* Presets Rápidos */}
         <div className="rounded-xl bg-paper p-3.5 ring-1 ring-border/70">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            {isUS ? "⚡ Quick Demo Profiles (US Markets):" : "⚡ Ou teste agora com clientes de exemplo:"}
+            {isUS ? "⚡ Ou teste agora com empresas de exemplo nos EUA:" : "⚡ Ou teste agora com clientes de exemplo:"}
           </span>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {presetsAtuais.map((p) => (
@@ -211,7 +211,7 @@ export function NovaAuditoria() {
             e.preventDefault();
             setErro(null);
             setCarregando(true);
-            setEtapaStatus(isUS ? "Mapping address & coordinates in the US..." : "Mapeando endereço e coordenadas da rua...");
+            setEtapaStatus(isUS ? "Mapeando endereço e coordenadas nos EUA..." : "Mapeando endereço e coordenadas da rua...");
 
             const perfil = {
               nome: f.nome.trim(),
@@ -224,7 +224,7 @@ export function NovaAuditoria() {
             };
 
             try {
-              setEtapaStatus(isUS ? "Fetching real-time Google Maps US local pack..." : "Consultando dados reais no Google Maps...");
+              setEtapaStatus(isUS ? "Consultando dados reais no Google Maps americano..." : "Consultando dados reais no Google Maps...");
               const resultado = await auditar({ data: perfil });
               aplicarAuditoria({ perfil, resultado });
               fechar();
@@ -242,13 +242,13 @@ export function NovaAuditoria() {
             <div className="flex items-center gap-2">
               <span className="flex size-5 items-center justify-center rounded-full bg-mint text-xs font-bold text-ink">1</span>
               <span className="font-semibold text-xs uppercase tracking-wider text-ink">
-                {isUS ? "Business Location & Service Radius" : "Localização Exata do Estabelecimento"}
+                {isUS ? "Localização do Negócio & Raio nos EUA" : "Localização Exata do Estabelecimento"}
               </span>
             </div>
 
             <div className="grid grid-cols-12 gap-3">
               <label className="col-span-4 block text-xs">
-                <span className="eyebrow">{isUS ? "State" : "Estado (UF)"}</span>
+                <span className="eyebrow">{isUS ? "Estado (EUA)" : "Estado (UF)"}</span>
                 <select
                   value={f.uf}
                   onChange={(e) => setF({ ...f, uf: e.target.value })}
@@ -269,11 +269,11 @@ export function NovaAuditoria() {
               </label>
 
               <label className="col-span-8 block text-xs">
-                <span className="eyebrow">{isUS ? "City" : "Cidade"}</span>
+                <span className="eyebrow">{isUS ? "Cidade (EUA)" : "Cidade"}</span>
                 <input
                   required
                   value={f.cidade}
-                  placeholder={isUS ? "e.g. Miami, Orlando, Boston, Dallas..." : "ex: Curitiba, São Paulo, Londrina..."}
+                  placeholder={isUS ? "ex: Miami, Orlando, Boston, Dallas..." : "ex: Curitiba, São Paulo, Londrina..."}
                   onChange={(e) => setF({ ...f, cidade: e.target.value })}
                   className="mt-1 w-full rounded-lg bg-surface px-3 py-2 text-sm outline-none ring-1 ring-border focus:ring-mint font-medium"
                 />
@@ -282,23 +282,23 @@ export function NovaAuditoria() {
 
             <div className="grid grid-cols-12 gap-3">
               <label className="col-span-8 block text-xs">
-                <span className="eyebrow">{isUS ? "Street Address / Neighborhood" : "Rua, Avenida e Bairro (Endereço)"}</span>
+                <span className="eyebrow">{isUS ? "Endereço e Bairro nos EUA" : "Rua, Avenida e Bairro (Endereço)"}</span>
                 <input
                   required
                   value={f.endereco}
-                  placeholder={isUS ? "e.g. 1101 Brickell Ave - Downtown" : "ex: Rua Bispo Dom José, 2100 - Batel"}
+                  placeholder={isUS ? "ex: 1101 Brickell Ave - Downtown" : "ex: Rua Bispo Dom José, 2100 - Batel"}
                   onChange={(e) => setF({ ...f, endereco: e.target.value })}
                   className="mt-1 w-full rounded-lg bg-surface px-3 py-2 text-sm outline-none ring-1 ring-border focus:ring-mint"
                 />
                 <span className="mt-1 block text-[10px] text-muted-foreground">
                   {isUS
-                    ? "Essential for hyper-local Google 3-Pack rank tracking and 'near me' queries."
+                    ? "Fundamental para rastrear o Top 3 Local do Google Maps e buscas como 'near me'."
                     : "Fundamental para mapear a concorrência vizinha e buscas como 'no [bairro]'."}
                 </span>
               </label>
 
               <label className="col-span-4 block text-xs">
-                <span className="eyebrow">{isUS ? "Search Radius" : "Raio Comercial"}</span>
+                <span className="eyebrow">{isUS ? "Raio de Busca (Milhas)" : "Raio Comercial"}</span>
                 <select
                   value={f.raio}
                   onChange={(e) => setF({ ...f, raio: e.target.value })}
@@ -306,10 +306,10 @@ export function NovaAuditoria() {
                 >
                   {isUS ? (
                     <>
-                      <option value="1">1 mi (Neighborhood)</option>
-                      <option value="3">3 mi (Urban District)</option>
-                      <option value="5">5 mi (Metro Area)</option>
-                      <option value="10">10 mi (County)</option>
+                      <option value="1">1 mi (Vizinhança Imediata)</option>
+                      <option value="3">3 mi (Distrito / ZIP Code)</option>
+                      <option value="5">5 mi (Área Metropolitana)</option>
+                      <option value="10">10 mi (Condado / Região Ampla)</option>
                     </>
                   ) : (
                     <>
@@ -329,16 +329,16 @@ export function NovaAuditoria() {
             <div className="flex items-center gap-2">
               <span className="flex size-5 items-center justify-center rounded-full bg-mint text-xs font-bold text-ink">2</span>
               <span className="font-semibold text-xs uppercase tracking-wider text-ink">
-                {isUS ? "Business Name & Niche" : "Empresa do Cliente & Segmento"}
+                {isUS ? "Empresa do Cliente & Segmento nos EUA" : "Empresa do Cliente & Segmento"}
               </span>
             </div>
 
             <label className="block text-xs">
-              <span className="eyebrow">{isUS ? "Business Name" : "Nome da empresa do cliente"}</span>
+              <span className="eyebrow">Nome da empresa do cliente</span>
               <input
                 required
                 value={f.nome}
-                placeholder={isUS ? "e.g. Brickell Dental Excellence" : "ex: Clínica Sorriso & Arte"}
+                placeholder={isUS ? "ex: Brickell Dental Excellence" : "ex: Clínica Sorriso & Arte"}
                 onChange={(e) => setF({ ...f, nome: e.target.value })}
                 className="mt-1 w-full rounded-lg bg-surface px-3 py-2 text-sm outline-none ring-1 ring-border focus:ring-mint font-medium"
               />
@@ -346,11 +346,11 @@ export function NovaAuditoria() {
 
             <div>
               <label className="block text-xs">
-                <span className="eyebrow">{isUS ? "Business Category / Industry" : "Segmento / Ramo de Atuação"}</span>
+                <span className="eyebrow">Segmento / Ramo de Atuação</span>
                 <input
                   required
                   value={f.segmento}
-                  placeholder={isUS ? "e.g. Dentist, Roofing, Lawyer, Auto Repair..." : "ex: Odontologia, Barbearia, Advocacia..."}
+                  placeholder={isUS ? "ex: Odontologia, Telhados, Advogado, Mecânica..." : "ex: Odontologia, Barbearia, Advocacia..."}
                   onChange={(e) => setF({ ...f, segmento: e.target.value })}
                   className="mt-1 w-full rounded-lg bg-surface px-3 py-2 text-sm outline-none ring-1 ring-border focus:ring-mint"
                 />
@@ -408,10 +408,10 @@ export function NovaAuditoria() {
                 {carregando ? (
                   <>
                     <span className="size-3 animate-spin rounded-full border-2 border-surface border-t-transparent" />
-                    <span>{isUS ? "Auditing US..." : "Auditando..."}</span>
+                    <span>{isUS ? "Auditando nos EUA..." : "Auditando..."}</span>
                   </>
                 ) : (
-                  isUS ? "🔍 Start US Local Audit" : "🔍 Iniciar Análise Hiperlocal"
+                  isUS ? "🔍 Iniciar Auditoria nos EUA (Milhas)" : "🔍 Iniciar Análise Hiperlocal"
                 )}
               </button>
             </div>
@@ -429,7 +429,7 @@ export function NovaAuditoria() {
         className="flex items-center gap-1.5 rounded-lg bg-surface px-3 py-2 text-xs sm:text-sm font-medium ring-1 ring-border transition hover:ring-ink/40 shadow-2xs cursor-pointer"
       >
         <span className="text-mint font-bold text-sm">🎯</span>
-        <span className="font-semibold">{empresa.pais === "US" ? "🇺🇸 Nova Análise (US)" : "🇧🇷 Nova Análise (BR)"}</span>
+        <span className="font-semibold">{empresa.pais === "US" ? "🇺🇸 Nova Análise (EUA)" : "🇧🇷 Nova Análise (Brasil)"}</span>
       </button>
 
       {montado && aberto && typeof document !== "undefined"
@@ -437,12 +437,6 @@ export function NovaAuditoria() {
         : null}
     </>
   );
-}
-
-declare global {
-  interface Window {
-    onabrirauditoria?: () => void;
-  }
 }
 
 declare global {

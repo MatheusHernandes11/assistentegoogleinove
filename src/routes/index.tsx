@@ -54,7 +54,7 @@ function Painel() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-1">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/20 px-3 py-1 text-xs font-semibold text-mint ring-1 ring-mint/30">
-              📍 {isUS() ? "US Local Market Intelligence" : "Diagnóstico Comercial Hiperlocal"}
+              📍 {isUS() ? "Inteligência de Mercado Americano (EUA)" : "Diagnóstico Comercial Hiperlocal"}
             </span>
             <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-surface">
               {isUS() ? "Auditar empresa nos Estados Unidos ou Brasil?" : "Avaliar um novo cliente agora?"}
